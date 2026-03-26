@@ -172,7 +172,7 @@ echo -e " ${GREEN}CPU${RESET}        $(lscpu | grep 'Model name' | awk -F: '{gsu
 echo -e " ${GREEN}GPU${RESET}        $(lspci 2>/dev/null | grep -i --color=never 'vga\|3d\|display' | sed 's/.*: //;s/(rev [0-9a-f]*)//g' || echo "Unknown")"
 echo -e " ${GREEN}Memory${RESET}     $(awk '/MemTotal/{t=$2}/MemAvailable/{a=$2}END{used=t-a; printf "%.1fGiB / %.1fGiB", used/1024/1024, t/1024/1024}' /proc/meminfo)"
 echo -e " ${GREEN}Disk${RESET}       $(df -h --output=used,size / | tail -1 | awk '{print $1" / "$2}')"
-echo -e " ${GREEN}Uptime${RESET}     $(uptime -p | sed 's/^up //')"
+echo -e " ${GREEN}Uptime${RESET}     $(uptime | sed 's/.*up //' | sed 's/,.*//')"
 echo -e " ${GREEN}Shell${RESET}      ${SHELL##*/}"
 [ -n "$XDG_CURRENT_DESKTOP" ] && echo -e " ${GREEN}DE/WM${RESET}      $XDG_CURRENT_DESKTOP" || echo -e " ${GREEN}WM${RESET}      ${DESKTOP_SESSION:-unknown}"
 echo -e " ${GREEN}Packages${RESET}   $(pkg_count)"
