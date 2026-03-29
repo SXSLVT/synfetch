@@ -11,6 +11,7 @@
 
 <div align="center">
 # synfetch
+  
 A really simple system fetch written in `bash`.
 *More features soon*
 </div>
