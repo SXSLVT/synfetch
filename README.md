@@ -58,7 +58,9 @@ If you are experiencing issues with `synfetch` or your current **Linux** distrib
 
 ## Installation
 
-The package **git** is required to clone the repository! Instructions on installing **git** below:
+> [!NOTE]
+>
+> The package **git** is required to clone the repository! Instructions on installing **git** below:
 
 - Linux: https://git-scm.com/install/linux
 - macOS: https://git-scm.com/install/mac
