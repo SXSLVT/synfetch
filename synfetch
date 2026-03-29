@@ -146,16 +146,46 @@ ${MAGENTA}  /_/  /_/\\_,_/\\__/\\____/___/
 }
 
 pkg_count() {
-    if   command -v pacman      >/dev/null; then echo "$(pacman -Q | wc -l) (pacman)"
-    elif command -v dpkg        >/dev/null; then echo "$(dpkg --get-selections | grep -v deinstall | wc -l) (dpkg)"
-    elif command -v qlist       >/dev/null; then echo "$(qlist -I | wc -l) (portage)"
-    elif command -v rpm         >/dev/null; then echo "$(rpm -qa | wc -l) (rpm)"
-    elif command -v xbps-query  >/dev/null; then echo "$(xbps-query -l | wc -l) (xbps)"
-    elif command -v apk         >/dev/null; then echo "$(apk info | wc -l) (apk)"
-    elif command -v qlist       >/dev/null; then echo "$(qlist -I | wc -l) (portage)"
-    elif command -v nix-store   >/dev/null; then echo "$(nix-store -q --requisites /run/current-system 2>/dev/null | wc -l || echo 0) (nix)"
-    elif command -v flatpak     >/dev/null; then echo "$(flatpak list | wc -l) (flatpak)"
-    else echo "?"
+    if command -v pacman >/dev/null; then
+        echo "$(pacman -Q | wc -l) (pacman)"
+
+    elif command -v dpkg >/dev/null; then
+        echo "$(dpkg --get-selections | grep -v deinstall | wc -l) (dpkg)"
+
+    elif command -v rpm >/dev/null; then
+        echo "$(rpm -qa | wc -l) (rpm)"
+
+    elif command -v qlist >/dev/null; then
+        echo "$(qlist -I | wc -l) (portage)"
+
+    elif command -v xbps-query >/dev/null; then
+        echo "$(xbps-query -l | wc -l) (xbps)"
+
+    elif command -v apk >/dev/null; then
+        echo "$(apk info | wc -l) (apk)"
+
+    elif command -v nix-store >/dev/null; then
+        echo "$(nix-store -q --requisites /run/current-system 2>/dev/null | wc -l || echo 0) (nix)"
+
+    elif command -v flatpak >/dev/null; then
+        echo "$(flatpak list | wc -l) (flatpak)"
+
+    elif command -v slackpkg >/dev/null || [ -d /var/log/packages ]; then
+        echo "$(ls /var/log/packages/ 2>/dev/null | wc -l) (slackware)"
+
+    elif command -v brew >/dev/null; then
+        local formulas=$(brew list --formula 2>/dev/null | wc -l)
+        local casks=$(brew list --cask 2>/dev/null | wc -l)
+        echo "$formulas (formulas) + $casks (casks) = $((formulas + casks)) (brew)"
+
+    elif command -v port >/dev/null; then
+        echo "$(port -q installed 2>/dev/null | wc -l) (MacPorts)"
+
+    elif command -v pkgutil >/dev/null || command -v pkg >/dev/null; then
+        echo "$(pkgutil --pkgs 2>/dev/null | wc -l) (Fink/pkgutil)"
+
+    else
+        echo "?"
     fi
 }
 
