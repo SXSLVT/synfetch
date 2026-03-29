@@ -82,7 +82,8 @@ git clone https://github.com/SXSLVT/synfetch.git && cd synfetch && chmod +x synf
 
 ### Usage
 
-Just run: ```bash
+Just run: 
+```bash
 synfetch
 ```
 
