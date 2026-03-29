@@ -17,6 +17,7 @@ While there are many excellent fetch tools (neofetch, fastfetch, etc.), synfetch
 - Works on both Linux and macOS
 - Highly customizable (easy to extend with new modules)
 - Blazing fast execution
+(Will add more features soon.)
 
 ## Installation
 
@@ -41,7 +42,7 @@ git clone https://github.com/SXSLVT/synfetch.git && cd synfetch && chmod +x synf
 
 ## Usage
 
-Run 
+Run: 
 ```bash
 synfetch
 ```
