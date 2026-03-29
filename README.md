@@ -29,3 +29,11 @@ sudo mv synfetch /usr/local/bin/
 or
 
 git clone https://github.com/SXSLVT/synfetch.git && cd synfetch && chmod +x synfetch && sudo mv synfetch /usr/local/bin/
+
+## License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+## Usage
+
+Run ```bash synfetch
