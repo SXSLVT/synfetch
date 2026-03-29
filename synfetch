@@ -203,6 +203,31 @@ echo -e " ${GREEN}Memory${RESET}     $(awk '/MemTotal/{t=$2}/MemAvailable/{a=$2}
 echo -e " ${GREEN}Disk${RESET}       $(df -h --output=used,size / | tail -1 | awk '{print $1" / "$2}')"
 echo -e " ${GREEN}Uptime${RESET}     $(uptime | sed -E 's/^[^,]*up *//; s/, *[0-9]+ users?.*//')"
 echo -e " ${GREEN}Shell${RESET}      ${SHELL##*/}"
-[ -n "$XDG_CURRENT_DESKTOP" ] && echo -e " ${GREEN}DE/WM${RESET}      $XDG_CURRENT_DESKTOP" || echo -e " ${GREEN}WM${RESET}      ${DESKTOP_SESSION:-unknown}"
+if [ -n "${XDG_CURRENT_DESKTOP}" ]; then
+    de_wm="${XDG_CURRENT_DESKTOP}"
+elif [ -n "${DESKTOP_SESSION}" ]; then
+    de_wm="${DESKTOP_SESSION}"
+else
+    de_wm="unknown"
+    for prog in \
+        gnome-shell plasmashell kwin \
+        xfwm4 xfce4-session mate-session cinnamon \
+        i3 sway hyprland river wayfire labwc \
+        awesome bspwm dwm qtile xmonad \
+        openbox fluxbox blackbox herbstluftwm; do
+        if pgrep -x "$prog" >/dev/null 2>&1; then
+            de_wm="$prog"
+            break
+        fi
+    done
+fi
+case "${de_wm,,}" in
+    gnome-shell)          de_wm="GNOME" ;;
+    plasmashell|kwin)     de_wm="KDE Plasma" ;;
+    xfwm4|xfce4-session)  de_wm="XFCE" ;;
+    mate-session)         de_wm="MATE" ;;
+    cinnamon)             de_wm="Cinnamon" ;;
+esac
+echo -e " ${GREEN}DE/WM${RESET}      ${de_wm}"
 echo -e " ${GREEN}Packages${RESET}   $(pkg_count)"
 echo -e " ${GREEN}Time${RESET}       $(date +%H:%M:%S)"
