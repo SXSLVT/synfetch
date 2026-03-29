@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# Universal Blazingly Fast System Fetch — works on almost every Linux distro + macOS
-# Made by Syn aka SXSLVT with love <3
 
 RED='\e[31m'; GREEN='\e[32m'; BLUE='\e[34m'; MAGENTA='\e[35m'; RESET='\e[0m'
 
