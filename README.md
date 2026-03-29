@@ -82,7 +82,9 @@ git clone https://github.com/SXSLVT/synfetch.git && cd synfetch && chmod +x synf
 
 ### Usage
 
-Run `synfetch`
+Just run: ```bash
+synfetch
+```
 
 ### Uninstallation
 
