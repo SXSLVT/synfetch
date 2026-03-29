@@ -56,7 +56,3 @@ rm -rf synfetch && sudo rm -rf /usr/local/bin/synfetch
 ## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
-
-Markdown[<image-card alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" ></image-card>](https://opensource.org/licenses/MIT)
-[<image-card alt="Platform: Linux | macOS" src="https://img.shields.io/badge/Platform-Linux%20%7C%20macOS-blue.svg" ></image-card>]()
