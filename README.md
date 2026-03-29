@@ -18,7 +18,7 @@ A really simple system fetch written in **bash**.
 *More features soon.*
 </div>
 
-## Why synfetch?
+### Why synfetch?
 
 While there are many excellent fetch tools (neofetch, fastfetch, etc.), synfetch stands out by embracing a distinct **synthwave / synthetic** identity:
 
@@ -27,7 +27,7 @@ While there are many excellent fetch tools (neofetch, fastfetch, etc.), synfetch
 - Fast bash implementation that stays lightweight
 - Designed to look great in riced terminals and screenshots
 
-## Features
+### Features
 
 - Beautiful custom ASCII art
 - Colorful and easy to read
@@ -35,7 +35,7 @@ While there are many excellent fetch tools (neofetch, fastfetch, etc.), synfetch
 - Highly customizable (easy to extend with new modules)
 - Blazing fast execution 
 
-## Support
+### Support
 `synfetch` currently supports **MacOS** and the following **Linux** distributions. However, I have not been able to tested them all.
 If you are experiencing issues with synfetch or your current **Linux** distribution does not support it, please create an issue in (https://github.com/SXSLVT/synfetch/issues).
 - Arch
@@ -57,7 +57,7 @@ If you are experiencing issues with synfetch or your current **Linux** distribut
 - NixOS
 - MacOS
 
-## Installation
+### Installation
 
 > [!NOTE]
 >
@@ -80,19 +80,19 @@ or
 git clone https://github.com/SXSLVT/synfetch.git && cd synfetch && chmod +x synfetch && sudo mv synfetch /usr/local/bin/ && cd -
 ```
 
-## Usage
+### Usage
 
 Run: 
 ```bash
 synfetch
 ```
 
-## Uninstallation
+### Uninstallation
 
 ```bash
 rm -rf ~/synfetch && sudo rm -rf /usr/local/bin/synfetch
 ```
 
-## License
+### License
 
 This project is licensed under the **GNU General Public License v3.0**
