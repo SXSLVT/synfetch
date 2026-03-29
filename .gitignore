@@ -1,0 +1,8 @@
+*.swp
+*.swo
+*~
+.DS_Store
+.vscode/
+.idea/
+*.log
+test-output/
