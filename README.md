@@ -2,6 +2,8 @@
 ![Issues](https://img.shields.io/github/issues/SXSLVT/synfetch)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+### Synfetch
+
 <img width="475" height="373" alt="image" src="https://github.com/user-attachments/assets/b4b7825d-c9a5-412e-8186-e8f9fd15808e" />
 
 ## Why synfetch?
