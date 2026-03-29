@@ -24,16 +24,20 @@ While there are many excellent fetch tools (neofetch, fastfetch, etc.), synfetch
 git clone https://github.com/SXSLVT/synfetch.git
 cd synfetch
 chmod +x synfetch
-sudo mv synfetch /usr/local/bin/ ```
+sudo mv synfetch /usr/local/bin/
+```
 
 or
 
 git clone https://github.com/SXSLVT/synfetch.git && cd synfetch && chmod +x synfetch && sudo mv synfetch /usr/local/bin/
 
+## Usage
+
+Run 
+```bash
+synfetch
+```
+
 ## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
-## Usage
-
-Run ```bash synfetch ```
