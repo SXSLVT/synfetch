@@ -2,8 +2,18 @@
 ![Issues](https://img.shields.io/github/issues/SXSLVT/synfetch)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+<div align="center">
+
 <img width="475" height="373" alt="image" src="https://github.com/user-attachments/assets/b4b7825d-c9a5-412e-8186-e8f9fd15808e" />
 <img width="432" height="354" alt="image" src="https://github.com/user-attachments/assets/144caf7d-c1ed-4180-b2ab-881e054ccc7a" />
+
+</div>
+
+<div align="center">
+# synfetch
+A really simple system fetch written in `bash`.
+*More features soon*
+</div>
 
 ## Why synfetch?
 
@@ -21,7 +31,28 @@ While there are many excellent fetch tools (neofetch, fastfetch, etc.), synfetch
 - Works on both Linux and macOS
 - Highly customizable (easy to extend with new modules)
 - Blazing fast execution 
-**(Will add more features soon)**
+
+## Support
+`synfetch` currently supports **MacOS** and the following **Linux** distributions. However, I have not been able to tested them all.
+If you are experiencing issues with `synfetch` or your current **Linux** distribution does not support it, please create an issue in (https://github.com/SXSLVT/synfetch/issues).
+- Arch
+- CachyOS
+- Ubuntu
+- Debian
+- Fedora
+- Linux Mint
+- ZorinOS
+- PopOS
+- Manjaro
+- openSUSE
+- Slackware
+- CentOS
+- Gentoo
+- EndeavourOS
+- Artix
+- Void
+- NixOS
+- MacOS
 
 ## Installation
 
