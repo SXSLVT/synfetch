@@ -223,7 +223,7 @@ else
 fi
 case "${de_wm,,}" in
     gnome-shell)          de_wm="GNOME" ;;
-    plasmashell|kwin)     de_wm="KDE Plasma" ;;
+    plasmashell|kwin)     de_wm="KDE" ;;
     xfwm4|xfce4-session)  de_wm="XFCE" ;;
     mate-session)         de_wm="MATE" ;;
     cinnamon)             de_wm="Cinnamon" ;;
