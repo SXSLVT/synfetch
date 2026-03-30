@@ -60,10 +60,7 @@ If you are experiencing issues with synfetch or your current **Linux** distribut
 
 > [!NOTE]
 >
-> The package **git** is required to clone the repository! Instructions on installing **git** below:
-
-- Linux: https://git-scm.com/install/linux
-- macOS: https://git-scm.com/install/mac
+> The package **git** is required to clone the repository!
 
 ```bash
 git clone https://github.com/SXSLVT/synfetch.git
@@ -89,7 +86,7 @@ synfetch
 ### Uninstallation
 
 ```bash
-rm -rf ~/synfetch && sudo rm -rf /usr/local/bin/synfetch
+sudo rm /usr/local/bin/synfetch
 ```
 
 ### License
