@@ -120,7 +120,7 @@ Options:
   --nonerd          Hide icons
   --noascii         Hide ASCII art
   --distro <name>   Display ASCII art of a different distro
-  --live            Animated synfetch with CPU, GPU and RAM usage
+  --live            Animated CPU, GPU and RAM usage
   --help | -h       Show this help message
 
 Available distros: arch, cachyos, ubuntu, debian, fedora, linuxmint, zorin, pop-os, manjaro, opensuse, slackware, centos, gentoo, endeavouros, artix, void, nixos, macos
