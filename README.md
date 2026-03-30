@@ -83,7 +83,7 @@ To hide icons:
 ```bash
 synfetch --nonerd
 ```
-To hide ascii:
+To hide ASCII:
 ```bash
 synfetch --noascii
 ```
