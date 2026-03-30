@@ -331,7 +331,7 @@ cyber_bar() {
 CPU=$(get_cpu_usage)
 RAM=$(get_ram_usage)
 
-# Advanced GPU Detector
+# GPU Detector
 
 get_gpu() {
     if [ "$(uname)" = "Linux" ]; then
