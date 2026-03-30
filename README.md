@@ -85,7 +85,7 @@ synfetch
 ### Uninstallation
 
 ```bash
-sudo rm /usr/local/bin/synfetch
+sudo rm -rf /usr/local/bin/synfetch
 ```
 
 ### License
