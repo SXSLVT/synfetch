@@ -4,7 +4,7 @@
 
 <div align="center">
 
-<img width="519" height="412" alt="image" src="https://github.com/user-attachments/assets/3eaffc84-6600-468b-bb93-18ffb23a3d10" />
+<img width="585" height="478" alt="image" src="https://github.com/user-attachments/assets/7bb3fb1b-5226-4545-9a00-bb303062e50e" />
 <img width="814" height="458" alt="image" src="https://github.com/user-attachments/assets/36987278-f33b-4614-8994-54d0ebf53ec9" />
 
 
@@ -29,7 +29,8 @@ While there are many excellent fetch tools (neofetch, fastfetch, etc.), synfetch
 ### Features
 
 - Beautiful custom ASCII art
-- Displays Info + CPU & RAM Usage
+- Live mode
+- Displays Info + CPU, GPU and RAM Usage
 - Highly customizable
 
 ### Support
@@ -82,12 +83,17 @@ Just run:
 synfetch
 ```
 
+To go to Live mode:
+```bash
+synfetch --live
+```
+
 To hide icons:
 ```bash
 synfetch --nonerd
 ```
 
-To hide ASCII:
+To hide ASCII art:
 ```bash
 synfetch --noascii
 ```
@@ -111,15 +117,17 @@ Output of `synfetch --help`
 Usage: synfetch [OPTIONS]
 
 Options:
-  --nonerd          Disable Nerd Font icons
+  --nonerd          Hide icons
   --noascii         Hide ASCII art
-  --distro <name>   Force specific distro ASCII
+  --distro <name>   Display ASCII art of a different distro
+  --live            Animated synfetch with CPU, GPU and RAM usage
   --help | -h       Show this help message
 
 Available distros: arch, cachyos, ubuntu, debian, fedora, linuxmint, zorin, pop-os, manjaro, opensuse, slackware, centos, gentoo, endeavouros, artix, void, nixos, macos
 
 Examples:
   synfetch 
+  synfetch --live
   synfetch --nonerd
   synfetch --noascii
   synfetch --distro arch
