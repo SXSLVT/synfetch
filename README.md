@@ -122,7 +122,7 @@ Examples:
 ### Uninstallation
 Simply uninstall `synfetch` with this command:
 ```bash
-cd - && rm -rf ~/synfetch && sudo rm -rf /usr/local/bin/synfetch
+rm -rf ~/synfetch && sudo rm -rf /usr/local/bin/synfetch
 ```
 
 ### License
