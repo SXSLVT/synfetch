@@ -167,7 +167,7 @@ ${BLUE}    / |/ (_)_ __/ __ \\/ __/
 ${BLUE}   /    / /\\ \\ / /_/ /\\ \\  
 ${BLUE}  /_/|_/_//_\\_|\\____/___/  
                     "
-		   ;;
+		  ;;
 macos|darwin|mac)
 ART="${MAGENTA}     __  ___         ____  ____
 ${MAGENTA}    /  |/  /__ _____/ __ \\/ __/
@@ -195,15 +195,17 @@ show_help() {
     echo -e "${BLUE}Usage:${RESET} synfetch [OPTIONS]"
     echo ""
     echo -e "${BOLD}Options:${RESET}"
-    echo -e "  ${PINK}--nonerd${RESET}          Disable Nerd Font icons"
+    echo -e "  ${PINK}--nonerd${RESET}          Hide icons"
     echo -e "  ${PINK}--noascii${RESET}         Hide ASCII art"
-    echo -e "  ${PINK}--distro${RESET} <name>   Force specific distro ASCII"
+    echo -e "  ${PINK}--distro${RESET} <name>   Display ASCII art of a different distro"
+    echo -e "  ${PINK}--live${RESET}            Animated synfetch with CPU, GPU and RAM usage"
     echo -e "  ${PINK}--help | -h${RESET}       Show this help message"
     echo ""
     echo -e "${BLUE}Available distros:${RESET} arch, cachyos, ubuntu, debian, fedora, linuxmint, zorin, pop-os, manjaro, opensuse, slackware, centos, gentoo, endeavouros, artix, void, nixos, macos"
     echo ""
     echo -e "${GRAY}Examples:${RESET}"
     echo -e "  ${GREEN}synfetch ${RESET}"
+    echo -e "  ${GREEN}synfetch --live${RESET}"
     echo -e "  ${GREEN}synfetch --nonerd${RESET}"
     echo -e "  ${GREEN}synfetch --noascii${RESET}"
     echo -e "  ${GREEN}synfetch --distro arch${RESET}"
@@ -216,6 +218,9 @@ show_help() {
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
+	   --live)
+		LIVE_MODE=true
+		;;
             --nonerd)
                 USE_NERD_FONTS=false
                 ;;
@@ -250,6 +255,7 @@ if $USE_NERD_FONTS; then
     ICON_HOST="󰗈 "
     ICON_MOBO=" "
     ICON_CPU=" "
+    ICON_GPU="󰾲 "
     ICON_UPTIME=" "
     ICON_SHELL=" "
     ICON_DEWM=" "
@@ -261,6 +267,7 @@ else
     ICON_HOST=""
     ICON_MOBO=""
     ICON_CPU=""
+    ICON_GPU=""
     ICON_UPTIME=""
     ICON_SHELL=""
     ICON_DEWM=""
@@ -323,6 +330,100 @@ cyber_bar() {
 
 CPU=$(get_cpu_usage)
 RAM=$(get_ram_usage)
+
+# Advanced GPU Detector
+
+get_gpu() {
+    if [ "$(uname)" = "Linux" ]; then
+        if command -v lspci >/dev/null; then
+            gpu=$(lspci | grep -E 'VGA|3D|Display' | head -n1 | sed 's/.*: //')
+            if [ -n "$gpu" ]; then
+                echo "$gpu"
+                return
+            fi
+        fi
+
+        if command -v nvidia-smi >/dev/null; then
+            echo "$(nvidia-smi --query-gpu=name --format=csv,noheader,nounits | head -n1)"
+            return
+        fi
+
+        if [ -d /sys/class/drm/card0/device ]; then
+            echo "Integrated Graphics"
+            return
+        fi
+
+        echo "Unknown GPU"
+    else
+        echo "$(system_profiler SPDisplaysDataType 2>/dev/null | grep 'Chipset Model' | awk -F': ' '{print $2}' || echo 'Apple GPU')"
+    fi
+}
+
+# GPU Usage (Linux only)
+
+get_gpu_usage() {
+    if [ "$(uname)" = "Linux" ]; then
+        if command -v nvidia-smi >/dev/null; then
+            nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | head -n1 | tr -d ' %'
+            return
+        fi
+
+        if [ -f /sys/class/drm/card0/device/gpu_busy_percent ]; then
+            cat /sys/class/drm/card0/device/gpu_busy_percent 2>/dev/null || echo "0"
+            return
+        fi
+
+        echo "0"   # fallback
+    else
+        echo "N/A"
+    fi
+}
+
+GPU=$(get_gpu)
+GPU_USAGE=$(get_gpu_usage)
+
+# Live Mode
+
+synfetch_live() {
+    clear
+    tput civis
+
+    trap 'tput cnorm; clear; exit 0' INT
+
+    while true; do
+        CPU=$(get_cpu_usage 2>/dev/null || echo 0)
+        RAM=$(get_ram_usage 2>/dev/null || echo 0)
+        GPU_USAGE=$(get_gpu_usage 2>/dev/null || echo 0)
+
+        tput cup 0 0
+
+        if $USE_ASCII; then
+            echo -e "$ART"
+            echo
+        fi
+        echo -e
+        echo -e " ${NEON_BLUE}${ICON_OS}${RESET}OS      ${NEON_BLUE}${DISTRO}${RESET}"
+        echo -e " ${MAGENTA}${ICON_KERNEL}${RESET}Kernel  ${MAGENTA}$(uname -r)${RESET}"
+        echo -e " ${BLUE}${ICON_USER}${RESET}User    ${BLUE}${USER}${RESET}"
+        echo -e " ${RED}${ICON_HOST}${RESET}Host    ${RED}$(cat /etc/hostname 2>/dev/null || hostname)${RESET}"
+        echo -e " ${GREEN}${ICON_MOBO}${RESET}MoBo    ${GREEN}$(cat /sys/class/dmi/id/board_vendor 2>/dev/null || echo "") $(cat /sys/class/dmi/id/board_name 2>/dev/null || echo "")"${RESET}
+        echo -e " ${TEAL}${ICON_CPU}${RESET}CPU     ${TEAL}$(lscpu | grep 'Model name' | awk -F: '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}')${RESET}"
+        echo -e " ${PINK}${ICON_GPU}${RESET}GPU     ${PINK}${GPU}${RESET}"
+        echo -e " ${WHITE}${ICON_UPTIME}${RESET}Uptime  ${WHITE}$(uptime | sed -E 's/^[^,]*up *//; s/, *[0-9]+ users?.*//')${RESET}"
+        echo -e " ${PURPLE}${ICON_SHELL}${RESET}Shell   ${PURPLE}${SHELL##*/}${RESET}"
+        echo -e " ${GRAY}${ICON_DEWM}${RESET}DE/WM   ${GRAY}${de_wm}${RESET}"
+        echo -e " ${YELLOW}${ICON_PKGS}${RESET}Pkgs    ${YELLOW}$(pkg_count)${RESET}"
+        echo -e " ${GRAY}────────────────────────────────────────${RESET}"
+        echo -e " ${PINK}CPU${RESET}     $(cyber_bar "${CPU}")"
+        echo -e " ${PINK}RAM${RESET}     $(cyber_bar "${RAM}")"
+        if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
+        echo -e " ${PINK}GPU${RESET}     $(cyber_bar "${GPU_USAGE}")"
+        fi
+        echo -e " ${GRAY}────────────────────────────────────────${RESET}"
+        echo -e " ${DIM}Press Ctrl+C to exit live mode${RESET}                "
+        sleep 0.7
+    done
+} 
 
 # DE/WM Detector
 
@@ -402,9 +503,13 @@ pkg_count() {
 
 detect_distro
 
-if $USE_ASCII; then
-    echo -e "$ART"
-fi
+if [[ "${LIVE_MODE:-false}" == true ]]; then
+    synfetch_live
+else
+    if $USE_ASCII; then
+        echo -e "$ART"
+        echo
+    fi
 
 echo -e
 echo -e " ${NEON_BLUE}${ICON_OS}${RESET}OS      ${NEON_BLUE}${DISTRO}${RESET}"
@@ -413,6 +518,7 @@ echo -e " ${BLUE}${ICON_USER}${RESET}User    ${BLUE}${USER}${RESET}"
 echo -e " ${RED}${ICON_HOST}${RESET}Host    ${RED}$(cat /etc/hostname 2>/dev/null || hostname)${RESET}"
 echo -e " ${GREEN}${ICON_MOBO}${RESET}MoBo    ${GREEN}$(cat /sys/class/dmi/id/board_vendor 2>/dev/null || echo "") $(cat /sys/class/dmi/id/board_name 2>/dev/null || echo "")"${RESET}
 echo -e " ${TEAL}${ICON_CPU}${RESET}CPU     ${TEAL}$(lscpu | grep 'Model name' | awk -F: '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}')${RESET}"
+echo -e " ${PINK}${ICON_GPU}${RESET}GPU     ${PINK}${GPU}${RESET}"
 echo -e " ${WHITE}${ICON_UPTIME}${RESET}Uptime  ${WHITE}$(uptime | sed -E 's/^[^,]*up *//; s/, *[0-9]+ users?.*//')${RESET}"
 echo -e " ${PURPLE}${ICON_SHELL}${RESET}Shell   ${PURPLE}${SHELL##*/}${RESET}"
 echo -e " ${GRAY}${ICON_DEWM}${RESET}DE/WM   ${GRAY}${de_wm}${RESET}"
@@ -420,4 +526,8 @@ echo -e " ${YELLOW}${ICON_PKGS}${RESET}Pkgs    ${YELLOW}$(pkg_count)${RESET}"
 echo -e " ${GRAY}────────────────────────────────────────${RESET}"
 echo -e " ${PINK}CPU${RESET}     $(cyber_bar "${CPU}")"
 echo -e " ${PINK}RAM${RESET}     $(cyber_bar "${RAM}")"
+if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
+    echo -e " ${PINK}GPU${RESET}     $(cyber_bar "${GPU_USAGE}")"
+fi
 echo -e " ${GRAY}────────────────────────────────────────${RESET}"
+fi
