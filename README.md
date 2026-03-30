@@ -23,15 +23,14 @@ While there are many excellent fetch tools (neofetch, fastfetch, etc.), synfetch
 
 - Clean, modern layout with vibrant cyber colors
 - Cross-platform support for **Linux** and **macOS**
-- Highly customizable
 - Fast bash implementation that stays lightweight
 
 ### Features
 
 - Beautiful custom ASCII art
 - Displays Info + CPU & RAM Usage
+- Highly customizable
 - Blazingly fast execution
-- Works on both Linux and macOS
 
 ### Support
 `synfetch` currently supports **MacOS** and the following **Linux** distributions. However, I have not been able to test them all.
