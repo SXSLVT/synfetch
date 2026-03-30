@@ -23,8 +23,8 @@ While there are many excellent fetch tools (neofetch, fastfetch, etc.), synfetch
 
 - Clean, modern layout with vibrant cyber colors
 - Cross-platform support for **Linux** and **macOS**
+- Highly customizable
 - Fast bash implementation that stays lightweight
-- Designed to look great in riced terminals and screenshots
 
 ### Features
 
