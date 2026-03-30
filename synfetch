@@ -198,7 +198,7 @@ show_help() {
     echo -e "  ${PINK}--nonerd${RESET}          Hide icons"
     echo -e "  ${PINK}--noascii${RESET}         Hide ASCII art"
     echo -e "  ${PINK}--distro${RESET} <name>   Display ASCII art of a different distro"
-    echo -e "  ${PINK}--live${RESET}            Animated synfetch with CPU, GPU and RAM usage"
+    echo -e "  ${PINK}--live${RESET}            Animated CPU, GPU and RAM usage"
     echo -e "  ${PINK}--help | -h${RESET}       Show this help message"
     echo ""
     echo -e "${BLUE}Available distros:${RESET} arch, cachyos, ubuntu, debian, fedora, linuxmint, zorin, pop-os, manjaro, opensuse, slackware, centos, gentoo, endeavouros, artix, void, nixos, macos"
