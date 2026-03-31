@@ -36,36 +36,36 @@ While there are many excellent fetch tools (neofetch, fastfetch, etc.), synfetch
 ### Support
 `synfetch` currently supports **MacOS** and the following **Linux** distributions. However, I have not been able to test them all.
 If you are experiencing issues with synfetch, please create an issue in (https://github.com/SXSLVT/synfetch/issues).
-- Arch
-- CachyOS
-- Ubuntu
-- Debian
-- Fedora
-- Linux Mint
-- ZorinOS
-- PopOS
-- Manjaro
-- openSUSE
-- Slackware
-- CentOS
-- MX Linux
-- Guix
-- QubesOS
-- antiX
-- Garuda
-- Nobara
-- Bazzite
-- Kali
-- elementaryOS
-- KDE Neon
-- Deepin
-- Alpine
-- Gentoo
-- EndeavourOS
-- Artix
-- Void
-- NixOS
-- MacOS
+├── Arch
+│   ├── CachyOS
+│   ├── Garuda
+│   ├── Manjaro
+│   ├── EndeavourOS
+│   └── Artix
+├── Debian
+│   ├── Ubuntu
+│   │   ├── Linux Mint
+│   │   ├── ZorinOS
+│   │   ├── Pop!_OS
+│   │   └── elementaryOS
+│   ├── Kali
+|   ├── Deepin
+│   ├── MX Linux
+│   ├── antiX
+│   └── KDE Neon
+├── Fedora
+│   ├── Nobara
+│   └── Bazzite
+├── openSUSE
+├── Slackware
+├── Gentoo
+├── Void
+├── Alpine
+├── Guix
+├── NixOS
+├── QubesOS
+├── CentOS
+└── MacOS
 
 ### Installation
 
