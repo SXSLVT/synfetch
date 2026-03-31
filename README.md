@@ -135,7 +135,7 @@ Options:
   --live            Animated CPU, GPU and RAM usage
   --help | -h       Show this help message
 
-Available distros: arch, cachyos, ubuntu, debian, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubes, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gentoo, endeavouros, artix, void, nixos, macos
+Available distros: arch, cachyos, ubuntu, debian, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gentoo, endeavouros, artix, void, nixos, macos
 
 Examples:
   synfetch 
