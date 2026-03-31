@@ -147,10 +147,10 @@ ${YELLOW}  \\___/\\_,_/_//_\\_\\
 		   "
 		   ;;
            qubes|qubesos)
-		   ART="${BLUE}    ____       __         
-${BLUE}   / __ \\__ __/ /  ___ ___
-${BLUE}  / /_/ / // / _ \\/ -_|_-<
-${BLUE}  \\___\\_\\_,_/_.__/\\__/___/
+		   ART="${BLUE}    ____       __           ____  ____
+${BLUE}   / __ \\__ __/ /  ___ ___ / __ \\/ __/
+${BLUE}  / /_/ / // / _ \\/ -_|_-</ /_/ /\\ \\  
+${BLUE}  \\___\\_\\_,_/_.__/\\__/___/\\____/___/  
 		   "
 		   ;;
 	  antix)
@@ -287,7 +287,7 @@ show_help() {
     echo -e "  ${PINK}--live${RESET}            Animated CPU, GPU and RAM usage"
     echo -e "  ${PINK}--help | -h${RESET}       Show this help message"
     echo ""
-    echo -e "${BLUE}Available distros:${RESET} arch, cachyos, ubuntu, debian, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubes, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gentoo, endeavouros, artix, void, nixos, macos"
+    echo -e "${BLUE}Available distros:${RESET} arch, cachyos, ubuntu, debian, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gentoo, endeavouros, artix, void, nixos, macos"
     echo ""
     echo -e "${GRAY}Examples:${RESET}"
     echo -e "  ${GREEN}synfetch ${RESET}"
