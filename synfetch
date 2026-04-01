@@ -517,7 +517,7 @@ if [ -n "${XDG_CURRENT_DESKTOP}" ]; then
 elif [ -n "${DESKTOP_SESSION}" ]; then
     de_wm="${DESKTOP_SESSION}"
 else
-    de_wm="unknown"
+    de_wm="tty"
     for prog in \
         gnome-shell plasmashell kwin \
         xfwm4 xfce4-session mate-session cinnamon \
