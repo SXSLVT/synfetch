@@ -79,14 +79,14 @@ If you are experiencing issues with synfetch, please create an issue in (https:/
 git clone https://github.com/SXSLVT/synfetch.git
 cd synfetch
 chmod +x synfetch
-sudo mv synfetch /usr/local/bin/
+sudo cp -r synfetch /usr/local/bin/
 cd -
 ```
 
 or
 
 ```bash
-git clone https://github.com/SXSLVT/synfetch.git && cd synfetch && chmod +x synfetch && sudo mv synfetch /usr/local/bin/ && cd -
+git clone https://github.com/SXSLVT/synfetch.git && cd synfetch && chmod +x synfetch && sudo cp -r synfetch /usr/local/bin/ && cd -
 ```
 
 ### Usage
