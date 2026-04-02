@@ -22,6 +22,7 @@
 - [Why synfetch?](#why-synfetch?)
 - [Features](#features)
 - [Support](#support)
+- [Dependencies](#dependencies)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Uninstallation](#uninstallation)
@@ -77,12 +78,16 @@ If you are experiencing issues with synfetch, please create an [issue](https://g
 - CentOS
 - MacOS
 
-### Installation
+### Dependencies
 
 > [!NOTE]
 >
 > The package **git** is required to clone the repository!
 > A **Nerd Font** is required to display icons!
+
+### Installation
+For `Arch-based` users, I have a [`PKGBUILD`](./install/PKGBUILD) available. 
+For `Nix` users, I have both [flake.nix](./install/flake.nix) and [flake.lock](./install/flake.lock)
 
 **Clone the repository and cd into the new directory**
 ```bash
