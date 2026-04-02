@@ -11,6 +11,7 @@ Thumbs.db
 *.tmp
 *.out
 *.bak
+*.cache
 build/
 dist/
 config.local
