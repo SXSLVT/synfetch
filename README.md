@@ -21,10 +21,15 @@
 ### Contents
 - [Why synfetch?](#why-synfetch?)
 - [Features](#features)
+- [Support](#support)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Uninstallation](#uninstallation)
+- [License](#license)
 
 ### Why synfetch?
 
-While there are many excellent fetch tools (neofetch, fastfetch, etc.), synfetch stands out by embracing a distinct **synthwave / synthetic** identity:
+While there are many excellent fetch tools (neofetch, fastfetch, etc.), `synfetch` stands out by embracing a distinct **synthwave / synthetic** identity:
 
 - Clean, modern layout with vibrant cyber colors
 - Cross-platform support for **Linux** and **macOS**
@@ -149,6 +154,12 @@ Examples:
   synfetch --noascii
   synfetch --distro arch
   synfetch --distro macos --nonerd
+```
+
+### Uninstallation
+To uninstall `synfetch`, just run:
+```bash
+sudo rm -rf /usr/local/bin/synfetch && sudo rm -rf /usr/bin/synfetch
 ```
 
 ### License
