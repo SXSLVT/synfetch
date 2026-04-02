@@ -84,18 +84,21 @@ If you are experiencing issues with synfetch, please create an [issue](https://g
 > The package **git** is required to clone the repository!
 > A **Nerd Font** is required to display icons!
 
+**Clone the repository and cd into the new directory**
 ```bash
-git clone https://github.com/SXSLVT/synfetch.git
-cd synfetch
-chmod +x synfetch
-sudo mv synfetch /usr/local/bin/
-cd -
+git clone https://github.com/SXSLVT/synfetch.git && cd synfetch
 ```
-
-or
-
+**Make `synfetch` executable**
 ```bash
-git clone https://github.com/SXSLVT/synfetch.git && cd synfetch && chmod +x synfetch && sudo mv synfetch /usr/local/bin/ && cd -
+chmod +x synfetch
+```
+**Move `synfetch` to `/usr/local/bin`**
+```bash
+sudo mv synfetch /usr/local/bin/
+```
+**Cd into previous directory**
+```bash
+cd -
 ```
 
 ### Usage
