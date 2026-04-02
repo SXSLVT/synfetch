@@ -557,9 +557,6 @@ pkg_count() {
     elif command -v guix >/dev/null; then
         echo "$(guix package -I | wc -l) (guix)"
 	
-    elif command -v ls /Programs >/dev/null; then
-	    echo "$(ls /Programs | wc -l) (programs)"
-
     elif command -v rpm >/dev/null; then
         echo "$(rpm -qa | wc -l) (rpm)"
 
@@ -591,6 +588,9 @@ pkg_count() {
 
     elif command -v pkgutil >/dev/null || command -v pkg >/dev/null; then
         echo "$(pkgutil --pkgs 2>/dev/null | wc -l) (Fink/pkgutil)"
+
+    elif command -v ls /Programs >/dev/null; then
+	    echo "$(ls /Programs | wc -l) (programs)"
 
     else
         echo "?"
