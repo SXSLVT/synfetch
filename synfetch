@@ -548,10 +548,7 @@ esac
 # Package Detector
 
 pkg_count() {
-    if command -v pacman >/dev/null; then
-        echo "$(pacman -Q | wc -l) (pacman)"
-
-    elif command -v dpkg >/dev/null; then
+    if command -v dpkg >/dev/null; then
         echo "$(dpkg --get-selections | grep -v deinstall | wc -l) (dpkg)"
 
     elif command -v guix >/dev/null; then
@@ -588,6 +585,9 @@ pkg_count() {
 
     elif command -v pkgutil >/dev/null || command -v pkg >/dev/null; then
         echo "$(pkgutil --pkgs 2>/dev/null | wc -l) (Fink/pkgutil)"
+    
+    elif command -v pacman >/dev/null; then
+        echo "$(pacman -Q | wc -l) (pacman)"
 
     elif command -v ls /Programs >/dev/null; then
 	    echo "$(ls /Programs | wc -l) (programs)"
