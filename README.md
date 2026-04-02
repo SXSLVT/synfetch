@@ -18,6 +18,9 @@
 
 </div>
 
+### Contents
+- [Why synfetch?](#why-synfetch?)
+
 ### Why synfetch?
 
 While there are many excellent fetch tools (neofetch, fastfetch, etc.), synfetch stands out by embracing a distinct **synthwave / synthetic** identity:
@@ -145,12 +148,6 @@ Examples:
   synfetch --noascii
   synfetch --distro arch
   synfetch --distro macos --nonerd
-```
-
-### Uninstallation
-Simply uninstall `synfetch` with this command:
-```bash
-rm -rf ~/synfetch && sudo rm -rf /usr/local/bin/synfetch
 ```
 
 ### License
