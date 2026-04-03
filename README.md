@@ -19,7 +19,7 @@
 </div>
 
 ### Contents
-- [Why synfetch?](#why-synfetch?)
+- [Why synfetch?](#why-synfetch)
 - [Features](#features)
 - [Support](#support)
 - [Dependencies](#dependencies)
