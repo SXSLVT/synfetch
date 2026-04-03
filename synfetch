@@ -537,15 +537,20 @@ synfetch_live() {
 
 # DE/WM Detector
 
+#!/usr/bin/env bash
+
+de_wm=""
+
 if [ -n "${XDG_CURRENT_DESKTOP}" ]; then
     de_wm="${XDG_CURRENT_DESKTOP}"
 elif [ -n "${DESKTOP_SESSION}" ]; then
     de_wm="${DESKTOP_SESSION}"
-else
-    de_wm="tty"
+fi
+
+if [ -z "$de_wm" ]; then
     for prog in \
+        plasmashell kwin_x11 kwin_wayland kded5 kded6 \
         gnome-shell gnome-session mutter \
-        plasmashell kwin_wayland kwin_x11 kded5 kded6 sddm \
         xfwm4 xfce4-session xfce4-panel \
         mate-session marco \
         cinnamon cinnamon-session muffin \
@@ -567,6 +572,10 @@ else
             break
         fi
     done
+fi
+
+if [ -z "$de_wm" ]; then
+    de_wm="tty"
 fi
 
 de_wm_lc="${de_wm,,}"
