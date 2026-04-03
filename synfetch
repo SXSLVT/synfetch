@@ -544,24 +544,89 @@ elif [ -n "${DESKTOP_SESSION}" ]; then
 else
     de_wm="tty"
     for prog in \
-        gnome-shell plasmashell kwin \
-        xfwm4 xfce4-session mate-session cinnamon \
-        i3 sway hyprland river wayfire labwc \
-        awesome bspwm dwm qtile xmonad \
-        openbox fluxbox blackbox herbstluftwm; do
+        gnome-shell gnome-session mutter \
+        plasmashell kwin_wayland kwin_x11 kded5 kded6 sddm \
+        xfwm4 xfce4-session xfce4-panel \
+        mate-session marco \
+        cinnamon cinnamon-session muffin \
+        budgie-wm budgie-panel budgie-session \
+        pantheon-session pantheon-shell gala \
+        deepin-session dde-desktop dde-dock \
+        ukui-session ukui-panel \
+        lxsession lxqt-session lxqt-panel openbox \
+        enlightenment e17 e16 e22 \
+        trinity tde-session \
+        unity unity-panel-service \
+        cosmic-comp cosmic-session \
+        i3 i3wm sway hyprland river wayfire labwc niri dwl \
+        awesome bspwm dwm qtile xmonad herbstluftwm spectrwm stumpwm \
+        openbox fluxbox blackbox jwm icewm afterstep windowmaker fvwm pekwm \
+        twm ctwm metacity sawfish compiz berry hikari cage waybox oxwm; do
         if pgrep -x "$prog" >/dev/null 2>&1; then
             de_wm="$prog"
             break
         fi
     done
 fi
+
 case "${de_wm,,}" in
-    gnome-shell)          de_wm="GNOME" ;;
-    plasmashell|kwin)     de_wm="KDE" ;;
-    xfwm4|xfce4-session)  de_wm="XFCE" ;;
-    mate-session)         de_wm="MATE" ;;
-    cinnamon)             de_wm="Cinnamon" ;;
+    gnome* | gnome-shell | mutter) de_wm="GNOME" ;;
+    plasma* | kde* | plasmashell | kwin* | kded*) de_wm="KDE Plasma" ;;
+    xfce* | xfwm4 | xfce4-session) de_wm="XFCE" ;;
+    mate* | marco) de_wm="MATE" ;;
+    cinnamon* | muffin) de_wm="Cinnamon" ;;
+    budgie*) de_wm="Budgie" ;;
+    pantheon* | gala) de_wm="Pantheon (elementary OS)" ;;
+    deepin* | dde*) de_wm="Deepin DDE" ;;
+    ukui*) de_wm="UKUI" ;;
+    lxde* | lxsession) de_wm="LXDE" ;;
+    lxqt* | lxqt-session) de_wm="LXQt" ;;
+    enlightenment | e17 | e16 | e22 | moksha) de_wm="Enlightenment" ;;
+    trinity | tde*) de_wm="Trinity (TDE)" ;;
+    unity*) de_wm="Unity" ;;
+    cosmic*) de_wm="COSMIC (System76)" ;;
+    lumina*) de_wm="Lumina" ;;
+    i3 | i3wm) de_wm="i3" ;;
+    sway) de_wm="Sway" ;;
+    hyprland) de_wm="Hyprland" ;;
+    river) de_wm="River" ;;
+    wayfire) de_wm="Wayfire" ;;
+    labwc) de_wm="LabWC" ;;
+    niri) de_wm="Niri" ;;
+    dwl) de_wm="dwl" ;;
+    awesome) de_wm="Awesome" ;;
+    bspwm) de_wm="bspwm" ;;
+    dwm) de_wm="dwm" ;;
+    qtile) de_wm="Qtile" ;;
+    xmonad) de_wm="XMonad" ;;
+    herbstluftwm) de_wm="herbstluftwm" ;;
+    spectrwm) de_wm="spectrwm" ;;
+    stumpwm) de_wm="StumpWM" ;;
+    openbox) de_wm="Openbox" ;;
+    fluxbox) de_wm="Fluxbox" ;;
+    blackbox) de_wm="Blackbox" ;;
+    jwm) de_wm="JWM" ;;
+    icewm) de_wm="IceWM" ;;
+    afterstep) de_wm="AfterStep" ;;
+    windowmaker | wmaker) de_wm="Window Maker" ;;
+    fvwm) de_wm="FVWM" ;;
+    pekwm) de_wm="PekWM" ;;
+    twm | ctwm) de_wm="TWM" ;;
+    metacity) de_wm="Metacity" ;;
+    compiz) de_wm="Compiz" ;;
+    berry) de_wm="berry" ;;
+    hikari) de_wm="Hikari" ;;
+    cage) de_wm="Cage (kiosk)" ;;
+    waybox) de_wm="Waybox" ;;
+    oxwm) de_wm="oxwm" ;;
+    aqua | quartz | macos | darwin) de_wm="macOS (Aqua)" ;;
 esac
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    de_wm="macOS (Aqua)"
+fi
+
+echo "${de_wm}"
 
 # Package Detector
 
