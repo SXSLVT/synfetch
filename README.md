@@ -99,7 +99,7 @@ git clone https://github.com/SXSLVT/synfetch && cd synfetch
 ```bash
 chmod +x synfetch
 ```
-**Move `synfetch` to `/usr/local/bin` and return to the previous directory**
+**Install `synfetch` system-wide and return to the previous directory**
 ```bash
 sudo mv synfetch /usr/local/bin/ && cd -
 ```
