@@ -569,18 +569,19 @@ else
     done
 fi
 
-case "${de_wm,,}" in
-    gnome* | gnome-shell | mutter) de_wm="GNOME" ;;
-    plasma* | kde* | plasmashell | kwin* | kded*) de_wm="KDE Plasma" ;;
-    xfce* | xfwm4 | xfce4-session) de_wm="XFCE" ;;
-    mate* | marco) de_wm="MATE" ;;
-    cinnamon* | muffin) de_wm="Cinnamon" ;;
-    budgie*) de_wm="Budgie" ;;
-    pantheon* | gala) de_wm="Pantheon (elementary OS)" ;;
-    deepin* | dde*) de_wm="Deepin DDE" ;;
-    ukui*) de_wm="UKUI" ;;
-    lxde* | lxsession) de_wm="LXDE" ;;
-    lxqt* | lxqt-session) de_wm="LXQt" ;;
+de_wm_lc="${de_wm,,}"
+case "$de_wm_lc" in
+    *gnome* | mutter) de_wm="GNOME" ;;
+    *plasma* | *kde* | plasmashell | kwin* | kded*) de_wm="KDE Plasma" ;;
+    *xfce* | xfwm4 | xfce4-session) de_wm="XFCE" ;;
+    *mate* | marco) de_wm="MATE" ;;
+    *cinnamon* | muffin) de_wm="Cinnamon" ;;
+    *budgie*) de_wm="Budgie" ;;
+    *pantheon* | gala) de_wm="Pantheon (elementary OS)" ;;
+    *deepin* | dde*) de_wm="Deepin DDE" ;;
+    *ukui*) de_wm="UKUI" ;;
+    *lxde* | lxsession) de_wm="LXDE" ;;
+    *lxqt* | lxqt-session) de_wm="LXQt" ;;
     enlightenment | e17 | e16 | e22 | moksha) de_wm="Enlightenment" ;;
     trinity | tde*) de_wm="Trinity (TDE)" ;;
     unity*) de_wm="Unity" ;;
