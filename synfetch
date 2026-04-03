@@ -445,7 +445,13 @@ get_gpu() {
             if [[ "$line" == *"NVIDIA"* ]] && command -v nvidia-smi >/dev/null 2>&1; then
                 continue
             fi
-            name=$(echo "$line" | sed 's/^[0-9a-f:.]\+ //' | sed 's/ (rev .*)$//')
+
+            name=$(echo "$line" | 
+                   sed 's/^[0-9a-f:.]\+ //' |        
+                   sed 's/^\(VGA compatible controller\|3D controller\|Display controller\): *//' | 
+                   sed 's/ (rev .*)$//' |     
+                   sed 's/ \[.*\]//' )      
+
             [ -n "$name" ] && gpus+=("$name")
         done < <(lspci | grep -E 'VGA|3D|Display' 2>/dev/null)
     fi
@@ -458,7 +464,11 @@ get_gpu() {
         fi
     fi
 
-    printf '%s\n' "${gpus[@]}"
+    if [ ${#gpus[@]} -gt 0 ]; then
+        printf '%s\n' "${gpus[*]}"
+    else
+        echo "Unknown GPU"
+    fi
 }
 
 get_gpu_usage() {
