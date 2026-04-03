@@ -546,8 +546,7 @@ elif [ -n "${DESKTOP_SESSION}" ]; then
 fi
 
 if [ -z "$de_wm" ]; then
-    for prog in \
-        plasmashell kwin_x11 kwin_wayland kded5 kded6 \
+    for prog in plasmashell kwin_x11 kwin_wayland kded5 kded6 \
         gnome-shell gnome-session mutter \
         xfwm4 xfce4-session xfce4-panel \
         mate-session marco \
@@ -577,6 +576,7 @@ if [ -z "$de_wm" ]; then
 fi
 
 de_wm_lc="${de_wm,,}"
+
 case "$de_wm_lc" in
     *gnome* | mutter) de_wm="GNOME" ;;
     *plasma* | *kde* | plasmashell | kwin* | kded*) de_wm="KDE Plasma" ;;
