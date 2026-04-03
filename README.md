@@ -42,6 +42,10 @@ While there are many excellent fetch tools (neofetch, fastfetch, etc.), `synfetc
 - Displays Info + CPU, GPU and RAM Usage
 - Highly customizable
 
+
+*(Will add Dual GPU Output and Themes for `synfetch` soon.)*
+
+
 ### Support
 `synfetch` currently supports **MacOS** and the following **Linux** distributions. However, I have not been able to test them all.
 If you are experiencing issues with synfetch, please create an [issue](https://github.com/SXSLVT/synfetch/issues/new).
