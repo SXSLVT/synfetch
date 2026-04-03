@@ -537,8 +537,6 @@ synfetch_live() {
 
 # DE/WM Detector
 
-#!/usr/bin/env bash
-
 de_wm=""
 
 if [ -n "${XDG_CURRENT_DESKTOP}" ]; then
