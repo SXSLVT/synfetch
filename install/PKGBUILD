@@ -1,6 +1,6 @@
 # Maintainer: Syner <ploscarusynxy@gmail.com>
 pkgname=synfetch
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 pkgdesc="A fast and customizable neofetch-like system information tool with a synthwave theme and live mode"
 arch=('any')
