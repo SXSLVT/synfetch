@@ -82,13 +82,7 @@ If you are experiencing issues with synfetch, please create an [issue](https://g
 
 > [!NOTE]
 >
-> The package **git** is required to clone the repository!
-> 
 > A **Nerd Font** is required to display icons!
-
-If you don't have `git` installed on your system, check one of the links below:
-- For Linux users: [here](https://git-scm.com/install/linux)
-- For MacOS users: [here](https://git-scm.com/install/mac)
 
 ### Building and Installation
 For `Arch-based` users, I have a [`PKGBUILD`](./PKGBUILD) available. 
