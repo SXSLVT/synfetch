@@ -93,7 +93,7 @@ For everyone else:
 
 **Clone the repository and cd into the new directory**
 ```bash
-git clone https://github.com/SXSLVT/synfetch.git && cd synfetch
+git clone https://github.com/SXSLVT/synfetch && cd synfetch
 ```
 **Make `synfetch` executable**
 ```bash
