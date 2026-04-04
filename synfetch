@@ -18,6 +18,78 @@ YELLOW="\e[38;5;226m"
 WHITE="\e[97m"
 GRAY="\e[38;5;245m"
 
+# Themes
+
+THEME="synthwave"
+
+declare -A THEMES
+
+THEMES[synthwave]="
+    ACCENT=201
+    SECONDARY=51
+    TERTIARY=165
+    BAR_START=201
+    BAR_END=45
+    BAR_EMPTY=236
+    SEP=────────────────────────────────────────
+    ASCII_COLOR=201
+"
+
+THEMES[monochrome]="
+    ACCENT=252
+    SECONDARY=250
+    TERTIARY=247
+    BAR_START=255
+    BAR_END=250
+    BAR_EMPTY=235
+    SEP=────────────────────────────────────────
+    ASCII_COLOR=252
+"
+
+THEMES[neon]="
+    ACCENT=51
+    SECONDARY=201
+    TERTIARY=165
+    BAR_START=201
+    BAR_END=51
+    BAR_EMPTY=234
+    SEP=▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ASCII_COLOR=51
+"
+
+THEMES[matrix]="
+    ACCENT=82
+    SECONDARY=118
+    TERTIARY=46
+    BAR_START=82
+    BAR_END=118
+    BAR_EMPTY=232
+    SEP=════════════════════════════════════════
+    ASCII_COLOR=82
+"
+
+THEMES[dracula]="
+    ACCENT=135
+    SECONDARY=199
+    TERTIARY=141
+    BAR_START=199
+    BAR_END=135
+    BAR_EMPTY=236
+    SEP=────────────────────────────────────────
+    ASCII_COLOR=135
+"
+
+THEMES[minimal]="
+    ACCENT=252
+    SECONDARY=250
+    TERTIARY=248
+    BAR_START=252
+    BAR_END=250
+    BAR_EMPTY=235
+    SEP=────────────────────
+    ASCII_COLOR=252
+"
+
 # ASCII
 
 detect_distro() {
@@ -292,6 +364,7 @@ show_help() {
     echo -e "  ${PINK}--noascii${RESET}         Hide ASCII art"
     echo -e "  ${PINK}--distro${RESET} <name>   Display ASCII art of a different distro"
     echo -e "  ${PINK}--live${RESET}            Animated CPU, GPU and RAM usage"
+    echo -e " ${PINK}--theme${RESET} <name>     Set theme (cyber, monochrome, neon, matrix, dracula, minimal)"
     echo -e "  ${PINK}--help | -h${RESET}       Show this help message"
     echo ""
     echo -e "${BLUE}Available distros:${RESET} arch, cachyos, ubuntu, debian, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, gentoo, endeavouros, artix, void, nixos, macos"
@@ -301,6 +374,7 @@ show_help() {
     echo -e "  ${GREEN}synfetch --live${RESET}"
     echo -e "  ${GREEN}synfetch --nonerd${RESET}"
     echo -e "  ${GREEN}synfetch --noascii${RESET}"
+    echo =e "  ${GREEN}synfetch --theme monochrome${RESET}"
     echo -e "  ${GREEN}synfetch --distro arch${RESET}"
     echo -e "  ${GREEN}synfetch --distro macos --nonerd${RESET}"
     exit 0
@@ -311,9 +385,13 @@ show_help() {
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
-	--live)
-		LIVE_MODE=true
-		;;
+         	--live)
+		        LIVE_MODE=true
+	        	;;
+            --theme)
+                shift
+                THEME="${1,,}"
+                ;;
             --nonerd)
                 USE_NERD_FONTS=false
                 ;;
@@ -338,6 +416,19 @@ parse_args() {
 }
 
 parse_args "$@"
+load_theme "$THEME"
+
+# Theme Detector
+
+load_theme() {
+    local data="${THEMES[$1]}"
+    if [[ -z "$data" ]]; then
+        echo -e "${RED}Error: Theme '$1' not found!${RESET}"
+        echo -e "Available: ${!THEMES[*]}"
+        exit 1
+    fi
+    eval "$data"
+}
 
 # Nerd Fonts
 
@@ -404,20 +495,16 @@ cyber_bar() {
     local filled=$((percent * width / 100))
     local bar=""
 
-    local pulse=$(( (percent % 10) + 80 ))
-
     for ((i=0; i<filled; i++)); do
         if (( i < filled/2 )); then
-            bar+="\e[38;5;201m█"
+            bar+="\e[38;5;${BAR_START}m█"
         else
-            bar+="\e[38;5;45m█"
+            bar+="\e[38;5;${BAR_END}m█"
         fi
     done
-
     for ((i=filled; i<width; i++)); do
-        bar+="\e[38;5;236m─"
+        bar+="\e[38;5;${BAR_EMPTY}m─"
     done
-
     printf "%b\e[0m %3d%%" "$bar" "$percent"
 }
 
@@ -524,10 +611,10 @@ synfetch_live() {
         echo -e " ${GRAY}${ICON_DEWM}${RESET}DE/WM   ${GRAY}${de_wm}${RESET}"
         echo -e " ${YELLOW}${ICON_PKGS}${RESET}Pkgs    ${YELLOW}$(pkg_count)${RESET}"
         echo -e " ${GRAY}────────────────────────────────────────${RESET}"
-        echo -e " ${PINK}CPU${RESET}     $(cyber_bar "${CPU}")"
-        echo -e " ${PINK}RAM${RESET}     $(cyber_bar "${RAM}")"
+        echo -e " \e[38;5;${SECONDARY}mCPU${RESET} $(cyber_bar "${CPU}")"
+        echo -e " \e[38;5;${SECONDARY}mRAM${RESET} $(cyber_bar "${RAM}")"
         if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
-        echo -e " ${PINK}GPU${RESET}     $(cyber_bar "${GPU_USAGE}")"
+        echo -e " \e[38;5;${SECONDARY}mGPU${RESET} $(cyber_bar "${GPU_USAGE}")"
         fi
         echo -e " ${GRAY}────────────────────────────────────────${RESET}"
         echo -e " ${DIM}Press Ctrl+C to exit live mode${RESET}                "
@@ -732,10 +819,10 @@ detect_distro
 if [[ "${LIVE_MODE:-false}" == true ]]; then
     synfetch_live
 else
-    if $USE_ASCII; then
-        echo -e "$ART"
-        echo
-    fi
+
+if $USE_ASCII; then
+    ART=$(echo -e "$ART" | sed "s/\e\[38;5;[0-9]*m/\e[38;5;${ASCII_COLOR}m/g")
+fi
 
 echo -e " ${NEON_BLUE}${ICON_OS}${RESET}OS      ${NEON_BLUE}${DISTRO}${RESET}"
 echo -e " ${MAGENTA}${ICON_KERNEL}${RESET}Kernel  ${MAGENTA}$(uname -r)${RESET}"
@@ -749,10 +836,9 @@ echo -e " ${PURPLE}${ICON_SHELL}${RESET}Shell   ${PURPLE}${SHELL##*/}${RESET}"
 echo -e " ${GRAY}${ICON_DEWM}${RESET}DE/WM   ${GRAY}${de_wm}${RESET}"
 echo -e " ${YELLOW}${ICON_PKGS}${RESET}Pkgs    ${YELLOW}$(pkg_count)${RESET}"
 echo -e " ${GRAY}────────────────────────────────────────${RESET}"
-echo -e " ${PINK}CPU${RESET}     $(cyber_bar "${CPU}")"
-echo -e " ${PINK}RAM${RESET}     $(cyber_bar "${RAM}")"
-if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
-    echo -e " ${PINK}GPU${RESET}     $(cyber_bar "${GPU_USAGE}")"
-fi
-echo -e " ${GRAY}────────────────────────────────────────${RESET}"
-fi
+    echo -e " \e[38;5;${SECONDARY}mCPU${RESET} $(cyber_bar "${CPU}")"
+    echo -e " \e[38;5;${SECONDARY}mRAM${RESET} $(cyber_bar "${RAM}")"
+    if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
+        echo -e " \e[38;5;${SECONDARY}mGPU${RESET} $(cyber_bar "${GPU_USAGE}")"
+    fi
+    echo -e " ${GRAY}────────────────────────────────────────${RESET}"
