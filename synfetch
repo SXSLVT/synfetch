@@ -514,15 +514,14 @@ synfetch_live() {
         echo -e " ${RED}${ICON_HOST}${RESET}Host    ${RED}$(cat /etc/hostname 2>/dev/null || hostname)${RESET}"
         echo -e " ${GREEN}${ICON_MOBO}${RESET}MoBo    ${GREEN}$(cat /sys/class/dmi/id/board_vendor 2>/dev/null || echo "") $(cat /sys/class/dmi/id/board_name 2>/dev/null || echo "")"${RESET}
         echo -e " ${TEAL}${ICON_CPU}${RESET}CPU     ${TEAL}$(lscpu | grep 'Model name' | awk -F: '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}')${RESET}"
-        echo -e " ${PINK}${ICON_GPU}${RESET}GPU"
-
         mapfile -t gpu_list < <(get_gpu)
 
         if [ ${#gpu_list[@]} -eq 1 ]; then
-            echo -e " ${PINK}${gpu_list[0]}${RESET}"
+            echo -e " ${PINK}${ICON_GPU}${RESET}GPU ${PINK}${gpu_list[0]}${RESET}"
         else
+            echo -e " ${PINK}${ICON_GPU}${RESET}GPU"
             for gpu in "${gpu_list[@]}"; do
-            echo -e " ${PINK}${gpu}${RESET}"
+                echo -e " ${PINK}${gpu}${RESET}"
             done
         fi
         echo -e " ${WHITE}${ICON_UPTIME}${RESET}Uptime  ${WHITE}$(uptime | sed -E 's/^[^,]*up *//; s/, *[0-9]+ users?.*//')${RESET}"
@@ -749,13 +748,12 @@ echo -e " ${BLUE}${ICON_USER}${RESET}User    ${BLUE}${USER}${RESET}"
 echo -e " ${RED}${ICON_HOST}${RESET}Host    ${RED}$(cat /etc/hostname 2>/dev/null || hostname)${RESET}"
 echo -e " ${GREEN}${ICON_MOBO}${RESET}MoBo    ${GREEN}$(cat /sys/class/dmi/id/board_vendor 2>/dev/null || echo "") $(cat /sys/class/dmi/id/board_name 2>/dev/null || echo "")"${RESET}
 echo -e " ${TEAL}${ICON_CPU}${RESET}CPU     ${TEAL}$(lscpu | grep 'Model name' | awk -F: '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}')${RESET}"
-echo -e " ${PINK}${ICON_GPU}${RESET}GPU"
-
 mapfile -t gpu_list < <(get_gpu)
 
 if [ ${#gpu_list[@]} -eq 1 ]; then
-    echo -e " ${PINK}${gpu_list[0]}${RESET}"
+    echo -e " ${PINK}${ICON_GPU}${RESET}GPU ${PINK}${gpu_list[0]}${RESET}"
 else
+    echo -e " ${PINK}${ICON_GPU}${RESET}GPU"
     for gpu in "${gpu_list[@]}"; do
         echo -e " ${PINK}${gpu}${RESET}"
     done
