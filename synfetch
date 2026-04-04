@@ -754,7 +754,7 @@ echo -e " ${PINK}${ICON_GPU}${RESET}GPU"
 mapfile -t gpu_list < <(get_gpu)
 
 if [ ${#gpu_list[@]} -eq 1 ]; then
-    echo -e "      ${PINK}${gpu_list[0]}${RESET}"
+    echo -e "           ${PINK}${gpu_list[0]}${RESET}"
 else
     for gpu in "${gpu_list[@]}"; do
         echo -e "      ${PINK}${gpu}${RESET}"
