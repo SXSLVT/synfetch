@@ -43,7 +43,7 @@ While there are many excellent fetch tools (neofetch, fastfetch, etc.), `synfetc
 - Highly customizable
 
 
-*(Will add Dual GPU Output and Themes for `synfetch` soon.)*
+*(Will add Dual GPU Output for `synfetch` soon.)*
 
 
 ### Support
