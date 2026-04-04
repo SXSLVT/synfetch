@@ -517,11 +517,11 @@ synfetch_live() {
         mapfile -t gpu_list < <(get_gpu)
 
         if [ ${#gpu_list[@]} -eq 1 ]; then
-            echo -e " ${PINK}${ICON_GPU}${RESET}GPU ${PINK}${gpu_list[0]}${RESET}"
+            echo -e " ${PINK}${ICON_GPU}${RESET}GPU      ${PINK}${gpu_list[0]}${RESET}"
         else
             echo -e " ${PINK}${ICON_GPU}${RESET}GPU"
             for gpu in "${gpu_list[@]}"; do
-                echo -e " ${PINK}${gpu}${RESET}"
+                echo -e      " ${PINK}${gpu}${RESET}"
             done
         fi
         echo -e " ${WHITE}${ICON_UPTIME}${RESET}Uptime  ${WHITE}$(uptime | sed -E 's/^[^,]*up *//; s/, *[0-9]+ users?.*//')${RESET}"
@@ -751,11 +751,11 @@ echo -e " ${TEAL}${ICON_CPU}${RESET}CPU     ${TEAL}$(lscpu | grep 'Model name' |
 mapfile -t gpu_list < <(get_gpu)
 
 if [ ${#gpu_list[@]} -eq 1 ]; then
-    echo -e " ${PINK}${ICON_GPU}${RESET}GPU ${PINK}${gpu_list[0]}${RESET}"
+    echo -e " ${PINK}${ICON_GPU}${RESET}GPU      ${PINK}${gpu_list[0]}${RESET}"
 else
     echo -e " ${PINK}${ICON_GPU}${RESET}GPU"
     for gpu in "${gpu_list[@]}"; do
-        echo -e " ${PINK}${gpu}${RESET}"
+        echo -e      " ${PINK}${gpu}${RESET}"
     done
 fi
 echo -e " ${WHITE}${ICON_UPTIME}${RESET}Uptime  ${WHITE}$(uptime | sed -E 's/^[^,]*up *//; s/, *[0-9]+ users?.*//')${RESET}"
