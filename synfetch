@@ -364,7 +364,7 @@ show_help() {
     echo -e "  ${PINK}--noascii${RESET}         Hide ASCII art"
     echo -e "  ${PINK}--distro${RESET} <name>   Display ASCII art of a different distro"
     echo -e "  ${PINK}--live${RESET}            Animated CPU, GPU and RAM usage"
-    echo -e " ${PINK}--theme${RESET} <name>     Set theme (cyber, monochrome, neon, matrix, dracula, minimal)"
+    echo -e " ${PINK}--theme${RESET} <name>     Set theme (synthwave, monochrome, neon, matrix, dracula, minimal)"
     echo -e "  ${PINK}--help | -h${RESET}       Show this help message"
     echo ""
     echo -e "${BLUE}Available distros:${RESET} arch, cachyos, ubuntu, debian, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, gentoo, endeavouros, artix, void, nixos, macos"
