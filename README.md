@@ -88,7 +88,7 @@ If you are experiencing issues with synfetch, please create an [issue](https://g
 > A **Nerd Font** is required to display icons!
 
 ### Building and Installation
-For `Arch-based` users, I have a [`PKGBUILD`](./PKGBUILD) available. 
+For `Arch` based users, I have a [`PKGBUILD`](./PKGBUILD) available. 
 
 For `Nix` users, I have both [`flake.nix`](./flake.nix) and [`flake.lock`](./flake.lock) available.
 
