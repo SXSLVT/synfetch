@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
 # Colors
+
 RESET="\e[0m"
 BOLD="\e[1m"
 DIM="\e[2m"
-NEON_BLUE="\e[38;5;39m"
+
+NEON_BLUE="\e[38;5;39m" 
 MAGENTA="\e[38;5;165m"
 PINK="\e[38;5;201m"
 BLUE="\e[38;5;51m"
@@ -16,77 +18,8 @@ YELLOW="\e[38;5;226m"
 WHITE="\e[97m"
 GRAY="\e[38;5;245m"
 
-# Themes
-THEME="synthwave"
-declare -A THEMES
-
-THEMES[synthwave]="
-    ACCENT=201
-    SECONDARY=51
-    TERTIARY=165
-    BAR_START=201
-    BAR_END=45
-    BAR_EMPTY=236
-    SEP=────────────────────────────────────────
-    ASCII_COLOR=201
-"
-
-THEMES[monochrome]="
-    ACCENT=252
-    SECONDARY=250
-    TERTIARY=247
-    BAR_START=255
-    BAR_END=250
-    BAR_EMPTY=235
-    SEP=────────────────────────────────────────
-    ASCII_COLOR=252
-"
-
-THEMES[neon]="
-    ACCENT=51
-    SECONDARY=201
-    TERTIARY=165
-    BAR_START=201
-    BAR_END=51
-    BAR_EMPTY=234
-    SEP=▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ASCII_COLOR=51
-"
-
-THEMES[matrix]="
-    ACCENT=82
-    SECONDARY=118
-    TERTIARY=46
-    BAR_START=82
-    BAR_END=118
-    BAR_EMPTY=232
-    SEP=════════════════════════════════════════
-    ASCII_COLOR=82
-"
-
-THEMES[dracula]="
-    ACCENT=135
-    SECONDARY=199
-    TERTIARY=141
-    BAR_START=199
-    BAR_END=135
-    BAR_EMPTY=236
-    SEP=────────────────────────────────────────
-    ASCII_COLOR=135
-"
-
-THEMES[minimal]="
-    ACCENT=252
-    SECONDARY=250
-    TERTIARY=248
-    BAR_START=252
-    BAR_END=250
-    BAR_EMPTY=235
-    SEP=────────────────────
-    ASCII_COLOR=252
-"
-
 # ASCII
+
 detect_distro() {
     local target_distro="${CUSTOM_DISTRO}"
     if [[ -z "$target_distro" ]]; then
@@ -111,227 +44,228 @@ detect_distro() {
             *) DISTRO="${target_distro^}" ;;
         esac
     fi
+
     case "$target_distro" in
                 arch|archarm)
-                    ART="${BLUE} ___ __
-${BLUE} / _ | ________/ /
-${BLUE} / __ |/ __/ __/ _ \\
-${BLUE} /_/ |_/_/ \\__/_//_/ "
+                    ART="${BLUE}     ___           __ 
+${BLUE}    / _ | ________/ / 
+${BLUE}   / __ |/ __/ __/ _ \\
+${BLUE}  /_/ |_/_/  \\__/_//_/ "
                     ;;
                 cachy|cachyos)
-                    ART="${BLUE} _____ __ ____ ____
-${BLUE} / ___/__ _____/ / __ __/ __ \\/ __/
-${BLUE} / /__/ _ \\/ __/ _ \\/ // / /_/ /\\ \\
-${BLUE} \\___/\\_,_/\\__/_//_/\\_, /\\____/___/
-${BLUE} /___/
+                    ART="${BLUE}    _____         __        ____  ____
+${BLUE}   / ___/__ _____/ /  __ __/ __ \\/ __/
+${BLUE}  / /__/ _ \\/ __/ _ \\/ // / /_/ /\\ \\  
+${BLUE}  \\___/\\_,_/\\__/_//_/\\_, /\\____/___/  
+${BLUE}                    /___/             
                     "
                     ;;
                 ubuntu)
-                    ART="${RED} __ ____ __
-${RED} / / / / / __ _____ / /___ __
-${RED} / /_/ / _ \\/ // / _ \\/ __/ // /
-${RED} \\____/_.__/\\_,_/_//_/\\__/\\_,_/
+                    ART="${RED}    __  ____             __      
+${RED}   / / / / /  __ _____  / /___ __
+${RED}  / /_/ / _ \\/ // / _ \\/ __/ // /
+${RED}  \\____/_.__/\\_,_/_//_/\\__/\\_,_/ 
                                "
                     ;;
                 debian)
-                    ART="${RED} ___ __ _
-${RED} / _ \\___ / / (_)__ ___
-${RED} / // / -_) _ \\/ / _ \\/ _ \\
-${RED} /____/\\__/_.__/_/\\_,_/_//_/
-                    "
+                    ART="${RED}     ___      __   _         
+${RED}    / _ \\___ / /  (_)__  ___ 
+${RED}   / // / -_) _ \\/ / _ \\/ _ \\
+${RED}  /____/\\__/_.__/_/\\_,_/_//_/                           
+                    "             
                     ;;
                 fedora)
-                    ART="${BLUE} ____ __
-${BLUE} / __/__ ___/ /__ _______ _
-${BLUE} / _// -_) _ / _ \\/ __/ _ \\/
-${BLUE} /_/ \\__/\\_,_/\\___/_/ \\_,_/
+                    ART="${BLUE}     ____       __             
+${BLUE}    / __/__ ___/ /__  _______ _
+${BLUE}   / _// -_) _  / _ \\/ __/ _ \\/
+${BLUE}  /_/  \\__/\\_,_/\\___/_/  \\_,_/ 
                     "
                     ;;
                 linuxmint|linux-mint)
-                    ART="${GREEN} __ ____ __
-${GREEN} / |/ (_)__ / /_
-${GREEN} / /|_/ / / _ \\/ __/
-${GREEN} /_/ /_/_/_//_/\\__/
+                    ART="${GREEN}     __  ____      __ 
+${GREEN}    /  |/  (_)__  / /_
+${GREEN}   / /|_/ / / _ \\/ __/
+${GREEN}  /_/  /_/_/_//_/\\__/ 
 "
                     ;;
                 zorin|zorinos)
-                    ART="${BLUE} ____ _ ____ ____
-${BLUE} /_ / ___ ____(_)__ / __ \\/ __/
-${BLUE} / /_/ _ \\/ __/ / _ \\/ /_/ /\\ \\
-${BLUE} /___/\\___/_/ /_/_//_/\\____/___/
- "
+                    ART="${BLUE}   ____           _      ____  ____
+${BLUE}  /_  / ___  ____(_)__  / __ \\/ __/
+${BLUE}   / /_/ _ \\/ __/ / _ \\/ /_/ /\\ \\  
+${BLUE}  /___/\\___/_/ /_/_//_/\\____/___/  
+		 "
                     ;;
                 pop|popos)
-                    ART="${BLUE} ___ ____ ____
-${BLUE} / _ \\___ ___ / __ \\/ __/
-${BLUE} / ___/ _ \\/ _ \\/ /_/ /\\ \\
-${BLUE} /_/ \\___/ .__/\\____/___/
-${BLUE} /_/
-                    "
+                    ART="${BLUE}     ___            ____  ____
+${BLUE}    / _ \\___  ___  / __ \\/ __/
+${BLUE}   / ___/ _ \\/ _ \\/ /_/ /\\ \\  
+${BLUE}  /_/   \\___/ .__/\\____/___/  
+${BLUE}           /_/                
+                    "                   
                     ;;
                 manjaro)
-                    ART="${GREEN} __ ___ _
-${GREEN} / |/ /__ ____ (_)__ ________
-${GREEN} / /|_/ / _ \\/ _ \\ / / _ \\/ __/ _ \\
-${GREEN} /_/ /_/\\_,_/_//_/_/ /\\_,_/_/ \\___/
-${GREEN} |___/
-                    " ;;
+                    ART="${GREEN}     __  ___            _             
+${GREEN}    /  |/  /__ ____    (_)__ ________ 
+${GREEN}   / /|_/ / _ \\/ _ \\  / / _ \\/ __/ _ \\
+${GREEN}  /_/  /_/\\_,_/_//_/_/ /\\_,_/_/  \\___/
+${GREEN}                  |___/               
+                    "                    ;;
                 opensuse*|sles)
-                    ART="${GREEN} ______ __________
-${GREEN} ___ ___ ___ ___ / __/ / / / __/ __/
-${GREEN} / _ \\/ _ \\/ -_) _ \\_\\ \\/ /_/ /\\ \\/ _/
-${GREEN} \\___/ .__/\\__/_//_/___/\\____/___/___/
-${GREEN} /_/
+                    ART="${GREEN}                       ______  __________
+${GREEN}   ___  ___  ___ ___  / __/ / / / __/ __/
+${GREEN}  / _ \\/ _ \\/ -_) _ \\_\\ \\/ /_/ /\\ \\/ _/  
+${GREEN}  \\___/ .__/\\__/_//_/___/\\____/___/___/  
+${GREEN}     /_/                                 
                     "
                     ;;
                 slackware)
-                    ART="${BLUE} ______ __
-${BLUE} / __/ /__ _____/ /___ _____ ________
-${BLUE} _\\ \\/ / _ \\/ __/ '_/ |/|/ / _ \\/ __/ -_)
-${BLUE} /___/_/\\_,_/\\__/_/\\_\\|__,__/\\_,_/_/ \\__/
+                    ART="${BLUE}     ______         __                      
+${BLUE}    / __/ /__ _____/ /___    _____ ________ 
+${BLUE}   _\\ \\/ / _ \\/ __/  '_/ |/|/ / _ \\/ __/ -_)
+${BLUE}  /___/_/\\_,_/\\__/_/\\_\\|__,__/\\_,_/_/  \\__/
                     "
                     ;;
                 centos|centos-stream|rhel)
-                    ART="${RED} _____ __ ____ ____
-${RED} / ___/__ ___ / /_/ __ \\/ __/
-${RED} / /__/ -_) _ \\/ __/ /_/ /\\ \\
-${RED} \\___/\\__/_//_/\\__/\\____/___/
+                    ART="${RED}    _____         __  ____  ____
+${RED}   / ___/__ ___  / /_/ __ \\/ __/
+${RED}  / /__/ -_) _ \\/ __/ /_/ /\\ \\  
+${RED}  \\___/\\__/_//_/\\__/\\____/___/  
                     "
                     ;;
- mx-linux|mxlinux)
- ART="${BLUE} __ ___ __ _
-${BLUE} / |/ /_ __ / / (_)__ __ ____ __
-${BLUE} / /|_/ /\\ \\ / / /__/ / _ \\/ // /\\ \\ /
-${BLUE} /_/ /_//_\\_\\ /____/_/_//_/\\_,_//_\\_\\
- "
- ;;
- guix)
- ART="${YELLOW} _____ _
-${YELLOW} / ___/_ __(_)_ __
-${YELLOW} / (_ / // / /\\ \\ /
-${YELLOW} \\___/\\_,_/_//_\\_\\
- "
- ;;
+	 mx-linux|mxlinux)
+		 ART="${BLUE}     __  ___       __   _               
+${BLUE}    /  |/  /_ __  / /  (_)__  __ ____ __
+${BLUE}   / /|_/ /\\ \\ / / /__/ / _ \\/ // /\\ \\ /
+${BLUE}  /_/  /_//_\\_\\ /____/_/_//_/\\_,_//_\\_\\  
+		 "
+		 ;;
+	 guix)
+		 ART="${YELLOW}    _____     _     
+${YELLOW}   / ___/_ __(_)_ __
+${YELLOW}  / (_ / // / /\\ \\ /
+${YELLOW}  \\___/\\_,_/_//_\\_\\ 
+		 "
+		 ;;
            qubes|qubesos)
- ART="${BLUE} ____ __ ____ ____
-${BLUE} / __ \\__ __/ / ___ ___ / __ \\/ __/
-${BLUE} / /_/ / // / _ \\/ -_|_-</ /_/ /\\ \\
-${BLUE} \\___\\_\\_,_/_.__/\\__/___/\\____/___/
- "
- ;;
-antix)
-ART="${BLUE} __ _ _ __
-${BLUE} ___ ____ / /_(_) |/_/
-${BLUE} / _ \\/ _ \\/ __/ /> <
-${BLUE} \\_,_/_//_/\\__/_/_/|_|
-"
+		 ART="${BLUE}    ____       __           ____  ____
+${BLUE}   / __ \\__ __/ /  ___ ___ / __ \\/ __/
+${BLUE}  / /_/ / // / _ \\/ -_|_-</ /_/ /\\ \\  
+${BLUE}  \\___\\_\\_,_/_.__/\\__/___/\\____/___/  
+		 "
+		 ;;
+	antix)
+		ART="${BLUE}              __  _ _  __
+${BLUE}   ___ ____  / /_(_) |/_/
+${BLUE}  / _ \\/ _ \\/ __/ />  <  
+${BLUE}  \\_,_/_//_/\\__/_/_/|_|  
+		"
                     ;;
- garuda)
- ART="${RED} _____ __
-${RED} / ___/__ _______ _____/ /__ _
-${RED} / (_ / _ \\/ __/ // / _ / _ \\/
-${RED} \\___/\\_,_/_/ \\_,_/\\_,_/\\_,_/
- "
- ;;
- nobara)
- ART="${MAGENTA} _ __ __
-${MAGENTA} / |/ /__ / / ___ ________ _
-${MAGENTA} / / _ \\/ _ \\/ _ \\/ __/ _ \\/
-${MAGENTA} /_/|_/\\___/_.__/\\_,_/_/ \\_,_/
- "
- ;;
- bazzite)
- ART="${BLUE} ___ _ __
-${BLUE} / _ )___ _______ (_) /____
-${BLUE} / _ / _ \\/_ /_ // / __/ -_)
-${BLUE} /____/\\_,_//__/__/_/\\__/\\__/
- "
- ;;
+	 garuda)
+		 ART="${RED}    _____                 __    
+${RED}   / ___/__ _______ _____/ /__ _
+${RED}  / (_ / _ \\/ __/ // / _  / _ \\/
+${RED}  \\___/\\_,_/_/  \\_,_/\\_,_/\\_,_/  
+		 "
+		 ;;
+	 nobara)
+		 ART="${MAGENTA}     _  __     __                
+${MAGENTA}    / |/ /__  / /  ___ ________ _
+${MAGENTA}   /    / _ \\/ _ \\/ _ \\/ __/ _ \\/
+${MAGENTA}  /_/|_/\\___/_.__/\\_,_/_/  \\_,_/ 		 
+		 "
+		 ;;
+	 bazzite)
+		 ART="${BLUE}     ___              _ __     
+${BLUE}    / _ )___ _______ (_) /____ 
+${BLUE}   / _  / _ \\/_ /_ // / __/ -_)
+${BLUE}  /____/\\_,_//__/__/_/\\__/\\__/
+		 "
+		 ;;
             kali)
- ART="${NEON_BLUE} __ __ ___
-${NEON_BLUE} / //_/__ _/ (_)
-${NEON_BLUE} / ,< / _ \\/ / /
-${NEON_BLUE} /_/|_|\\_,_/_/_/
- "
- ;;
- elementaryos|elementary)
- ART="${WHITE} __ __ ____ ____
-${WHITE} ___ / /__ __ _ ___ ___ / /____ _______ __/ __ \\/ __/
-${WHITE} / -_) / -_) ' \\/ -_) _ \\/ __/ _ \\/ __/ // / /_/ /\\ \\
-${WHITE} \\__/_/\\__/_/_/_/\\__/_//_/\\__/\\_,_/_/ \\_, /\\____/___/
-${WHITE} /___/
- "
- ;;
- kde-neon|kdeneon)
- ART="${BLUE} __ _____ ____ _ __
-${BLUE} / //_/ _ \\/ __/ / |/ /__ ___ ___
-${BLUE} / ,< / // / _/ / / -_) _ \\/ _ \\
-${BLUE} /_/|_/____/___/ /_/|_/\\__/\\___/_//_/
- "
- ;;
- deepin)
- ART="${BLUE} ___ _
-${BLUE} / _ \\___ ___ ___ (_)__
-${BLUE} / // / -_) -_) _ \\/ / _ \\
-${BLUE} /____/\\__/\\__/ .__/_/_//_/
-${BLUE} /_/
- "
- ;;
- alpine)
- ART="${NEON_BLUE} ___ __ _
-${NEON_BLUE} / _ | / /__ (_)__ ___
-${NEON_BLUE} / __ |/ / _ \\/ / _ \\/ -_)
-${NEON_BLUE} /_/ |_/_/ .__/_/_//_/\\__/
-${NEON_BLUE} /_/
- "
- ;;
- gobo)
- ART="${BLUE} _____ __
-${BLUE} / ___/__ / / ___
-${BLUE} / (_ / _ \\/ _ \\/ _ \\
-${BLUE} \\___/\\___/_.__/\\___/
- "
- ;;
+		 ART="${NEON_BLUE}     __ __     ___ 
+${NEON_BLUE}    / //_/__ _/ (_)
+${NEON_BLUE}   / ,< / _ \\/ / / 
+${NEON_BLUE}  /_/|_|\\_,_/_/_/  
+		 "
+		 ;;
+	 elementaryos|elementary)
+		 ART="${WHITE}        __                   __                ____  ____
+${WHITE}   ___ / /__ __ _  ___ ___  / /____ _______ __/ __ \\/ __/
+${WHITE}  / -_) / -_)  ' \\/ -_) _ \\/ __/ _ \\/ __/ // / /_/ /\\ \\  
+${WHITE}  \\__/_/\\__/_/_/_/\\__/_//_/\\__/\\_,_/_/  \\_, /\\____/___/  
+${WHITE}                                       /___/             
+		 "
+		 ;;
+	 kde-neon|kdeneon)
+		 ART="${BLUE}     __ _____  ____  _  __            
+${BLUE}    / //_/ _ \\/ __/ / |/ /__ ___  ___ 
+${BLUE}   / ,< / // / _/  /    / -_) _ \\/ _ \\
+${BLUE}  /_/|_/____/___/ /_/|_/\\__/\\___/_//_/
+		 "
+		 ;;
+	 deepin)
+		 ART="${BLUE}     ___               _    
+${BLUE}    / _ \\___ ___ ___  (_)__ 
+${BLUE}   / // / -_) -_) _ \\/ / _ \\
+${BLUE}  /____/\\__/\\__/ .__/_/_//_/
+${BLUE}              /_/           
+		 "
+		 ;;
+	 alpine)
+		 ART="${NEON_BLUE}     ___   __     _         
+${NEON_BLUE}    / _ | / /__  (_)__  ___ 
+${NEON_BLUE}   / __ |/ / _ \\/ / _ \\/ -_)
+${NEON_BLUE}  /_/ |_/_/ .__/_/_//_/\\__/ 
+${NEON_BLUE}         /_/                
+		 "
+		 ;;
+	 gobo)
+		 ART="${BLUE}    _____     __      
+${BLUE}   / ___/__  / /  ___ 
+${BLUE}  / (_ / _ \\/ _ \\/ _ \\
+${BLUE}  \\___/\\___/_.__/\\___/
+		 "
+		 ;;
                 gentoo)
-                    ART="${MAGENTA} _____ __
-${MAGENTA} / ___/__ ___ / /____ ___
-${MAGENTA} / (_ / -_) _ \\/ __/ _ \\/ _ \\
-${MAGENTA} \\___/\\__/_//_/\\__/\\___/\\___/
+                    ART="${MAGENTA}    _____         __          
+${MAGENTA}   / ___/__ ___  / /____  ___ 
+${MAGENTA}  / (_ / -_) _ \\/ __/ _ \\/ _ \\
+${MAGENTA}  \\___/\\__/_//_/\\__/\\___/\\___/                            
                     "
                     ;;
                 endeavour|endeavouros)
-                    ART="${MAGENTA} ____ __ ____ ____
-${MAGENTA} / __/__ ___/ /__ ___ __ _____ __ ______/ __ \\/ __/
-${MAGENTA} / _// _ \\/ _ / -_) _ \\/ |/ / _ \\/ // / __/ /_/ /\\ \\
-${MAGENTA} /___/_//_/\\_,_/\\__/\\_,_/|___/\\___/\\_,_/_/ \\____/___/
+                    ART="${MAGENTA}     ____        __                            ____  ____
+${MAGENTA}    / __/__  ___/ /__ ___ __  _____  __ ______/ __ \\/ __/
+${MAGENTA}   / _// _ \\/ _  / -_) _ \\/ |/ / _ \\/ // / __/ /_/ /\\ \\  
+${MAGENTA}  /___/_//_/\\_,_/\\__/\\_,_/|___/\\___/\\_,_/_/  \\____/___/  
                     "
                     ;;
                 artix)
-                    ART="${BLUE} ___ __ _
-${BLUE} / _ | ____/ /_(_)_ __
-${BLUE} / __ |/ __/ __/ /\\ \\ /
-${BLUE} /_/ |_/_/ \\__/_//_\\_\\
-                    "
+                    ART="${BLUE}     ___       __  _     
+${BLUE}    / _ | ____/ /_(_)_ __
+${BLUE}   / __ |/ __/ __/ /\\ \\ /
+${BLUE}  /_/ |_/_/  \\__/_//_\\_\\
+                    "    
                     ;;
                 void)
-                    ART="${GREEN} _ __ _ __
-${GREEN} | | / /__ (_)__/ /
-${GREEN} | |/ / _ \\/ / _ /
-${GREEN} |___/\\___/_/\\_,_/
+                    ART="${GREEN}   _   __     _    __
+${GREEN}  | | / /__  (_)__/ /
+${GREEN}  | |/ / _ \\/ / _  / 
+${GREEN}  |___/\\___/_/\\_,_/  
                     "
                     ;;
                 nix|nixos)
-                    ART="${BLUE} _ ___ ____ ____
-${BLUE} / |/ (_)_ __/ __ \\/ __/
-${BLUE} / / /\\ \\ / /_/ /\\ \\
-${BLUE} /_/|_/_//_\\_|\\____/___/
+                    ART="${BLUE}     _  ___      ____  ____
+${BLUE}    / |/ (_)_ __/ __ \\/ __/
+${BLUE}   /    / /\\ \\ / /_/ /\\ \\  
+${BLUE}  /_/|_/_//_\\_|\\____/___/  
                     "
-;;
+		;;
 macos|darwin|mac)
-ART="${MAGENTA} __ ___ ____ ____
-${MAGENTA} / |/ /__ _____/ __ \\/ __/
-${MAGENTA} / /|_/ / _ \\/ __/ /_/ /\\ \\
-${MAGENTA} /_/ /_/\\_,_/\\__/\\____/___/
+ART="${MAGENTA}     __  ___         ____  ____
+${MAGENTA}    /  |/  /__ _____/ __ \\/ __/
+${MAGENTA}   / /|_/ / _ \\/ __/ /_/ /\\ \\  
+${MAGENTA}  /_/  /_/\\_,_/\\__/\\____/___/  
 "
 ;;
         *)
@@ -342,47 +276,44 @@ ${MAGENTA} /_/ /_/\\_,_/\\__/\\____/___/
 }
 
 # Flags
+
 USE_NERD_FONTS=true
 USE_ASCII=true
 CUSTOM_DISTRO=""
-LIVE_MODE=false
 
 # Help
+
 show_help() {
     echo ""
     echo -e "${BLUE}Usage:${RESET} synfetch [OPTIONS]"
     echo ""
     echo -e "${BOLD}Options:${RESET}"
-    echo -e " ${PINK}--nonerd${RESET} Hide icons"
-    echo -e " ${PINK}--noascii${RESET} Hide ASCII art"
-    echo -e " ${PINK}--distro${RESET} <name> Display ASCII art of a different distro"
-    echo -e " ${PINK}--live${RESET} Animated CPU, GPU and RAM usage"
-    echo -e " ${PINK}--theme${RESET} <name> Set theme (synthwave, monochrome, neon, matrix, dracula, minimal)"
-    echo -e " ${PINK}--help | -h${RESET} Show this help message"
+    echo -e "  ${PINK}--nonerd${RESET}          Hide icons"
+    echo -e "  ${PINK}--noascii${RESET}         Hide ASCII art"
+    echo -e "  ${PINK}--distro${RESET} <name>   Display ASCII art of a different distro"
+    echo -e "  ${PINK}--live${RESET}            Animated CPU, GPU and RAM usage"
+    echo -e "  ${PINK}--help | -h${RESET}       Show this help message"
     echo ""
     echo -e "${BLUE}Available distros:${RESET} arch, cachyos, ubuntu, debian, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, gentoo, endeavouros, artix, void, nixos, macos"
     echo ""
     echo -e "${GRAY}Examples:${RESET}"
-    echo -e " ${GREEN}synfetch ${RESET}"
-    echo -e " ${GREEN}synfetch --live${RESET}"
-    echo -e " ${GREEN}synfetch --nonerd${RESET}"
-    echo -e " ${GREEN}synfetch --noascii${RESET}"
-    echo -e " ${GREEN}synfetch --theme monochrome${RESET}"
-    echo -e " ${GREEN}synfetch --distro arch${RESET}"
+    echo -e "  ${GREEN}synfetch ${RESET}"
+    echo -e "  ${GREEN}synfetch --live${RESET}"
+    echo -e "  ${GREEN}synfetch --nonerd${RESET}"
+    echo -e "  ${GREEN}synfetch --noascii${RESET}"
+    echo -e "  ${GREEN}synfetch --distro arch${RESET}"
+    echo -e "  ${GREEN}synfetch --distro macos --nonerd${RESET}"
     exit 0
 }
 
 # Argument Parsing
+
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            --live)
-                LIVE_MODE=true
-                ;;
-            --theme)
-                shift
-                THEME="${1,,}"
-                ;;
+	--live)
+		LIVE_MODE=true
+		;;
             --nonerd)
                 USE_NERD_FONTS=false
                 ;;
@@ -408,20 +339,8 @@ parse_args() {
 
 parse_args "$@"
 
-# Load theme
-load_theme() {
-    local data="${THEMES[$1]}"
-    if [[ -z "$data" ]]; then
-        echo -e "${RED}Error: Theme '$1' not found!${RESET}"
-        echo -e "Available themes: ${!THEMES[*]}"
-        exit 1
-    fi
-    eval "$data"
-}
-
-load_theme "$THEME"
-
 # Nerd Fonts
+
 if $USE_NERD_FONTS; then
     ICON_OS="󰣇 "
     ICON_KERNEL=" "
@@ -449,15 +368,19 @@ else
 fi
 
 # CPU & RAM Usage
+
 get_cpu_usage() {
     if [ "$(uname)" = "Linux" ]; then
         read -r cpu user nice system idle iowait irq softirq steal guest guest_nice < /proc/stat
         total1=$((user + nice + system + idle + iowait + irq + softirq + steal + guest + guest_nice))
         idle1=$((idle + iowait))
+
         sleep 0.2
+
         read -r cpu user nice system idle iowait irq softirq steal guest guest_nice < /proc/stat
         total2=$((user + nice + system + idle + iowait + irq + softirq + steal + guest + guest_nice))
         idle2=$((idle + iowait))
+
         diff_total=$((total2 - total1))
         diff_idle=$((idle2 - idle1))
         usage=$((100 * (diff_total - diff_idle) / diff_total))
@@ -480,16 +403,21 @@ cyber_bar() {
     local width=22
     local filled=$((percent * width / 100))
     local bar=""
+
+    local pulse=$(( (percent % 10) + 80 ))
+
     for ((i=0; i<filled; i++)); do
         if (( i < filled/2 )); then
-            bar+="\e[38;5;${BAR_START}m█"
+            bar+="\e[38;5;201m█"
         else
-            bar+="\e[38;5;${BAR_END}m█"
+            bar+="\e[38;5;45m█"
         fi
     done
+
     for ((i=filled; i<width; i++)); do
-        bar+="\e[38;5;${BAR_EMPTY}m─"
+        bar+="\e[38;5;236m─"
     done
+
     printf "%b\e[0m %3d%%" "$bar" "$percent"
 }
 
@@ -497,30 +425,37 @@ CPU=$(get_cpu_usage)
 RAM=$(get_ram_usage)
 
 # GPU & GPU Usage Detector
+
 get_gpu() {
     if [ "$(uname)" != "Linux" ]; then
         echo "$(system_profiler SPDisplaysDataType 2>/dev/null | grep 'Chipset Model' | awk -F': ' '{print $2}' || echo 'Apple GPU')"
         return
     fi
+
     local gpus=()
+
     if command -v nvidia-smi >/dev/null 2>&1; then
         while IFS= read -r name; do
             [ -n "$name" ] && gpus+=("$name")
         done < <(nvidia-smi --query-gpu=name --format=csv,noheader,nounits 2>/dev/null)
     fi
+
     if command -v lspci >/dev/null 2>&1; then
         while IFS= read -r line; do
             if [[ "$line" == *"NVIDIA"* ]] && command -v nvidia-smi >/dev/null 2>&1; then
                 continue
             fi
-            name=$(echo "$line" |
-                   sed 's/^[0-9a-f:.]\+ //' |
-                   sed 's/^\(VGA compatible controller\|3D controller\|Display controller\): *//' |
-                   sed 's/ (rev .*)$//' |
-                   sed 's/ \[.*\]//' )
+
+            name=$(echo "$line" | 
+                   sed 's/^[0-9a-f:.]\+ //' |        
+                   sed 's/^\(VGA compatible controller\|3D controller\|Display controller\): *//' | 
+                   sed 's/ (rev .*)$//' |     
+                   sed 's/ \[.*\]//' )      
+
             [ -n "$name" ] && gpus+=("$name")
         done < <(lspci | grep -E 'VGA|3D|Display' 2>/dev/null)
     fi
+
     if [ ${#gpus[@]} -eq 0 ]; then
         if [ -d /sys/class/drm/card0/device ]; then
             gpus+=("Integrated Graphics")
@@ -528,6 +463,7 @@ get_gpu() {
             gpus+=("Unknown GPU")
         fi
     fi
+
     if [ ${#gpus[@]} -gt 0 ]; then
         printf '%s\n' "${gpus[*]}"
     else
@@ -540,14 +476,17 @@ get_gpu_usage() {
         echo "N/A"
         return
     fi
+
     if command -v nvidia-smi >/dev/null 2>&1; then
         nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -n1 | tr -d ' %'
         return
     fi
+
     if [ -f /sys/class/drm/card0/device/gpu_busy_percent ]; then
         cat /sys/class/drm/card0/device/gpu_busy_percent 2>/dev/null || echo "0"
         return
     fi
+
     echo "0"
 }
 
@@ -555,43 +494,49 @@ GPU=$(get_gpu)
 GPU_USAGE=$(get_gpu_usage)
 
 # Real-time Monitoring
+
 synfetch_live() {
     clear
     tput civis
+
     trap 'tput cnorm; clear; exit 0' INT
+
     while true; do
         CPU=$(get_cpu_usage 2>/dev/null || echo 0)
         RAM=$(get_ram_usage 2>/dev/null || echo 0)
         GPU_USAGE=$(get_gpu_usage 2>/dev/null || echo 0)
+
         tput cup 0 0
+
         if $USE_ASCII; then
             echo -e "$ART"
             echo
         fi
-        echo -e " ${NEON_BLUE}${ICON_OS}${RESET}OS ${NEON_BLUE}${DISTRO}${RESET}"
-        echo -e " ${MAGENTA}${ICON_KERNEL}${RESET}Kernel ${MAGENTA}$(uname -r)${RESET}"
-        echo -e " ${BLUE}${ICON_USER}${RESET}User ${BLUE}${USER}${RESET}"
-        echo -e " ${RED}${ICON_HOST}${RESET}Host ${RED}$(cat /etc/hostname 2>/dev/null || hostname)${RESET}"
-        echo -e " ${GREEN}${ICON_MOBO}${RESET}MoBo ${GREEN}$(cat /sys/class/dmi/id/board_vendor 2>/dev/null || echo "") $(cat /sys/class/dmi/id/board_name 2>/dev/null || echo "")"${RESET}
-        echo -e " ${TEAL}${ICON_CPU}${RESET}CPU ${TEAL}$(lscpu | grep 'Model name' | awk -F: '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}')${RESET}"
-        echo -e " ${PINK}${ICON_GPU}${RESET}GPU ${PINK}${GPU}${RESET}"
-        echo -e " ${WHITE}${ICON_UPTIME}${RESET}Uptime ${WHITE}$(uptime | sed -E 's/^[^,]*up *//; s/, *[0-9]+ users?.*//')${RESET}"
-        echo -e " ${PURPLE}${ICON_SHELL}${RESET}Shell ${PURPLE}${SHELL##*/}${RESET}"
-        echo -e " ${GRAY}${ICON_DEWM}${RESET}DE/WM ${GRAY}${de_wm}${RESET}"
-        echo -e " ${YELLOW}${ICON_PKGS}${RESET}Pkgs ${YELLOW}$(pkg_count)${RESET}"
-        echo -e " ${GRAY}${SEP}${RESET}"
-        echo -e " \e[38;5;${SECONDARY}mCPU${RESET} $(cyber_bar "${CPU}")"
-        echo -e " \e[38;5;${SECONDARY}mRAM${RESET} $(cyber_bar "${RAM}")"
+        echo -e " ${NEON_BLUE}${ICON_OS}${RESET}OS      ${NEON_BLUE}${DISTRO}${RESET}"
+        echo -e " ${MAGENTA}${ICON_KERNEL}${RESET}Kernel  ${MAGENTA}$(uname -r)${RESET}"
+        echo -e " ${BLUE}${ICON_USER}${RESET}User    ${BLUE}${USER}${RESET}"
+        echo -e " ${RED}${ICON_HOST}${RESET}Host    ${RED}$(cat /etc/hostname 2>/dev/null || hostname)${RESET}"
+        echo -e " ${GREEN}${ICON_MOBO}${RESET}MoBo    ${GREEN}$(cat /sys/class/dmi/id/board_vendor 2>/dev/null || echo "") $(cat /sys/class/dmi/id/board_name 2>/dev/null || echo "")"${RESET}
+        echo -e " ${TEAL}${ICON_CPU}${RESET}CPU     ${TEAL}$(lscpu | grep 'Model name' | awk -F: '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}')${RESET}"
+        echo -e " ${PINK}${ICON_GPU}${RESET}GPU     ${PINK}${GPU}${RESET}"
+        echo -e " ${WHITE}${ICON_UPTIME}${RESET}Uptime  ${WHITE}$(uptime | sed -E 's/^[^,]*up *//; s/, *[0-9]+ users?.*//')${RESET}"
+        echo -e " ${PURPLE}${ICON_SHELL}${RESET}Shell   ${PURPLE}${SHELL##*/}${RESET}"
+        echo -e " ${GRAY}${ICON_DEWM}${RESET}DE/WM   ${GRAY}${de_wm}${RESET}"
+        echo -e " ${YELLOW}${ICON_PKGS}${RESET}Pkgs    ${YELLOW}$(pkg_count)${RESET}"
+        echo -e " ${GRAY}────────────────────────────────────────${RESET}"
+        echo -e " ${PINK}CPU${RESET}     $(cyber_bar "${CPU}")"
+        echo -e " ${PINK}RAM${RESET}     $(cyber_bar "${RAM}")"
         if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
-            echo -e " \e[38;5;${SECONDARY}mGPU${RESET} $(cyber_bar "${GPU_USAGE}")"
+        echo -e " ${PINK}GPU${RESET}     $(cyber_bar "${GPU_USAGE}")"
         fi
-        echo -e " ${GRAY}${SEP}${RESET}"
-        echo -e " ${DIM}Press Ctrl+C to exit live mode${RESET} "
+        echo -e " ${GRAY}────────────────────────────────────────${RESET}"
+        echo -e " ${DIM}Press Ctrl+C to exit live mode${RESET}                "
         sleep 0.7
     done
-}
+} 
 
 # DE/WM Detector
+
 de_wm=""
 if [ -n "${XDG_CURRENT_DESKTOP}" ]; then
     de_wm="${XDG_CURRENT_DESKTOP}"
@@ -624,7 +569,6 @@ else
         fi
     done
 fi
-
 case "${de_wm,,}" in
     gnome* | gnome-shell | mutter) de_wm="GNOME" ;;
     plasma* | kde* | plasmashell | kwin* | kded*) de_wm="KDE Plasma" ;;
@@ -677,7 +621,6 @@ case "${de_wm,,}" in
     oxwm) de_wm="oxwm" ;;
     aqua | quartz | macos | darwin) de_wm="macOS (Aqua)" ;;
 esac
-
 if [[ "$(uname -s)" == "Darwin" ]]; then
     de_wm="macOS (Aqua)"
 fi
@@ -693,7 +636,7 @@ if [[ "${de_wm}" == "GNOME" || \
     if [ -n "${XDG_SESSION_TYPE}" ]; then
         case "${XDG_SESSION_TYPE}" in
             wayland) session_suffix=" (Wayland)" ;;
-            x11) session_suffix=" (X11)" ;;
+            x11)     session_suffix=" (X11)" ;;
         esac
     elif [ -n "${WAYLAND_DISPLAY}" ]; then
         session_suffix=" (Wayland)"
@@ -704,46 +647,60 @@ if [[ "${de_wm}" == "GNOME" || \
 fi
 
 # Package Detector
+
 pkg_count() {
     local pkgs=()
     local count
+
     if command -v dpkg >/dev/null; then
         count=$(dpkg --get-selections | grep -v deinstall | wc -l)
         pkgs+=("$count (dpkg)")
+
     elif command -v guix >/dev/null; then
         count=$(guix package -I | wc -l)
         pkgs+=("$count (guix)")
+
     elif command -v rpm >/dev/null; then
         count=$(rpm -qa | wc -l)
         pkgs+=("$count (rpm)")
+
     elif command -v qlist >/dev/null; then
         count=$(qlist -I | wc -l)
         pkgs+=("$count (portage)")
+
     elif command -v xbps-query >/dev/null; then
         count=$(xbps-query -l | wc -l)
         pkgs+=("$count (xbps)")
+
     elif command -v apk >/dev/null; then
         count=$(apk info | wc -l)
         pkgs+=("$count (apk)")
+
     elif command -v nix-store >/dev/null; then
         count=$(nix-store -q --requisites /run/current-system 2>/dev/null | wc -l || echo 0)
         pkgs+=("$count (nix)")
+
     elif command -v slackpkg >/dev/null || [ -d /var/log/packages ]; then
         count=$(ls /var/log/packages/ 2>/dev/null | wc -l)
         pkgs+=("$count (slackware)")
+
     elif command -v brew >/dev/null; then
         local formulas=$(brew list --formula 2>/dev/null | wc -l)
         local casks=$(brew list --cask 2>/dev/null | wc -l)
         pkgs+=("$formulas (formulas) + $casks (casks) = $((formulas + casks)) (brew)")
+
     elif command -v port >/dev/null; then
         count=$(port -q installed 2>/dev/null | wc -l)
         pkgs+=("$count (MacPorts)")
+
     elif command -v pkgutil >/dev/null || command -v pkg >/dev/null; then
         count=$(pkgutil --pkgs 2>/dev/null | wc -l)
         pkgs+=("$count (Fink/pkgutil)")
+
     elif command -v pacman >/dev/null; then
         count=$(pacman -Q | wc -l)
         pkgs+=("$count (pacman)")
+
     elif command -v flatpak >/dev/null; then
         count=$(flatpak list | wc -l)
         pkgs+=("$count (flatpak)")
@@ -753,12 +710,14 @@ pkg_count() {
         count=$(ls /Programs | wc -l)
         pkgs+=("$count (programs)")
     fi
+
     if command -v flatpak >/dev/null; then
         local fp_count=$(flatpak list | wc -l)
         if [ "$fp_count" -gt 0 ]; then
             pkgs+=("$fp_count (flatpak)")
         fi
     fi
+
     if [ ${#pkgs[@]} -eq 0 ]; then
         echo "?"
     else
@@ -767,32 +726,33 @@ pkg_count() {
 }
 
 # Main Output
+
 detect_distro
 
 if [[ "${LIVE_MODE:-false}" == true ]]; then
     synfetch_live
 else
     if $USE_ASCII; then
-        ART=$(echo -e "$ART" | sed "s/\e\[38;5;[0-9]*m/\e[38;5;${ASCII_COLOR}m/g")
         echo -e "$ART"
         echo
     fi
-    echo -e " ${NEON_BLUE}${ICON_OS}${RESET}OS ${NEON_BLUE}${DISTRO}${RESET}"
-    echo -e " ${MAGENTA}${ICON_KERNEL}${RESET}Kernel ${MAGENTA}$(uname -r)${RESET}"
-    echo -e " ${BLUE}${ICON_USER}${RESET}User ${BLUE}${USER}${RESET}"
-    echo -e " ${RED}${ICON_HOST}${RESET}Host ${RED}$(cat /etc/hostname 2>/dev/null || hostname)${RESET}"
-    echo -e " ${GREEN}${ICON_MOBO}${RESET}MoBo ${GREEN}$(cat /sys/class/dmi/id/board_vendor 2>/dev/null || echo "") $(cat /sys/class/dmi/id/board_name 2>/dev/null || echo "")"${RESET}
-    echo -e " ${TEAL}${ICON_CPU}${RESET}CPU ${TEAL}$(lscpu | grep 'Model name' | awk -F: '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}')${RESET}"
-    echo -e " ${PINK}${ICON_GPU}${RESET}GPU ${PINK}${GPU}${RESET}"
-    echo -e " ${WHITE}${ICON_UPTIME}${RESET}Uptime ${WHITE}$(uptime | sed -E 's/^[^,]*up *//; s/, *[0-9]+ users?.*//')${RESET}"
-    echo -e " ${PURPLE}${ICON_SHELL}${RESET}Shell ${PURPLE}${SHELL##*/}${RESET}"
-    echo -e " ${GRAY}${ICON_DEWM}${RESET}DE/WM ${GRAY}${de_wm}${RESET}"
-    echo -e " ${YELLOW}${ICON_PKGS}${RESET}Pkgs ${YELLOW}$(pkg_count)${RESET}"
-    echo -e " ${GRAY}${SEP}${RESET}"
-    echo -e " \e[38;5;${SECONDARY}mCPU${RESET} $(cyber_bar "${CPU}")"
-    echo -e " \e[38;5;${SECONDARY}mRAM${RESET} $(cyber_bar "${RAM}")"
-    if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
-        echo -e " \e[38;5;${SECONDARY}mGPU${RESET} $(cyber_bar "${GPU_USAGE}")"
-    fi
-    echo -e " ${GRAY}${SEP}${RESET}"
+
+echo -e " ${NEON_BLUE}${ICON_OS}${RESET}OS      ${NEON_BLUE}${DISTRO}${RESET}"
+echo -e " ${MAGENTA}${ICON_KERNEL}${RESET}Kernel  ${MAGENTA}$(uname -r)${RESET}"
+echo -e " ${BLUE}${ICON_USER}${RESET}User    ${BLUE}${USER}${RESET}"
+echo -e " ${RED}${ICON_HOST}${RESET}Host    ${RED}$(cat /etc/hostname 2>/dev/null || hostname)${RESET}"
+echo -e " ${GREEN}${ICON_MOBO}${RESET}MoBo    ${GREEN}$(cat /sys/class/dmi/id/board_vendor 2>/dev/null || echo "") $(cat /sys/class/dmi/id/board_name 2>/dev/null || echo "")"${RESET}
+echo -e " ${TEAL}${ICON_CPU}${RESET}CPU     ${TEAL}$(lscpu | grep 'Model name' | awk -F: '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}')${RESET}"
+echo -e " ${PINK}${ICON_GPU}${RESET}GPU     ${PINK}${GPU}${RESET}"
+echo -e " ${WHITE}${ICON_UPTIME}${RESET}Uptime  ${WHITE}$(uptime | sed -E 's/^[^,]*up *//; s/, *[0-9]+ users?.*//')${RESET}"
+echo -e " ${PURPLE}${ICON_SHELL}${RESET}Shell   ${PURPLE}${SHELL##*/}${RESET}"
+echo -e " ${GRAY}${ICON_DEWM}${RESET}DE/WM   ${GRAY}${de_wm}${RESET}"
+echo -e " ${YELLOW}${ICON_PKGS}${RESET}Pkgs    ${YELLOW}$(pkg_count)${RESET}"
+echo -e " ${GRAY}────────────────────────────────────────${RESET}"
+echo -e " ${PINK}CPU${RESET}     $(cyber_bar "${CPU}")"
+echo -e " ${PINK}RAM${RESET}     $(cyber_bar "${RAM}")"
+if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
+    echo -e " ${PINK}GPU${RESET}     $(cyber_bar "${GPU_USAGE}")"
+fi
+echo -e " ${GRAY}────────────────────────────────────────${RESET}"
 fi
