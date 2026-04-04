@@ -538,7 +538,6 @@ synfetch_live() {
 # DE/WM Detector
 
 de_wm=""
-
 if [ -n "${XDG_CURRENT_DESKTOP}" ]; then
     de_wm="${XDG_CURRENT_DESKTOP}"
 elif [ -n "${DESKTOP_SESSION}" ]; then
@@ -570,7 +569,6 @@ else
         fi
     done
 fi
-
 case "${de_wm,,}" in
     gnome* | gnome-shell | mutter) de_wm="GNOME" ;;
     plasma* | kde* | plasmashell | kwin* | kded*) de_wm="KDE Plasma" ;;
@@ -623,9 +621,29 @@ case "${de_wm,,}" in
     oxwm) de_wm="oxwm" ;;
     aqua | quartz | macos | darwin) de_wm="macOS (Aqua)" ;;
 esac
-
 if [[ "$(uname -s)" == "Darwin" ]]; then
     de_wm="macOS (Aqua)"
+fi
+
+if [[ "${de_wm}" == "GNOME" || \
+      "${de_wm}" == "KDE Plasma" || \
+      "${de_wm}" == "Enlightenment" || \
+      "${de_wm}" == "MATE" || \
+      "${de_wm}" == "XFCE" || \
+      "${de_wm}" == "LXQt" || \
+      "${de_wm}" == "Cinnamon" ]]; then
+    session_suffix=""
+    if [ -n "${XDG_SESSION_TYPE}" ]; then
+        case "${XDG_SESSION_TYPE}" in
+            wayland) session_suffix=" (Wayland)" ;;
+            x11)     session_suffix=" (X11)" ;;
+        esac
+    elif [ -n "${WAYLAND_DISPLAY}" ]; then
+        session_suffix=" (Wayland)"
+    elif [ -n "${DISPLAY}" ]; then
+        session_suffix=" (X11)"
+    fi
+    de_wm="${de_wm}${session_suffix}"
 fi
 
 # Package Detector
