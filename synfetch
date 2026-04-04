@@ -442,7 +442,6 @@ get_gpu() {
 
     if command -v lspci >/dev/null 2>&1; then
         while IFS= read -r line; do
-            # Skip NVIDIA if we already detected them via nvidia-smi (avoids duplicates)
             if [[ "$line" == *"NVIDIA"* ]] && command -v nvidia-smi >/dev/null 2>&1; then
                 continue
             fi
@@ -465,11 +464,7 @@ get_gpu() {
         fi
     fi
 
-    if [ ${#gpus[@]} -gt 0 ]; then
-        printf '%s\n' "${gpus[@]}"
-    else
-        echo "Unknown GPU"
-    fi
+    printf '%s\n' "${gpus[@]}"
 }
 
 get_gpu_usage() {
@@ -520,9 +515,16 @@ synfetch_live() {
         echo -e " ${GREEN}${ICON_MOBO}${RESET}MoBo    ${GREEN}$(cat /sys/class/dmi/id/board_vendor 2>/dev/null || echo "") $(cat /sys/class/dmi/id/board_name 2>/dev/null || echo "")"${RESET}
         echo -e " ${TEAL}${ICON_CPU}${RESET}CPU     ${TEAL}$(lscpu | grep 'Model name' | awk -F: '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}')${RESET}"
         echo -e " ${PINK}${ICON_GPU}${RESET}GPU"
-        get_gpu | while IFS= read -r gpu_line; do
-          [ -n "$gpu_line" ] && echo -e "      ${PINK}${gpu_line}${RESET}"
-        done
+
+        mapfile -t gpu_list < <(get_gpu)
+
+           if [ ${#gpu_list[@]} -eq 1 ]; then
+        echo -e "      ${PINK}${gpu_list[0]}${RESET}"
+           else
+          for gpu in "${gpu_list[@]}"; do
+        echo -e "      ${PINK}${gpu}${RESET}"
+          done
+        fi
         echo -e " ${WHITE}${ICON_UPTIME}${RESET}Uptime  ${WHITE}$(uptime | sed -E 's/^[^,]*up *//; s/, *[0-9]+ users?.*//')${RESET}"
         echo -e " ${PURPLE}${ICON_SHELL}${RESET}Shell   ${PURPLE}${SHELL##*/}${RESET}"
         echo -e " ${GRAY}${ICON_DEWM}${RESET}DE/WM   ${GRAY}${de_wm}${RESET}"
@@ -748,9 +750,16 @@ echo -e " ${RED}${ICON_HOST}${RESET}Host    ${RED}$(cat /etc/hostname 2>/dev/nul
 echo -e " ${GREEN}${ICON_MOBO}${RESET}MoBo    ${GREEN}$(cat /sys/class/dmi/id/board_vendor 2>/dev/null || echo "") $(cat /sys/class/dmi/id/board_name 2>/dev/null || echo "")"${RESET}
 echo -e " ${TEAL}${ICON_CPU}${RESET}CPU     ${TEAL}$(lscpu | grep 'Model name' | awk -F: '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}')${RESET}"
 echo -e " ${PINK}${ICON_GPU}${RESET}GPU"
-get_gpu | while IFS= read -r gpu_line; do
-    [ -n "$gpu_line" ] && echo -e "      ${PINK}${gpu_line}${RESET}"
-done
+
+mapfile -t gpu_list < <(get_gpu)
+
+if [ ${#gpu_list[@]} -eq 1 ]; then
+    echo -e "      ${PINK}${gpu_list[0]}${RESET}"
+else
+    for gpu in "${gpu_list[@]}"; do
+        echo -e "      ${PINK}${gpu}${RESET}"
+    done
+fi
 echo -e " ${WHITE}${ICON_UPTIME}${RESET}Uptime  ${WHITE}$(uptime | sed -E 's/^[^,]*up *//; s/, *[0-9]+ users?.*//')${RESET}"
 echo -e " ${PURPLE}${ICON_SHELL}${RESET}Shell   ${PURPLE}${SHELL##*/}${RESET}"
 echo -e " ${GRAY}${ICON_DEWM}${RESET}DE/WM   ${GRAY}${de_wm}${RESET}"
