@@ -167,7 +167,7 @@ Examples:
 ### Uninstallation
 To uninstall `synfetch`, just run:
 ```bash
-sudo rm -rf /usr/local/bin/synfetch && sudo rm -rf /usr/bin/synfetch
+sudo rm -rf /usr/local/bin/synfetch
 ```
 
 ### License
