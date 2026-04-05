@@ -6,11 +6,12 @@ pkgdesc="A fast and customizable neofetch-like system information tool with a sy
 arch=('any')
 url="https://github.com/SXSLVT/synfetch"
 license=('GPL3')
-depends=('bash')
+depends=(
+  'bash'
+  'pciutils'
+)
 optdepends=(
-  'pciutils: Required for proper GPU detection (Intel, AMD Radeon, NVIDIA)'
-  'nvidia-utils: Better NVIDIA GPU usage monitoring in --live mode'
-  'flatpak: Accurate Flatpak package counting'
+  'nvidia-utils: Better NVIDIA GPU usage monitoring'
 )
 provides=('synfetch')
 conflicts=('synfetch-git')
