@@ -32,8 +32,9 @@
 While there are many excellent fetch tools (neofetch, fastfetch, etc.), `synfetch` stands out by embracing a distinct **synthwave / synthetic** identity:
 
 - Clean, modern layout with vibrant synthwave colors
-- Cross-platform support for **Linux** and **macOS**
 - Fast bash implementation that stays lightweight
+- Can be used in ricing and sharing your info/ricing
+- Cross-platform support for **Linux** and **macOS**
 
 ### Features
 
