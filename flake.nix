@@ -10,13 +10,15 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
 
-      perSystem = { pkgs, ... }: {
+      perSystem = { pkgs, lib, ... }: {
         packages.default = pkgs.writeShellApplication {
           name = "synfetch";
 
           runtimeInputs = with pkgs; [
-            pciutils      # lspci for GPU detection
-            nvidia-utils  # nice for NVIDIA usage
+            pciutils                  # required for proper GPU detection
+          ]
+          ++ lib.optionals pkgs.stdenv.isLinux [
+            nvidia-utils              # nice for NVIDIA GPU usage
           ];
 
           text = builtins.readFile ./synfetch;
