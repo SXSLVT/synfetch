@@ -574,7 +574,7 @@ case "${de_wm,,}" in
     plasma* | kde* | plasmashell | kwin* | kded*) de_wm="KDE Plasma" ;;
     xfce* | xfwm4 | xfce4-session) de_wm="XFCE" ;;
     mate* | marco) de_wm="MATE" ;;
-    cinnamon* | muffin) de_wm="Cinnamon" ;;
+    cinnamon* | muffin) de_wm="X-Cinnamon" ;;
     budgie*) de_wm="Budgie" ;;
     pantheon* | gala) de_wm="Pantheon (elementary OS)" ;;
     deepin* | dde*) de_wm="Deepin DDE" ;;
@@ -632,7 +632,7 @@ if [[ "${de_wm}" == "GNOME" || \
       "${de_wm}" == "MATE" || \
       "${de_wm}" == "XFCE" || \
       "${de_wm}" == "LXQt" || \
-      "${de_wm}" == "Cinnamon" ]]; then
+      "${de_wm}" == "X-Cinnamon" ]]; then
     session_suffix=""
     if [ -n "${XDG_SESSION_TYPE}" ]; then
         case "${XDG_SESSION_TYPE}" in
