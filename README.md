@@ -83,7 +83,7 @@ If you are experiencing issues with synfetch, please create an [issue](https://g
 
 > [!NOTE]
 >
-> **Git** is required to clone the repository!
+> The package **git** is required to clone the repository!
 > 
 > A **Nerd Font** is required to display icons!
 
