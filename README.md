@@ -83,9 +83,13 @@ If you are experiencing issues with synfetch, please create an [issue](https://g
 
 > [!NOTE]
 >
-> The package **git** is required to clone the repository!
+> **git** is required to clone the repository!
 > 
-> A **Nerd Font** is required to display icons!
+> **pciutils** (provides `lspci`) is required for accurate GPU detection (Intel, AMD Radeon, NVIDIA)!
+> 
+> **nvidia-utils** is required for NVIDIA GPU usage! (optional)
+> 
+> A **Nerd Font** is required to display icons! (optional)
 
 ### Building and Installation
 For `Arch` based users, I have a [`PKGBUILD`](./PKGBUILD) available. 
