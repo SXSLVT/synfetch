@@ -441,6 +441,9 @@ get_gpu() {
         s/Intel Corporation/Intel/;
         s/NVIDIA Corporation/NVIDIA/;
         s/NVIDIA [A-Z0-9]\{2,6\} \[/NVIDIA [/;
+        s| / Radeon Vega Mobile Series||i;
+        s| / Radeon Vega Series||i;
+        s| / Radeon .* Series||i;
         s/^ *//; s/ *$//;
         s/\[//g;
         s/\]//g;
