@@ -12,7 +12,7 @@ MAGENTA='\033[0;35m'
 RESET='\033[0m'
 
 # Cool banner
-echo -e "${CYAN}"
+echo -e "${BLUE}"
 cat << "EOF"
    ____          ____    __      __ 
   / __/_ _____  / __/__ / /_____/ / 
