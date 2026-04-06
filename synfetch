@@ -13,7 +13,7 @@ BLUE="\e[38;5;51m"
 PURPLE="\e[38;5;135m"
 TEAL="\e[38;5;45m"
 RED="\e[38;5;196m"
-GREEN="\e[38;5;82m"
+GREEN="\e[38;5;28m"
 YELLOW="\e[38;5;226m"
 WHITE="\e[97m"
 GRAY="\e[38;5;245m"
@@ -350,7 +350,7 @@ parse_args "$@"
 # Nerd Fonts
 
 if $USE_NERD_FONTS; then
-    ICON_OS=" "
+    ICON_OS=" "
     ICON_KERNEL="󰌢 "
     ICON_USER=" "
     ICON_HOST=" "
@@ -360,7 +360,7 @@ if $USE_NERD_FONTS; then
     ICON_UPTIME=" "
     ICON_SHELL=" "
     ICON_DEWM=" "
-    ICON_PKGS=" "
+    ICON_PKGS="󰏗 "
 else
     ICON_OS=""
     ICON_KERNEL=""
