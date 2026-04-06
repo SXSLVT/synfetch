@@ -99,6 +99,22 @@ For everyone else:
 curl -fsSL https://raw.githubusercontent.com/SXSLVT/synfetch/main/synfetch | sudo tee /usr/local/bin/synfetch > /dev/null && sudo chmod +x /usr/local/bin/synfetch
 ```
 
+or
+
+**Clone the repository and cd into the new directory**
+```bash
+git clone https://github.com/SXSLVT/synfetch && cd synfetch
+```
+**Make `synfetch` executable**
+```bash
+chmod +x synfetch
+```
+**Install `synfetch` system-wide and return to the previous directory**
+```bash
+sudo mv synfetch /usr/local/bin/ && cd -
+```
+
+
 ### Usage
 
 Just run: 
