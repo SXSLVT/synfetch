@@ -41,7 +41,7 @@ While there are many excellent fetch tools (neofetch, fastfetch, etc.), `synfetc
 - Beautiful custom ASCII art
 - Real-time Monitoring
 - Displays Info + CPU, GPU and RAM Usage
-- Highly customizable & Minimal Flags
+- Highly customizable (easy to understand the script) & Minimal Flags
 
 
 ### Support
