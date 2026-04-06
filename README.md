@@ -158,6 +158,7 @@ Examples:
 ```
 
 ### Uninstallation
+If you want to uninstall `synfetch`, run:
 ```bash
 sudo rm -rf /usr/local/bin/synfetch
 ```
