@@ -82,7 +82,6 @@ If you are experiencing issues with synfetch, please create an [issue](https://g
 
 ### Dependencies
 
-- The package **git** is required to clone the repository!
 - The package **pciutils** is required for accurate GPU detection (Intel, AMD Radeon, NVIDIA)!
 - The package **nvidia-utils** is required for NVIDIA GPU usage! **(optional)** 
 - A **Nerd Font** is required to display icons! **(optional)**
