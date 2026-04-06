@@ -82,7 +82,6 @@ If you are experiencing issues with synfetch, please create an [issue](https://g
 - MacOS
 
 ### Dependencies
-
 - The package **pciutils** is required for accurate GPU detection (Intel, AMD Radeon, NVIDIA)!
 - The package **nvidia-utils** is required for NVIDIA GPU usage! **(optional)** 
 - A **Nerd Font** is required to display icons! **(optional)**
@@ -98,21 +97,6 @@ For everyone else:
 **Run:**
 ```bash
 wget -qO- https://raw.githubusercontent.com/SXSLVT/synfetch/main/synfetch | sudo tee /usr/local/bin/synfetch > /dev/null && sudo chmod +x /usr/local/bin/synfetch
-```
-
-or
-
-**Clone the repository and cd into the new directory**
-```bash
-git clone https://github.com/SXSLVT/synfetch && cd synfetch
-```
-**Make `synfetch` executable**
-```bash
-chmod +x synfetch
-```
-**Install `synfetch` system-wide and return to the previous directory**
-```bash
-sudo mv synfetch /usr/local/bin/ && cd -
 ```
 
 ### Usage
