@@ -96,7 +96,7 @@ For `Nix` users, I have both [`flake.nix`](./flake.nix) and [`flake.lock`](./fla
 
 For everyone else:
 
-Run the [install.sh](./install.sh) file
+I have an [install.sh](./install.sh) available.
 
 or
 
@@ -175,7 +175,7 @@ Examples:
 
 To uninstall `synfetch`:
 
-Run the [uninstall.sh](./uninstall.sh) file
+I have an [uninstall.sh](./uninstall.sh) available.
 
 or
 
