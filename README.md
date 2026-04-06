@@ -94,9 +94,7 @@ For `Arch` based users, I have a [`PKGBUILD`](./PKGBUILD) available.
 
 For `Nix` users, I have both [`flake.nix`](./flake.nix) and [`flake.lock`](./flake.lock) available.
 
-For everyone else:
-
-I have an [install.sh](./install.sh) available.
+For everyone else, I have an [install.sh](./install.sh) available.
 
 or
 
