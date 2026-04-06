@@ -436,12 +436,12 @@ RAM=$(get_ram_usage)
 
 get_gpu() {
     if [ "$(uname)" != "Linux" ]; then
-        echo "$(system_profiler SPDisplaysDataType 2>/dev/null | grep 'Chipset Model' | awk -F': ' '{print $2}' || echo 'Apple GPU')"
+        system_profiler SPDisplaysDataType 2>/dev/null | grep 'Chipset Model' | awk -F': ' '{print $2}' || echo 'Apple GPU'
         return
     fi
 
-    local gpus
-    gpus=$(lspci -nn 2>/dev/null | grep -E 'VGA|3D|Display' | sed 's/.*: //' | sed '
+    local raw
+    raw=$(lspci -nn 2>/dev/null | grep -E 'VGA|3D|Display' | sed 's/.*: //' | sed '
         s/ (rev .*)$//;
         s/\[[0-9a-fx:]\+\]//g;
         s/Advanced Micro Devices, Inc\. \[AMD\/ATI\]/AMD Radeon/;
@@ -449,28 +449,18 @@ get_gpu() {
         s/Intel Corporation/Intel/;
         s/NVIDIA Corporation/NVIDIA/;
         s/NVIDIA [A-Z0-9]\{2,6\} \[/NVIDIA [/;
-        s| / Radeon Vega Mobile Series||i;
-        s| / Radeon Vega Series||i;
         s| / Radeon .* Series||i;
         s/^ *//; s/ *$//;
-        s/\[//g;
-        s/\]//g;
+        s/\[//g; s/\]//g;
     ' | sort -u)
 
-    if [ -z "$gpus" ]; then
-        if command -v glxinfo >/dev/null 2>&1; then
-            glxinfo -B 2>/dev/null | grep -i "OpenGL renderer" | head -n1 | sed 's/.*: //; s|/.*||; s/ (.*)//'
-            return
-        fi
-        if [ -d /sys/class/drm/card0/device ]; then
-            echo "Integrated Graphics"
-        else
-            echo "Unknown GPU"
-        fi
+    if [ -z "$raw" ]; then
+        command -v glxinfo >/dev/null 2>&1 && glxinfo -B 2>/dev/null | grep -i "OpenGL renderer" | head -n1 | sed 's/.*: //; s|/.*||; s/ (.*)//' && return
+        [ -d /sys/class/drm/card0/device ] && echo "Integrated Graphics" || echo "Unknown GPU"
         return
     fi
 
-    echo "$gpus" | paste -sd ' + ' -
+    echo "$raw" | paste -sd ' + ' -
 }
 
 get_gpu_usage() {
