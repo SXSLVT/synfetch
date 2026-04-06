@@ -97,7 +97,7 @@ For everyone else:
 
 **Run:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/SXSLVT/synfetch/main/synfetch | sudo tee /usr/local/bin/synfetch > /dev/null && sudo chmod +x /usr/local/bin/synfetch
+wget -qO- https://raw.githubusercontent.com/SXSLVT/synfetch/main/synfetch | sudo tee /usr/local/bin/synfetch > /dev/null && sudo chmod +x /usr/local/bin/synfetch
 ```
 
 or
