@@ -350,17 +350,17 @@ parse_args "$@"
 # Nerd Fonts
 
 if $USE_NERD_FONTS; then
-    ICON_OS="󰣇 "
-    ICON_KERNEL=" "
+    ICON_OS=" "
+    ICON_KERNEL=" "
     ICON_USER=" "
-    ICON_HOST="󰗈 "
+    ICON_HOST=" "
     ICON_MOBO=" "
     ICON_CPU=" "
     ICON_GPU="󰾲 "
     ICON_UPTIME=" "
     ICON_SHELL=" "
     ICON_DEWM=" "
-    ICON_PKGS="󰏗 "
+    ICON_PKGS=" "
 else
     ICON_OS=""
     ICON_KERNEL=""
