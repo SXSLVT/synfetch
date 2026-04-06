@@ -95,6 +95,9 @@ For `Arch` based users, I have a [`PKGBUILD`](./PKGBUILD) available.
 For `Nix` users, I have both [`flake.nix`](./flake.nix) and [`flake.lock`](./flake.lock) available.
 
 For everyone else:
+**Run the `[install.sh](./install.sh)` file**
+
+or
 
 **Clone the repository and cd into the new directory**
 ```bash
@@ -108,9 +111,6 @@ chmod +x synfetch
 ```bash
 sudo mv synfetch /usr/local/bin/ && cd -
 ```
-or
-
-**Run the [install.sh](./install.sh) file**
 
 ### Usage
 
@@ -173,6 +173,10 @@ Examples:
 ### Uninstallation
 
 To uninstall `synfetch`, just run:
+**[install.sh](./install.sh) file**
+
+or
+
 ```bash
 sudo rm -rf /usr/local/bin/synfetch
 ```
