@@ -24,6 +24,7 @@
 - [Dependencies](#dependencies)
 - [Building and Installation](#building-and-installation)
 - [Usage](#usage)
+- [Uninstallation](#uninstallation)
 - [License](#license)
 
 ### Why synfetch?
@@ -170,6 +171,11 @@ Examples:
   synfetch --noascii
   synfetch --distro arch
   synfetch --distro macos --nonerd
+```
+
+### Uninstallation
+```bash
+sudo rm -rf /usr/local/bin/synfetch
 ```
 
 ### License
