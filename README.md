@@ -33,7 +33,7 @@ While there are many excellent fetch tools (neofetch, fastfetch, etc.), `synfetc
 
 - Clean, modern layout with vibrant synthwave colors
 - Fast bash implementation that stays lightweight
-- Can be used in ricing and sharing your info/ricing
+- Can be used in ricing and sharing your info/rice
 - Cross-platform support for **Linux** and **macOS**
 
 ### Features
