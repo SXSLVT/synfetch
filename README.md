@@ -95,7 +95,8 @@ For `Arch` based users, I have a [`PKGBUILD`](./PKGBUILD) available.
 For `Nix` users, I have both [`flake.nix`](./flake.nix) and [`flake.lock`](./flake.lock) available.
 
 For everyone else:
-**Run the `[install.sh](./install.sh)` file**
+
+**Run the [install.sh](./install.sh) file**
 
 or
 
@@ -173,7 +174,8 @@ Examples:
 ### Uninstallation
 
 To uninstall `synfetch`, just run:
-**[install.sh](./install.sh) file**
+
+**[uninstall.sh](./uninstall.sh) file**
 
 or
 
