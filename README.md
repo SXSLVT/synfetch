@@ -108,7 +108,9 @@ chmod +x synfetch
 ```bash
 sudo mv synfetch /usr/local/bin/ && cd -
 ```
+or
 
+**Run the [install.sh](./install.sh) file**
 
 ### Usage
 
