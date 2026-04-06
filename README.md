@@ -24,7 +24,6 @@
 - [Dependencies](#dependencies)
 - [Building and Installation](#building-and-installation)
 - [Usage](#usage)
-- [Uninstallation](#uninstallation)
 - [License](#license)
 
 ### Why synfetch?
