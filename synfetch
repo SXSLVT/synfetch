@@ -440,8 +440,8 @@ get_gpu() {
         return
     fi
 
-    local raw
-    raw=$(lspci -nn 2>/dev/null | grep -E 'VGA|3D|Display' | sed 's/.*: //' | sed '
+    local gpus
+    gpus=$(lspci -nn 2>/dev/null | grep -E 'VGA|3D|Display' | sed 's/.*: //' | sed '
         s/ (rev .*)$//;
         s/\[[0-9a-fx:]\+\]//g;
         s/Advanced Micro Devices, Inc\. \[AMD\/ATI\]/AMD Radeon/;
@@ -450,17 +450,33 @@ get_gpu() {
         s/NVIDIA Corporation/NVIDIA/;
         s/NVIDIA [A-Z0-9]\{2,6\} \[/NVIDIA [/;
         s| / Radeon .* Series||i;
+        s/3D controller: //i;
+        s/VGA compatible controller: //i;
+        s/Display controller: //i;
         s/^ *//; s/ *$//;
         s/\[//g; s/\]//g;
+        s/ Mobile$//i;
+        s/ Max-Q$//i;
+        s/ Laptop$//i;
     ' | sort -u)
 
-    if [ -z "$raw" ]; then
-        command -v glxinfo >/dev/null 2>&1 && glxinfo -B 2>/dev/null | grep -i "OpenGL renderer" | head -n1 | sed 's/.*: //; s|/.*||; s/ (.*)//' && return
+    if [ -z "$gpus" ]; then
+        if command -v glxinfo >/dev/null 2>&1; then
+            glxinfo -B 2>/dev/null | grep -i "OpenGL renderer" | head -n1 | sed 's/.*: //; s|/.*||; s/ (.*)//'
+            return
+        fi
         [ -d /sys/class/drm/card0/device ] && echo "Integrated Graphics" || echo "Unknown GPU"
         return
     fi
 
-    echo "$raw" | paste -sd ' + ' -
+    local joined
+    joined=$(echo "$gpus" | paste -sd ' + ' -)
+
+    if echo "$gpus" | grep -q "Intel" && echo "$gpus" | grep -q "NVIDIA"; then
+       echo "$joined" | sed 's/Intel /Intel /; s/NVIDIA /NVIDIA /'
+    else
+       echo "$joined"
+    fi
 }
 
 get_gpu_usage() {
