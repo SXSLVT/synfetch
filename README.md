@@ -112,6 +112,15 @@ Just run:
 synfetch
 ```
 
+To display help:
+```bash
+synfetch --help
+```
+or
+```bash
+synfetch -h
+```
+
 To display CPU, GPU and RAM Usage in real-time:
 ```bash
 synfetch --live
@@ -120,11 +129,6 @@ synfetch --live
 To hide icons:
 ```bash
 synfetch --nonerd
-```
-
-To set a theme:
-```bash
-synfetch --theme <name>
 ```
 
 To hide ASCII art:
@@ -136,18 +140,14 @@ To display ASCII art of a different distro:
 ```bash
 synfetch --distro <name>
 ```
-To orce refresh all cache files (use after installing packages)
+To force refresh all cache files (use after installing packages)
 ```bash
 synfetch --refresh
 ```
 
-To display help:
+To set a theme:
 ```bash
-synfetch --help
-```
-or
-```bash
-synfetch -h
+synfetch --theme <name>
 ```
 
 Output of `synfetch --help`
