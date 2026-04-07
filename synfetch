@@ -320,9 +320,9 @@ show_help() {
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
-      	   --live)
-		       LIVE_MODE=true
-		       ;;
+      	  --live)
+		      LIVE_MODE=true
+		      ;;
             --nonerd)
                 USE_NERD_FONTS=false
                 ;;
@@ -336,7 +336,7 @@ parse_args() {
             --help|-h)
                 show_help
          		;;
-	       --refresh)
+	      --refresh)
                 REFRESH=true
                 ;;
             *)
@@ -588,6 +588,29 @@ cyber_bar() {
 CPU=$(get_cpu_usage)
 RAM=$(get_ram_usage)
 
+# Animated Uptime
+
+get_uptime() {
+    if [ "$(uname)" = "Linux" ]; then
+        local up=$(awk '{print int($1)}' /proc/uptime)
+    else
+        local up=$(sysctl -n kern.boottime 2>/dev/null | awk -F' = ' '{print $2}' | tr -d ',')
+        up=$(( $(date +%s) - up ))
+    fi
+
+    local days=$((up / 86400))
+    local hours=$(( (up % 86400) / 3600 ))
+    local mins=$(( (up % 3600) / 60 ))
+
+    local result=""
+
+    (( days > 0 )) && result+="${days}d "
+    (( hours > 0 || days > 0 )) && result+="${hours}h "
+    result+="${mins}m"
+
+    echo "$result"
+}
+
 # Nerd Fonts
 
 if $USE_NERD_FONTS; then
@@ -732,7 +755,6 @@ fi
 
 KERNEL="$(uname -r)"
 HOSTNAME="$(cat /etc/hostname 2>/dev/null || hostname)"
-UPTIME="$(uptime | sed -E 's/^[^,]*up *//; s/, *[0-9]+ users?.*//')"
 SHELL_NAME="${SHELL##*/}"
 
 # Real-time Monitoring
@@ -762,17 +784,17 @@ synfetch_live() {
         echo -e " ${GREEN}${ICON_MOBO}${RESET}MoBo    ${GREEN}${MOBO}${RESET}"
         echo -e " ${TEAL}${ICON_CPU}${RESET}CPU     ${TEAL}${CPU_MODEL}${RESET}"
         echo -e " ${PINK}${ICON_GPU}${RESET}GPU     ${PINK}${GPU}${RESET}"
-        echo -e " ${WHITE}${ICON_UPTIME}${RESET}Uptime  ${WHITE}${UPTIME}${RESET}"
+        echo -e " ${WHITE}${ICON_UPTIME}${RESET}Uptime  ${WHITE}$(get_uptime)${RESET}"
         echo -e " ${PURPLE}${ICON_SHELL}${RESET}Shell   ${PURPLE}${SHELL_NAME}${RESET}"
         echo -e " ${GRAY}${ICON_DEWM}${RESET}DE/WM   ${GRAY}${de_wm}${RESET}"
         echo -e " ${YELLOW}${ICON_PKGS}${RESET}Pkgs    ${YELLOW}${PKG_COUNT}${RESET}"
         echo -e " ${GRAY}────────────────────────────────────────${RESET}"
         echo -e " ${PINK}CPU${RESET}     $(cyber_bar "${CPU}")"
         echo -e " ${PINK}RAM${RESET}     $(cyber_bar "${RAM}")"
-        if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
+        if [[ "$GPU_USAGE" != "N/A" ]]; then
             echo -e " ${PINK}GPU${RESET}     $(cyber_bar "${GPU_USAGE}")"
         fi
-        echo -e " ${GRAY}────────────────────────────────────────${RESET}"
+	echo -e " ${GRAY}────────────────────────────────────────${RESET}"
         echo -e " ${DIM}Press Ctrl+C to exit live mode${RESET}                "
         sleep 0.4
     done
@@ -797,14 +819,14 @@ echo -e " ${RED}${ICON_HOST}${RESET}Host    ${RED}${HOSTNAME}${RESET}"
 echo -e " ${GREEN}${ICON_MOBO}${RESET}MoBo    ${GREEN}${MOBO}${RESET}"
 echo -e " ${TEAL}${ICON_CPU}${RESET}CPU     ${TEAL}${CPU_MODEL}${RESET}"
 echo -e " ${PINK}${ICON_GPU}${RESET}GPU     ${PINK}${GPU}${RESET}"
-echo -e " ${WHITE}${ICON_UPTIME}${RESET}Uptime  ${WHITE}${UPTIME}${RESET}"
+echo -e " ${WHITE}${ICON_UPTIME}${RESET}Uptime  ${WHITE}$(get_uptime)${RESET}"
 echo -e " ${PURPLE}${ICON_SHELL}${RESET}Shell   ${PURPLE}${SHELL_NAME}${RESET}"
 echo -e " ${GRAY}${ICON_DEWM}${RESET}DE/WM   ${GRAY}${de_wm}${RESET}"
 echo -e " ${YELLOW}${ICON_PKGS}${RESET}Pkgs    ${YELLOW}${PKG_COUNT}${RESET}"
 echo -e " ${GRAY}────────────────────────────────────────${RESET}"
 echo -e " ${PINK}CPU${RESET}     $(cyber_bar "${CPU}")"
 echo -e " ${PINK}RAM${RESET}     $(cyber_bar "${RAM}")"
-if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
+if [[ "$GPU_USAGE" != "N/A" ]]; then
     echo -e " ${PINK}GPU${RESET}     $(cyber_bar "${GPU_USAGE}")"
 fi
 echo -e " ${GRAY}────────────────────────────────────────${RESET}"
