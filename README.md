@@ -35,7 +35,7 @@ While there are many excellent fetch tools, `synfetch` stands out with:
 - Pure bash with smart caching (feels instant on every run)
 - Beautiful synthwave aesthetic with vibrant neon colors
 - Lightweight, debloated, and highly customizable
-- Real-time monitoring mode (`--live`)
+- Real-time monitoring mode (--live)
 - Excellent Linux + macOS support
 - Perfect for ricing and showing off your setup
 
