@@ -165,16 +165,6 @@ Options:
 
 Available themes: synthwave (default), monochrome, minimal, dracula
 Available distros: arch, cachyos, ubuntu, debian, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, nixos, macos
-
-Examples:
-  synfetch 
-  synfetch --live
-  synfetch --nonerd
-  synfetch --noascii
-  synfetch --refresh
-  synfetch --distro macos
-  synfetch --theme monochrome
-  synfetch --theme minimal --live
 ```
 
 ### Uninstallation
