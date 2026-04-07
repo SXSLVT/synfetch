@@ -89,13 +89,6 @@ For `Nix` users, I have both [`flake.nix`](./flake.nix) and [`flake.lock`](./fla
 
 For everyone else:
 
-**Run:**
-```bash
-curl -fsSL https://raw.githubusercontent.com/SXSLVT/synfetch/main/synfetch | sudo tee /usr/local/bin/synfetch > /dev/null && sudo chmod +x /usr/local/bin/synfetch
-```
-
-or
-
 **Clone the repository and cd into the new directory**
 ```bash
 git clone https://github.com/SXSLVT/synfetch && cd synfetch
