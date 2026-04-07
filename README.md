@@ -11,13 +11,14 @@
 
 <div align="center">
 
-  # Synfetch
+# Synfetch
   
 *A really simple system fetch written in **bash**.*
 
 </div>
 
 ### Contents
+
 - [Why synfetch?](#why-synfetch)
 - [Support](#support)
 - [Dependencies](#dependencies)
@@ -130,6 +131,10 @@ To display ASCII art of a different distro:
 ```bash
 synfetch --distro <name>
 ```
+To orce refresh all cache files (use after installing packages)
+```bash
+synfetch --refresh
+```
 
 To display help:
 ```bash
@@ -149,6 +154,7 @@ Options:
   --noascii         Hide ASCII art
   --distro <name>   Display ASCII art of a different distro
   --live            Animated CPU, GPU and RAM usage
+  --refresh         Force refresh all cache files (use after installing packages)
   --help | -h       Show this help message
 
 Available distros: arch, cachyos, ubuntu, debian, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, nixos, macos
@@ -156,6 +162,7 @@ Available distros: arch, cachyos, ubuntu, debian, fedora, linuxmint, zorinos, po
 Examples:
   synfetch 
   synfetch --live
+  synfetch --refresh
   synfetch --nonerd
   synfetch --noascii
   synfetch --distro arch
@@ -163,6 +170,7 @@ Examples:
 ```
 
 ### Uninstallation
+
 If you want to uninstall `synfetch`, run:
 ```bash
 sudo rm -rf /usr/local/bin/synfetch
