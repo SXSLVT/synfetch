@@ -4,7 +4,7 @@
 
 <div align="center">
 
-<img width="511" height="469" alt="image" src="https://github.com/user-attachments/assets/477fd527-6d77-45b9-b4f2-966dbba1f96f" />
+<img width="481" height="459" alt="image" src="https://github.com/user-attachments/assets/c907c9b7-6fc7-4a00-9e7c-556049a5ad58" />
 <img width="945" height="531" alt="image" src="https://github.com/user-attachments/assets/45f9e56a-c006-4274-8a3d-42dff9f57842" />
 
 </div>
@@ -122,6 +122,11 @@ To hide icons:
 synfetch --nonerd
 ```
 
+To set a theme:
+```bash
+synfetch --theme <name>
+```
+
 To hide ASCII art:
 ```bash
 synfetch --noascii
@@ -155,18 +160,21 @@ Options:
   --distro <name>   Display ASCII art of a different distro
   --live            Animated CPU, GPU and RAM usage
   --refresh         Force refresh all cache files (use after installing packages)
+  --theme <name>    Color theme (synthwave, monochrome, minimal, dracula)
   --help | -h       Show this help message
 
+Available themes: synthwave (default), monochrome, minimal, dracula
 Available distros: arch, cachyos, ubuntu, debian, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, nixos, macos
 
 Examples:
   synfetch 
   synfetch --live
-  synfetch --refresh
   synfetch --nonerd
   synfetch --noascii
-  synfetch --distro arch
-  synfetch --distro macos --nonerd
+  synfetch --refresh
+  synfetch --distro macos
+  synfetch --theme monochrome
+  synfetch --theme minimal --live
 ```
 
 ### Uninstallation
