@@ -816,8 +816,7 @@ fi
 
 case "${de_wm,,}" in
     *x-cinnamon*)                    de_wm="Cinnamon" ;;
-    *zorin*)                         de_wm="Zorin OS (GNOME)" ;;   # ← Fixed
-    *ubuntu:gnome* | *gnome*)        de_wm="GNOME" ;;
+    *ubuntu:gnome* | zorin:gnome | *gnome*)de_wm="GNOME" ;;
     *kde* | *plasma*)                de_wm="KDE Plasma" ;;
     *xfce*)                          de_wm="XFCE" ;;
     *mate*)                          de_wm="MATE" ;;
@@ -974,8 +973,8 @@ synfetch_live() {
         echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"
         echo -e " ${BAR_LABEL_COLOR}CPU${RESET}     $(cyber_bar "${CPU}")"
         echo -e " ${BAR_LABEL_COLOR}RAM${RESET}     $(cyber_bar "${RAM}")"
-        if [[ "$GPU_USAGE" != "N/A" ]]; then
-            echo -e " ${BAR_LABEL_COLOR}GPU${RESET}     $(cyber_bar "${GPU_USAGE}")"
+        if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
+            echo -e " ${PINK}GPU${RESET}     $(cyber_bar "${GPU_USAGE}")"
         fi
         echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"
         echo -e " ${DIM}Press Ctrl+C to exit live mode${RESET}                "
@@ -1009,8 +1008,8 @@ else
     echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"
     echo -e " ${BAR_LABEL_COLOR}CPU${RESET}     $(cyber_bar "${CPU}")"
     echo -e " ${BAR_LABEL_COLOR}RAM${RESET}     $(cyber_bar "${RAM}")"
-    if [[ "$GPU_USAGE" != "N/A" ]]; then
-        echo -e " ${BAR_LABEL_COLOR}GPU${RESET}     $(cyber_bar "${GPU_USAGE}")"
+    if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
+        echo -e " ${PINK}GPU${RESET}     $(cyber_bar "${GPU_USAGE}")"
     fi
     echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"
 fi
