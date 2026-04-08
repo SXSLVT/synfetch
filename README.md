@@ -68,6 +68,7 @@ If you are experiencing issues with synfetch, please create an [issue](https://g
 - Gentoo
 - Void
 - Alpine
+- Bedrock
 - Guix
 - Gobo
 - NixOS
@@ -162,7 +163,7 @@ Options:
   --help | -h       Show this help message
 
 Available themes: synthwave (default), monochrome, minimal, dracula
-Available distros: arch, cachyos, ubuntu, debian, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, nixos, macos
+Available distros: arch, cachyos, ubuntu, debian, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, nixos, macos
 ```
 
 ### Uninstallation
