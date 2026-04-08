@@ -562,6 +562,44 @@ get_gpu_usage() {
 
 GPU_USAGE=$(get_gpu_usage)
 
+# CPU Model Detector
+
+get_cpu_model() {
+    if [ "$(uname)" = "Darwin" ]; then
+        sysctl -n machdep.cpu.brand_string 2>/dev/null || echo "Unknown CPU"
+        return
+    fi
+
+    if [ -r /proc/cpuinfo ]; then
+        local model
+        # x86_64 / most systems
+        model=$(awk -F': ' '/^model name/ {print $2; exit}' /proc/cpuinfo 2>/dev/null)
+        if [ -n "$model" ]; then
+            echo "$model" | sed 's/ with Radeon.*//; s/^ *//; s/ *$//'
+            return
+        fi
+
+        model=$(awk -F': ' '/^Processor/ {print $2; exit}' /proc/cpuinfo 2>/dev/null)
+        if [ -n "$model" ]; then
+            echo "$model" | sed 's/^ *//; s/ *$//'
+            return
+        fi
+
+        model=$(awk -F': ' '/^Hardware/ {print $2; exit}' /proc/cpuinfo 2>/dev/null)
+        if [ -n "$model" ]; then
+            echo "$model" | sed 's/^ *//; s/ *$//'
+            return
+        fi
+    fi
+
+    if command -v lscpu >/dev/null 2>&1; then
+        lscpu | grep "^Model name:" | sed 's/.*: *//; s/ with Radeon.*//; s/^ *//; s/ *$//'
+        return
+    fi
+
+    echo "Unknown CPU"
+}
+
 # Package Detector
 
 pkg_count() {
@@ -644,7 +682,7 @@ cache() {
 }
 
 if [[ "$REFRESH" == true ]] || [[ ! -f "$CACHE_DIR/preload.stamp" ]]; then
-    cache "cpu"  'lscpu | grep "Model name:" | sed "s/.*: *//; s/ with Radeon.*//"' >/dev/null
+    cache "cpu"  'get_cpu_model' >/dev/null
     cache "mobo" 'echo "$(cat /sys/class/dmi/id/board_vendor 2>/dev/null || echo "") $(cat /sys/class/dmi/id/board_name 2>/dev/null || echo "")"' >/dev/null
     cache "gpu"  'get_gpu' >/dev/null
     cache "pkgs" 'pkg_count' 300 >/dev/null
@@ -653,7 +691,7 @@ fi
 
 # Load cached values
 
-CPU_MODEL=$(cache "cpu"  'lscpu | grep "Model name:" | sed "s/.*: *//; s/ with Radeon.*//"')
+CPU_MODEL=$(cache "cpu"  'get_cpu_model')
 MOBO=$(cache "mobo"    'echo "$(cat /sys/class/dmi/id/board_vendor 2>/dev/null || echo "Unknown") $(cat /sys/class/dmi/id/board_name 2>/dev/null || echo "")"')
 GPU=$(cache "gpu"      'get_gpu')
 PKG_COUNT=$(cache "pkgs" 'pkg_count' 300)
