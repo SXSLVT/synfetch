@@ -119,7 +119,7 @@ or
 synfetch -h
 ```
 
-To display Uptime, CPU, GPU and RAM Usage in real-time:
+To display Uptime and CPU, GPU, RAM Usage in real-time:
 ```bash
 synfetch --live
 ```
