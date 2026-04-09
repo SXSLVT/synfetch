@@ -79,7 +79,7 @@ If you are experiencing issues with synfetch, please create an [issue](https://g
 
 ### Dependencies
 
-Only requires `bash` (because synfetch is written **pure bash**) 
+Only requires `bash` (because synfetch is written in **pure bash**) 
 
 Uses common tools like `lspci`, `lscpu` when available **(optional)**
 
