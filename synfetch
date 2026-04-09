@@ -19,7 +19,7 @@ YELLOW="\e[38;5;226m"
 WHITE="\e[97m"
 GRAY="\e[38;5;245m"
 
-# Dracula colors and mono accent
+# Dracula and monochrome colors
 
 DRACULA_CYAN="\e[38;5;81m"
 DRACULA_PURPLE="\e[38;5;141m"
@@ -292,20 +292,20 @@ ${GREEN}  | |/ / _ \\/ / _  /
 ${GREEN}  |___/\\___/_/\\_,_/  
                     "
                     ;;
-	       bedrock)
-	           ART="${GRAY}     ___         __             __  
+	      bedrock)
+	          ART="${GRAY}     ___         __             __  
 ${GRAY}    / _ )___ ___/ /______  ____/ /__
 ${GRAY}   / _  / -_) _  / __/ _ \\/ __/   _/
 ${GRAY}  /____/\\__/\\_,_/_/  \\___/\\__/_/\\_\\                            
-		   "
-		   ;;
+		  "
+		  ;;
 		bodhi)
-		   ART="${GREEN}     ___          ____   _ 
+		  ART="${GREEN}     ___          ____   _ 
 ${GREEN}    / _ )___  ___/ / /  (_)
 ${GREEN}   / _  / _ \\/ _  / _ \\/ / 
 ${GREEN}  /____/\\___/\\_,_/_//_/_/  
-		   "
-		   ;;
+		  "
+		  ;;
                 nix|nixos)
                     ART="${BLUE}     _  ___      ____  ____
 ${BLUE}    / |/ (_)_ __/ __ \\/ __/
@@ -413,7 +413,27 @@ set_theme() {
             EMPTY_COLOR="\e[38;5;236m"
             SEPARATOR_COLOR="${GRAY}"
             ;;
-    esac
+
+        nord)
+            NORD_ACCENT="\e[38;5;116m" 
+            OS_COLOR="${NORD_ACCENT}"
+            KERNEL_COLOR="${NORD_ACCENT}"
+            USER_COLOR="${NORD_ACCENT}"
+            HOST_COLOR="${NORD_ACCENT}"
+            MOBO_COLOR="${NORD_ACCENT}"
+            CPU_COLOR="${NORD_ACCENT}"
+            GPU_COLOR="${NORD_ACCENT}"
+            UPTIME_COLOR="${NORD_ACCENT}"
+            SHELL_COLOR="${NORD_ACCENT}"
+            DEWM_COLOR="${NORD_ACCENT}"
+            PKGS_COLOR="${NORD_ACCENT}"
+            BAR_LABEL_COLOR="${NORD_ACCENT}"
+            FILLED1_COLOR="${NORD_ACCENT}"
+            FILLED2_COLOR="${NORD_ACCENT}"
+            EMPTY_COLOR="\e[38;5;236m"
+            SEPARATOR_COLOR="\e[38;5;245m"
+	   ;;
+       esac
 }
 
 # Help
@@ -428,10 +448,10 @@ show_help() {
     echo -e "  ${PINK}--distro${RESET} <name>   Display ASCII art of a different distro"
     echo -e "  ${PINK}--live${RESET}            Animated CPU, GPU and RAM usage"
     echo -e "  ${PINK}--refresh${RESET}         Force refresh all cache files (use after installing packages)"
-    echo -e "  ${PINK}--theme${RESET} <name>    Color theme (synthwave, monochrome, minimal, dracula)"
+    echo -e "  ${PINK}--theme${RESET} <name>    Color theme"
     echo -e "  ${PINK}--help | -h${RESET}       Show this help message"
     echo ""
-    echo -e "${BLUE}Available themes:${RESET} synthwave (default), monochrome, minimal, dracula"
+    echo -e "${BLUE}Available themes:${RESET} synthwave (default), monochrome, minimal, dracula, nord"
     echo -e "${BLUE}Available distros:${RESET} arch, cachyos, ubuntu, debian, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, macos"
     exit 0
 }
@@ -480,10 +500,10 @@ parse_args "$@"
 
 validate_theme() {
     case "$THEME" in
-        synthwave|monochrome|minimal|dracula) ;;
+        synthwave|monochrome|minimal|dracula|nord) ;;
         *)
             echo -e "${PINK}Error:${RESET} Unknown theme '$THEME'"
-            echo -e "Available: synthwave, monochrome, minimal, dracula"
+            echo -e "Available: synthwave, monochrome, minimal, dracula, nord"
             exit 1
             ;;
     esac
@@ -563,13 +583,37 @@ get_gpu_usage() {
     fi
 
     if command -v nvidia-smi >/dev/null 2>&1; then
-        nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -n1 | tr -d ' %'
+        local usage
+        usage=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -n1 | tr -d ' %')
+        if [[ "$usage" =~ ^[0-9]+$ ]]; then
+            echo "$usage"
+            return
+        fi
+    fi
+
+    local amdgpu_usage=0
+    for card in /sys/class/drm/card*/device/gpu_busy_percent; do
+        if [ -f "$card" ]; then
+            local val
+            val=$(cat "$card" 2>/dev/null || echo 0)
+            if [[ "$val" =~ ^[0-9]+$ ]] && (( val > amdgpu_usage )); then
+                amdgpu_usage=$val
+            fi
+        fi
+    done
+    if (( amdgpu_usage > 0 )); then
+        echo "$amdgpu_usage"
         return
     fi
 
-    if [ -f /sys/class/drm/card0/device/gpu_busy_percent ]; then
-        cat /sys/class/drm/card0/device/gpu_busy_percent 2>/dev/null || echo "0"
-        return
+    if command -v intel_gpu_top >/dev/null 2>&1; then
+        local usage
+        usage=$(timeout 0.3s intel_gpu_top -s 500 -o - 2>/dev/null \
+                | awk 'NR==3 {print $2; exit}' | tr -d ' %' || echo "0")
+        if [[ "$usage" =~ ^[0-9]+$ ]] && (( usage > 0 )); then
+            echo "$usage"
+            return
+        fi
     fi
 
     echo "0"
@@ -845,31 +889,14 @@ esac
 
 if [[ "$de_wm" == "Unknown" || -z "$de_wm" ]]; then
     de_wm="tty"
-    for prog in \
-        gnome-shell gnome-session mutter \
-        plasmashell kwin_wayland kwin_x11 kded5 kded6 \
-        cinnamon cinnamon-session muffin \
-        xfwm4 xfce4-session xfce4-panel \
-        mate-session marco \
-        budgie-wm budgie-panel budgie-session \
-        pantheon-session pantheon-shell gala \
-        deepin-session dde-desktop dde-dock \
-        ukui-session ukui-panel \
-        lxsession lxqt-session lxqt-panel openbox \
-        enlightenment e17 e16 e22 moksha \
-        trinity tde-session \
-        unity unity-panel-service \
-        cosmic-comp cosmic-session \
-        hyprland sway i3 i3wm river wayfire labwc niri dwl \
-        awesome bspwm dwm qtile xmonad herbstluftwm spectrwm stumpwm \
-        fluxbox blackbox jwm icewm afterstep windowmaker fvwm pekwm \
-        twm ctwm metacity sawfish compiz berry hikari cage waybox oxwm exwm; do
-        
-        if pgrep -x "$prog" >/dev/null 2>&1; then
-            de_wm="$prog"
-            break
-        fi
-    done
+
+    progs_regex="gnome-shell|gnome-session|mutter|plasmashell|kwin_wayland|kwin_x11|kded5|kded6|cinnamon|cinnamon-session|muffin|xfwm4|xfce4-session|xfce4-panel|mate-session|marco|budgie-wm|budgie-panel|budgie-session|pantheon-session|pantheon-shell|gala|deepin-session|dde-desktop|dde-dock|ukui-session|ukui-panel|lxsession|lxqt-session|lxqt-panel|openbox|enlightenment|e17|e16|e22|moksha|trinity|tde-session|unity|unity-panel-service|cosmic-comp|cosmic-session|hyprland|sway|i3|i3wm|river|wayfire|labwc|niri|dwl|awesome|bspwm|dwm|qtile|xmonad|herbstluftwm|spectrwm|stumpwm|fluxbox|blackbox|jwm|icewm|afterstep|windowmaker|fvwm|pekwm|twm|ctwm|metacity|sawfish|compiz|berry|hikari|cage|waybox|oxwm|exwm"
+
+    detected_wm=$(ps -eo comm= 2>/dev/null | grep -E "^(${progs_regex})$" | head -n 1)
+
+    if [[ -n "$detected_wm" ]]; then
+        de_wm="$detected_wm"
+    fi
 fi
 
 case "${de_wm,,}" in
@@ -932,8 +959,7 @@ fi
 if [[ "${de_wm}" == "GNOME" || "${de_wm}" == "KDE Plasma" || \
       "${de_wm}" == "Cinnamon" || "${de_wm}" == "XFCE" || \
       "${de_wm}" == "MATE" || "${de_wm}" == "LXQt" || \
-      "${de_wm}" == "Enlightenment" || "${de_wm}" == "UKUI" || \
-      "${de_wm}" == "Zorin OS (GNOME)" ]]; then
+      "${de_wm}" == "Enlightenment" || "${de_wm}" == "UKUI" ]]; then
     session_suffix=""
     if [ -n "${XDG_SESSION_TYPE}" ]; then
         case "${XDG_SESSION_TYPE}" in
