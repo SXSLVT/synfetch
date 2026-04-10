@@ -295,7 +295,7 @@ ${GREEN}  |___/\\___/_/\\_,_/
                     "
                     ;;
 	bedrock)
-	    ART="${GRAY}     ___         __             __  
+	   ART="${GRAY}     ___         __             __  
 ${GRAY}    / _ )___ ___/ /______  ____/ /__
 ${GRAY}   / _  / -_) _  / __/ _ \\/ __/   _/
 ${GRAY}  /____/\\__/\\_,_/_/  \\___/\\__/_/\\_\\                            
@@ -751,9 +751,9 @@ if [[ "$REFRESH" == true ]] || [[ ! -f "$CACHE_DIR/preload.stamp" ]]; then
     cache "cpu"       'get_cpu_model'
     cache "mobo"      'printf "%s %s\n" "$(< /sys/class/dmi/id/board_vendor)" "$(< /sys/class/dmi/id/board_name)" 2>/dev/null'
     cache "gpu"       'get_gpu'
-    cache "pkgs"      'pkg_count' 300
-    cache "cpu_usage" 'get_cpu_usage' 2
-    cache "gpu_usage" 'get_gpu_usage' 2
+    cache "pkgs"      'pkg_count' 86400
+    cache "cpu_usage" 'get_cpu_usage' 300
+    cache "gpu_usage" 'get_gpu_usage' 300
     touch "$CACHE_DIR/preload.stamp" 2>/dev/null || true
 fi
 
@@ -832,8 +832,8 @@ if [[ "${LIVE_MODE:-false}" == true ]]; then
     CPU=0
     GPU_USAGE=0
 else
-    cache "cpu_usage" 'get_cpu_usage' 2;   CPU=$_CACHE_RESULT
-    cache "gpu_usage" 'get_gpu_usage' 2;   GPU_USAGE=$_CACHE_RESULT
+    cache "cpu_usage" 'get_cpu_usage' 300;   CPU=$_CACHE_RESULT
+    cache "gpu_usage" 'get_gpu_usage' 300;   GPU_USAGE=$_CACHE_RESULT
 fi
 
 # Animate Uptime
