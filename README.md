@@ -156,7 +156,7 @@ synfetch --theme <name>
 ```
 
 Output of `synfetch --help`
-`
+```bash
 Usage: synfetch [OPTIONS]
 
 Options:
@@ -170,7 +170,7 @@ Options:
 
 Available themes: synthwave (default), monochrome, minimal, dracula, nord
 Available distros: arch, cachyos, ubuntu, debian, devuan, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, macos
-`
+```
 
 ### Uninstallation
 
