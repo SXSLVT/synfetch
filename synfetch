@@ -100,12 +100,12 @@ ${RED}  /____/\\__/_.__/_/\\_,_/_//_/
                     "             
                     ;;
                 devuan)
-		 ART="${RED}     ___                        
+		ART="${RED}     ___                        
 ${RED}    / _ \\___ _  ____ _____ ____ 
 ${RED}   / // / -_) |/ / // / _ \\/ _ \\
 ${RED}  /____/\\__/|___/\\_,_/\\_,_/_//_/
-		 "
-		 ;;
+		"
+		;;
                 fedora)
                     ART="${BLUE}     ____       __             
 ${BLUE}    / __/__ ___/ /__  _______ _
@@ -294,8 +294,8 @@ ${GREEN}  | |/ / _ \\/ / _  /
 ${GREEN}  |___/\\___/_/\\_,_/  
                     "
                     ;;
-	  bedrock)
-	      ART="${GRAY}     ___         __             __  
+	 bedrock)
+	     ART="${GRAY}     ___         __             __  
 ${GRAY}    / _ )___ ___/ /______  ____/ /__
 ${GRAY}   / _  / -_) _  / __/ _ \\/ __/   _/
 ${GRAY}  /____/\\__/\\_,_/_/  \\___/\\__/_/\\_\\                            
@@ -314,7 +314,7 @@ ${BLUE}    / |/ (_)_ __/ __ \\/ __/
 ${BLUE}   /    / /\\ \\ / /_/ /\\ \\  
 ${BLUE}  /_/|_/_//_\\_|\\____/___/  
                     "
-	  	 ;;
+	 	;;
           macos|darwin|mac)
                     ART="${MAGENTA}     __  ___         ____  ____
 ${MAGENTA}    /  |/  /__ _____/ __ \\/ __/
@@ -630,7 +630,6 @@ get_cpu_model() {
 
     if [ -r /proc/cpuinfo ]; then
         local model
-        # x86_64 / most systems
         model=$(awk -F': ' '/^model name/ {print $2; exit}' /proc/cpuinfo 2>/dev/null)
         if [ -n "$model" ]; then
             echo "$model" | sed 's/ with Radeon.*//; s/^ *//; s/ *$//'
