@@ -295,7 +295,7 @@ ${GREEN}  |___/\\___/_/\\_,_/
                     "
                     ;;
 	bedrock)
-	   ART="${GRAY}     ___         __             __  
+	  ART="${GRAY}     ___         __             __  
 ${GRAY}    / _ )___ ___/ /______  ____/ /__
 ${GRAY}   / _  / -_) _  / __/ _ \\/ __/   _/
 ${GRAY}  /____/\\__/\\_,_/_/  \\___/\\__/_/\\_\\                            
@@ -739,16 +739,18 @@ if [[ "$REFRESH" == true ]] || [[ ! -f "$CACHE_DIR/preload.stamp" ]]; then
     cache "cpu"       'get_cpu_model'
     cache "mobo"      'printf "%s %s\n" "$(< /sys/class/dmi/id/board_vendor)" "$(< /sys/class/dmi/id/board_name)" 2>/dev/null'
     cache "gpu"       'get_gpu'
-    cache "pkgs"      'pkg_count' 360
+    cache "pkgs"      'pkg_count' 120
     cache "cpu_usage" 'get_cpu_usage' 7
     cache "gpu_usage" 'get_gpu_usage' 7
     touch "$CACHE_DIR/preload.stamp" 2>/dev/null || true
 fi
 
+# Preload cached values
+
 cache "cpu"  'get_cpu_model';              CPU_MODEL=$_CACHE_RESULT
 cache "mobo" 'printf "%s %s\n" "$(< /sys/class/dmi/id/board_vendor)" "$(< /sys/class/dmi/id/board_name)" 2>/dev/null'; MOBO=$_CACHE_RESULT
 cache "gpu"  'get_gpu';                    GPU=$_CACHE_RESULT
-cache "pkgs" 'pkg_count' 360;              PKG_COUNT=$_CACHE_RESULT
+cache "pkgs" 'pkg_count' 120;              PKG_COUNT=$_CACHE_RESULT
 
 # CPU & RAM Usage
 
