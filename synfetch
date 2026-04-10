@@ -98,15 +98,15 @@ ${RED}    / _ \\___ / /  (_)__  ___
 ${RED}   / // / -_) _ \\/ / _ \\/ _ \\
 ${RED}  /____/\\__/_.__/_/\\_,_/_//_/                           
                     "             
-        	   ;;
+                    ;;
                 devuan)
-		   ART="${RED}     ___                        
+		  ART="${RED}     ___                        
 ${RED}    / _ \\___ _  ____ _____ ____ 
 ${RED}   / // / -_) |/ / // / _ \\/ _ \\
 ${RED}  /____/\\__/|___/\\_,_/\\_,_/_//_/
-		   "
-		   ;;
-     	       fedora)
+		  "
+		  ;;
+                fedora)
                     ART="${BLUE}     ____       __             
 ${BLUE}    / __/__ ___/ /__  _______ _
 ${BLUE}   / _// -_) _  / _ \\/ __/ _ \\/
@@ -681,7 +681,7 @@ pkg_count() {
         pkgs+=("$count (xbps)")
     elif command -v qlist >/dev/null; then
         count=$(qlist -I 2>/dev/null | wc -l)
-        pkgs+=("$count (portage)")
+        pkgs+=("$count (emerge)")
     elif command -v guix >/dev/null; then
         count=$(guix package -I 2>/dev/null | wc -l)
         pkgs+=("$count (guix)")
@@ -723,38 +723,49 @@ pkg_count() {
 # Cache for speed
 
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/synfetch"
-mkdir -p "$CACHE_DIR" 2>/dev/null || true
+[[ -d "$CACHE_DIR" ]] || mkdir -p "$CACHE_DIR" 2>/dev/null || true
 REFRESH=${REFRESH:-false}
+
+# _CACHE_RESULT is set by cache() instead of printing — avoids $(...) subshell at call sites
+_CACHE_RESULT=""
 
 cache() {
     local key="$1"
     local cmd="$2"
-    local cache_file="$CACHE_DIR/${key}.cache"
     local ttl="${3:-3600}"
+    local cache_file="$CACHE_DIR/${key}.cache"
+    local exp_file="$CACHE_DIR/${key}.exp"
+    local exp now
 
-    if [[ "$REFRESH" == true ]] || [[ ! -f "$cache_file" ]] || \
-       (( $(date +%s) - $(stat -c %Y "$cache_file" 2>/dev/null || echo 0) > ttl )); then
-        eval "$cmd" > "$cache_file" 2>/dev/null || echo "Unknown" > "$cache_file"
+    # printf '%(%s)T' is a bash built-in — zero external process
+    printf -v now '%(%s)T' -1
+
+    # Read cached expiry epoch — guard with -f so the shell never tries to open a missing file
+    exp=0
+    [[ -f "$exp_file" ]] && read -r exp < "$exp_file"
+
+    if [[ "$REFRESH" == true ]] || [[ ! -f "$cache_file" ]] || (( now >= exp )); then
+        eval "$cmd" > "$cache_file" 2>/dev/null || printf 'Unknown\n' > "$cache_file"
+        printf '%d\n' $(( now + ttl )) > "$exp_file"
     fi
-    cat "$cache_file"
+    _CACHE_RESULT=$(< "$cache_file")
 }
 
 if [[ "$REFRESH" == true ]] || [[ ! -f "$CACHE_DIR/preload.stamp" ]]; then
-    cache "cpu"       'get_cpu_model' >/dev/null
-    cache "mobo"      'echo "$(cat /sys/class/dmi/id/board_vendor 2>/dev/null || echo "") $(cat /sys/class/dmi/id/board_name 2>/dev/null || echo "")"' >/dev/null
-    cache "gpu"       'get_gpu' >/dev/null
-    cache "pkgs"      'pkg_count' 300 >/dev/null
-    cache "cpu_usage" 'get_cpu_usage' 2 >/dev/null
-    cache "gpu_usage" 'get_gpu_usage' 2 >/dev/null
+    cache "cpu"       'get_cpu_model'
+    cache "mobo"      'printf "%s %s\n" "$(< /sys/class/dmi/id/board_vendor)" "$(< /sys/class/dmi/id/board_name)" 2>/dev/null'
+    cache "gpu"       'get_gpu'
+    cache "pkgs"      'pkg_count' 300
+    cache "cpu_usage" 'get_cpu_usage' 2
+    cache "gpu_usage" 'get_gpu_usage' 2
     touch "$CACHE_DIR/preload.stamp" 2>/dev/null || true
 fi
 
-# Load cached values
-
-CPU_MODEL=$(cache "cpu"  'get_cpu_model')
-MOBO=$(cache "mobo"    'echo "$(cat /sys/class/dmi/id/board_vendor 2>/dev/null || echo "Unknown") $(cat /sys/class/dmi/id/board_name 2>/dev/null || echo "")"')
-GPU=$(cache "gpu"      'get_gpu')
-PKG_COUNT=$(cache "pkgs" 'pkg_count' 300)
+# Load cached values — call cache() directly (no $(...) subshell spawned)
+cache "cpu"  'get_cpu_model';              CPU_MODEL=$_CACHE_RESULT
+cache "mobo" 'printf "%s %s\n" "$(< /sys/class/dmi/id/board_vendor)" "$(< /sys/class/dmi/id/board_name)" 2>/dev/null'; MOBO=$_CACHE_RESULT
+cache "gpu"  'get_gpu';                    GPU=$_CACHE_RESULT
+cache "pkgs" 'pkg_count' 300;              PKG_COUNT=$_CACHE_RESULT
 
 # CPU & RAM Usage
 
@@ -781,7 +792,15 @@ get_cpu_usage() {
 
 get_ram_usage() {
     if [ "$(uname)" = "Linux" ]; then
-        free -m | awk '/Mem:/ {printf "%d", 100*$3/$2}'
+        # Read /proc/meminfo directly — no fork needed
+        local key val total=0 avail=0
+        while read -r key val _; do
+            case $key in
+                MemTotal:)     total=$val ;;
+                MemAvailable:) avail=$val; break ;;
+            esac
+        done < /proc/meminfo
+        (( total > 0 )) && printf '%d' $(( 100 * (total - avail) / total )) || printf '0'
     else
         vm_stat | awk '/Pages active/ {print int(($2 * 4096 / 1024 / 1024) / ($(sysctl -n hw.memsize)/1024/1024) * 100)}'
     fi
@@ -807,7 +826,6 @@ cyber_bar() {
         bar+="${EMPTY_COLOR}─"
     done
 
-    [[ "$percent" =~ ^[0-9]+$ ]] || percent=0
     printf "%b\e[0m %3d%%" "$bar" "$percent"
 }
 
@@ -815,8 +833,8 @@ if [[ "${LIVE_MODE:-false}" == true ]]; then
     CPU=0
     GPU_USAGE=0
 else
-    CPU=$(cache "cpu_usage" 'get_cpu_usage' 2)
-    GPU_USAGE=$(cache "gpu_usage" 'get_gpu_usage' 2)
+    cache "cpu_usage" 'get_cpu_usage' 2;   CPU=$_CACHE_RESULT
+    cache "gpu_usage" 'get_gpu_usage' 2;   GPU_USAGE=$_CACHE_RESULT
 fi
 
 RAM=$(get_ram_usage)
@@ -825,7 +843,9 @@ RAM=$(get_ram_usage)
 
 get_uptime() {
     if [ "$(uname)" = "Linux" ]; then
-        local up=$(awk '{print int($1)}' /proc/uptime)
+        local up _
+        { read -r up _; } < /proc/uptime
+        up=${up%.*}   # integer seconds, no awk needed
     else
         local up=$(sysctl -n kern.boottime 2>/dev/null | awk -F' = ' '{print $2}' | tr -d ',')
         up=$(( $(date +%s) - up ))
@@ -985,8 +1005,10 @@ fi
 
 # Pre-computed Variables
 
-KERNEL="$(uname -r)"
-HOSTNAME="$(cat /etc/hostname 2>/dev/null || hostname)"
+# Read kernel version directly from /proc — no fork
+{ read -r KERNEL; } < /proc/sys/kernel/osrelease 2>/dev/null || KERNEL=$(uname -r)
+# $HOSTNAME is already set by bash; only fall back to a fork if empty
+: "${HOSTNAME:=$(hostname 2>/dev/null)}"
 SHELL_NAME="${SHELL##*/}"
 
 # Real-time Monitoring
@@ -1044,22 +1066,24 @@ else
         echo
     fi
 
-    echo -e " ${OS_COLOR}${ICON_OS}${RESET}OS      ${OS_COLOR}${DISTRO}${RESET}"
-    echo -e " ${KERNEL_COLOR}${ICON_KERNEL}${RESET}Kernel  ${KERNEL_COLOR}${KERNEL}${RESET}"
-    echo -e " ${USER_COLOR}${ICON_USER}${RESET}User    ${USER_COLOR}${USER}${RESET}"
-    echo -e " ${HOST_COLOR}${ICON_HOST}${RESET}Host    ${HOST_COLOR}${HOSTNAME}${RESET}"
-    echo -e " ${MOBO_COLOR}${ICON_MOBO}${RESET}MoBo    ${MOBO_COLOR}${MOBO}${RESET}"
-    echo -e " ${CPU_COLOR}${ICON_CPU}${RESET}CPU     ${CPU_COLOR}${CPU_MODEL}${RESET}"
-    echo -e " ${GPU_COLOR}${ICON_GPU}${RESET}GPU     ${GPU_COLOR}${GPU}${RESET}"
-    echo -e " ${UPTIME_COLOR}${ICON_UPTIME}${RESET}Uptime  ${UPTIME_COLOR}$(get_uptime)${RESET}"
-    echo -e " ${SHELL_COLOR}${ICON_SHELL}${RESET}Shell   ${SHELL_COLOR}${SHELL_NAME}${RESET}"
-    echo -e " ${DEWM_COLOR}${ICON_DEWM}${RESET}DE/WM   ${DEWM_COLOR}${de_wm}${RESET}"
-    echo -e " ${PKGS_COLOR}${ICON_PKGS}${RESET}Pkgs    ${PKGS_COLOR}${PKG_COUNT}${RESET}"
-    echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"
-    echo -e " ${BAR_LABEL_COLOR}CPU${RESET}     $(cyber_bar "${CPU}")"
-    echo -e " ${BAR_LABEL_COLOR}RAM${RESET}     $(cyber_bar "${RAM}")"
+    printf " ${OS_COLOR}${ICON_OS}${RESET}OS      ${OS_COLOR}%s${RESET}\n \
+${KERNEL_COLOR}${ICON_KERNEL}${RESET}Kernel  ${KERNEL_COLOR}%s${RESET}\n \
+${USER_COLOR}${ICON_USER}${RESET}User    ${USER_COLOR}%s${RESET}\n \
+${HOST_COLOR}${ICON_HOST}${RESET}Host    ${HOST_COLOR}%s${RESET}\n \
+${MOBO_COLOR}${ICON_MOBO}${RESET}MoBo    ${MOBO_COLOR}%s${RESET}\n \
+${CPU_COLOR}${ICON_CPU}${RESET}CPU     ${CPU_COLOR}%s${RESET}\n \
+${GPU_COLOR}${ICON_GPU}${RESET}GPU     ${GPU_COLOR}%s${RESET}\n \
+${UPTIME_COLOR}${ICON_UPTIME}${RESET}Uptime  ${UPTIME_COLOR}%s${RESET}\n \
+${SHELL_COLOR}${ICON_SHELL}${RESET}Shell   ${SHELL_COLOR}%s${RESET}\n \
+${DEWM_COLOR}${ICON_DEWM}${RESET}DE/WM   ${DEWM_COLOR}%s${RESET}\n \
+${PKGS_COLOR}${ICON_PKGS}${RESET}Pkgs    ${PKGS_COLOR}%s${RESET}\n \
+${SEPARATOR_COLOR}────────────────────────────────────────${RESET}\n" \
+        "$DISTRO" "$KERNEL" "$USER" "$HOSTNAME" "$MOBO" \
+        "$CPU_MODEL" "$GPU" "$(get_uptime)" "$SHELL_NAME" "$de_wm" "$PKG_COUNT"
+    printf " ${BAR_LABEL_COLOR}CPU${RESET}     %b\n" "$(cyber_bar "${CPU}")"
+    printf " ${BAR_LABEL_COLOR}RAM${RESET}     %b\n" "$(cyber_bar "${RAM}")"
     if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
-        echo -e " ${BAR_LABEL_COLOR}GPU${RESET}     $(cyber_bar "${GPU_USAGE}")"
+        printf " ${BAR_LABEL_COLOR}GPU${RESET}     %b\n" "$(cyber_bar "${GPU_USAGE}")"
     fi
-    echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"
+    printf " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}\n"
 fi
