@@ -100,12 +100,12 @@ ${RED}  /____/\\__/_.__/_/\\_,_/_//_/
                     "             
                     ;;
                 devuan)
-		  ART="${RED}     ___                        
+		 ART="${RED}     ___                        
 ${RED}    / _ \\___ _  ____ _____ ____ 
 ${RED}   / // / -_) |/ / // / _ \\/ _ \\
 ${RED}  /____/\\__/|___/\\_,_/\\_,_/_//_/
-		  "
-		  ;;
+		 "
+		 ;;
                 fedora)
                     ART="${BLUE}     ____       __             
 ${BLUE}    / __/__ ___/ /__  _______ _
@@ -294,8 +294,8 @@ ${GREEN}  | |/ / _ \\/ / _  /
 ${GREEN}  |___/\\___/_/\\_,_/  
                     "
                     ;;
-	   bedrock)
-	       ART="${GRAY}     ___         __             __  
+	  bedrock)
+	      ART="${GRAY}     ___         __             __  
 ${GRAY}    / _ )___ ___/ /______  ____/ /__
 ${GRAY}   / _  / -_) _  / __/ _ \\/ __/   _/
 ${GRAY}  /____/\\__/\\_,_/_/  \\___/\\__/_/\\_\\                            
@@ -314,7 +314,7 @@ ${BLUE}    / |/ (_)_ __/ __ \\/ __/
 ${BLUE}   /    / /\\ \\ / /_/ /\\ \\  
 ${BLUE}  /_/|_/_//_\\_|\\____/___/  
                     "
-	   	  ;;
+	  	 ;;
           macos|darwin|mac)
                     ART="${MAGENTA}     __  ___         ____  ____
 ${MAGENTA}    /  |/  /__ _____/ __ \\/ __/
@@ -726,7 +726,6 @@ CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/synfetch"
 [[ -d "$CACHE_DIR" ]] || mkdir -p "$CACHE_DIR" 2>/dev/null || true
 REFRESH=${REFRESH:-false}
 
-# _CACHE_RESULT is set by cache() instead of printing — avoids $(...) subshell at call sites
 _CACHE_RESULT=""
 
 cache() {
@@ -737,10 +736,8 @@ cache() {
     local exp_file="$CACHE_DIR/${key}.exp"
     local exp now
 
-    # printf '%(%s)T' is a bash built-in — zero external process
     printf -v now '%(%s)T' -1
 
-    # Read cached expiry epoch — guard with -f so the shell never tries to open a missing file
     exp=0
     [[ -f "$exp_file" ]] && read -r exp < "$exp_file"
 
@@ -761,7 +758,6 @@ if [[ "$REFRESH" == true ]] || [[ ! -f "$CACHE_DIR/preload.stamp" ]]; then
     touch "$CACHE_DIR/preload.stamp" 2>/dev/null || true
 fi
 
-# Load cached values — call cache() directly (no $(...) subshell spawned)
 cache "cpu"  'get_cpu_model';              CPU_MODEL=$_CACHE_RESULT
 cache "mobo" 'printf "%s %s\n" "$(< /sys/class/dmi/id/board_vendor)" "$(< /sys/class/dmi/id/board_name)" 2>/dev/null'; MOBO=$_CACHE_RESULT
 cache "gpu"  'get_gpu';                    GPU=$_CACHE_RESULT
@@ -770,29 +766,39 @@ cache "pkgs" 'pkg_count' 300;              PKG_COUNT=$_CACHE_RESULT
 # CPU & RAM Usage
 
 get_cpu_usage() {
-    if [ "$(uname)" = "Linux" ]; then
-        read -r cpu user nice system idle iowait irq softirq steal guest guest_nice < /proc/stat
-        total1=$((user + nice + system + idle + iowait + irq + softirq + steal + guest + guest_nice))
-        idle1=$((idle + iowait))
+    if [ "$(uname)" != "Linux" ]; then
+        echo "0"
+        return
+    fi
 
-        sleep 0.01
+    local u1 n1 s1 i1 io1 ir1 so1 st1
+    local u2 n2 s2 i2 io2 ir2 so2 st2
+    local total1 idle1 total2 idle2 diff_total diff_idle
 
-        read -r cpu user nice system idle iowait irq softirq steal guest guest_nice < /proc/stat
-        total2=$((user + nice + system + idle + iowait + irq + softirq + steal + guest + guest_nice))
-        idle2=$((idle + iowait))
+    read -r _ u1 n1 s1 i1 io1 ir1 so1 st1 _ _ < /proc/stat
 
-        diff_total=$((total2 - total1))
-        diff_idle=$((idle2 - idle1))
-        usage=$((100 * (diff_total - diff_idle) / diff_total))
-        echo "$usage"
+    sleep 0.08
+
+    read -r _ u2 n2 s2 i2 io2 ir2 so2 st2 _ _ < /proc/stat
+
+    total1=$((u1 + n1 + s1 + i1 + io1 + ir1 + so1 + st1))
+    idle1=$((i1 + io1))
+
+    total2=$((u2 + n2 + s2 + i2 + io2 + ir2 + so2 + st2))
+    idle2=$((i2 + io2))
+
+    diff_total=$((total2 - total1))
+    diff_idle=$((idle2 - idle1))
+
+    if (( diff_total == 0 )); then
+        echo 0
     else
-        top -l 1 | awk '/^CPU usage/ {print int($3)}'
+        echo $(( (100 * (diff_total - diff_idle) + diff_total/2 ) / diff_total ))
     fi
 }
 
 get_ram_usage() {
     if [ "$(uname)" = "Linux" ]; then
-        # Read /proc/meminfo directly — no fork needed
         local key val total=0 avail=0
         while read -r key val _; do
             case $key in
@@ -805,6 +811,8 @@ get_ram_usage() {
         vm_stat | awk '/Pages active/ {print int(($2 * 4096 / 1024 / 1024) / ($(sysctl -n hw.memsize)/1024/1024) * 100)}'
     fi
 }
+
+RAM=$(get_ram_usage)
 
 # Cyber bar theme
 
@@ -826,6 +834,7 @@ cyber_bar() {
         bar+="${EMPTY_COLOR}─"
     done
 
+    [[ "$percent" =~ ^[0-9]+$ ]] || percent=0
     printf "%b\e[0m %3d%%" "$bar" "$percent"
 }
 
@@ -837,15 +846,13 @@ else
     cache "gpu_usage" 'get_gpu_usage' 2;   GPU_USAGE=$_CACHE_RESULT
 fi
 
-RAM=$(get_ram_usage)
-
 # Animate Uptime
 
 get_uptime() {
     if [ "$(uname)" = "Linux" ]; then
         local up _
         { read -r up _; } < /proc/uptime
-        up=${up%.*}   # integer seconds, no awk needed
+        up=${up%.*} 
     else
         local up=$(sysctl -n kern.boottime 2>/dev/null | awk -F' = ' '{print $2}' | tr -d ',')
         up=$(( $(date +%s) - up ))
@@ -1005,9 +1012,7 @@ fi
 
 # Pre-computed Variables
 
-# Read kernel version directly from /proc — no fork
 { read -r KERNEL; } < /proc/sys/kernel/osrelease 2>/dev/null || KERNEL=$(uname -r)
-# $HOSTNAME is already set by bash; only fall back to a fork if empty
 : "${HOSTNAME:=$(hostname 2>/dev/null)}"
 SHELL_NAME="${SHELL##*/}"
 
