@@ -952,6 +952,7 @@ case "${de_wm,,}" in
     waybox)                                 de_wm="Waybox" ;;
     oxwm)                                   de_wm="oxwm" ;;
     exwm)                                   de_wm="exwm" ;;
+    ctwm)                                   de_wm="ctwm" ;;
 esac
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
