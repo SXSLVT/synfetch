@@ -49,6 +49,7 @@ If you are experiencing issues with synfetch, please create an [issue](https://g
 - Manjaro
 - EndeavourOS
 - Debian
+- Devuan
 - Ubuntu
 - Linux Mint
 - ZorinOS
@@ -168,7 +169,7 @@ Options:
   --help | -h       Show this help message
 
 Available themes: synthwave (default), monochrome, minimal, dracula, nord
-Available distros: arch, cachyos, ubuntu, debian, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, macos
+Available distros: arch, cachyos, ubuntu, debian, devuan, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, macos
 ```
 
 ### Uninstallation
