@@ -98,7 +98,7 @@ For everyone else, run:
 ```bash
 wget https://raw.githubusercontent.com/SXSLVT/synfetch/main/synfetch && chmod +x synfetch && sudo mv synfetch /usr/local/bin/
 ```
-What happens when you run this command?
+What this command does:
 
 `wget ...` → downloads the **synfetch** script from GitHub
 
