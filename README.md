@@ -98,10 +98,12 @@ For everyone else, run:
 ```bash
 wget https://raw.githubusercontent.com/SXSLVT/synfetch/main/synfetch && chmod +x synfetch && sudo mv synfetch /usr/local/bin/
 ```
-What happens when you run this command:
+What happens when you run this command?
 
 `wget ...` → downloads the **synfetch** script from GitHub
+
 `chmod +x synfetch` → makes **synfetch** executable
+
 `sudo mv synfetch /usr/local/bin/` → installs **synfetch** system-wide (so you can run it anywhere)
 
 ### Usage
