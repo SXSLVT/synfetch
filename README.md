@@ -12,14 +12,13 @@
 <div align="center">
 
 # Synfetch
-  
-*A really simple system fetch written in **bash**.*
 
 </div>
 
 ### Contents
 
 - [Why synfetch?](#why-synfetch)
+- [Features](#features)
 - [Support](#support)
 - [Dependencies](#dependencies)
 - [Building and Installation](#building-and-installation)
@@ -29,7 +28,9 @@
 
 ### Why synfetch?
 
-While there are many excellent fetch tools, `synfetch` stands out with:
+`synfetch` stands out to be the fastest feature-rich system fetch tool written entirely in pure **bash**.
+
+### Features
 
 - Pure bash with smart caching (feels instant on every run)
 - Beautiful synthwave aesthetic with vibrant neon colors
@@ -80,7 +81,7 @@ If you are experiencing issues with synfetch, please create an [issue](https://g
 
 ### Dependencies
 
-Only requires `bash` (because synfetch is written in **pure bash**) 
+Only requires `bash`
 
 Uses common tools like `lspci`, `lscpu` when available **(optional)**
 
