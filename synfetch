@@ -295,7 +295,7 @@ ${GREEN}  |___/\\___/_/\\_,_/
                     "
                     ;;
 	bedrock)
-	  ART="${GRAY}     ___         __             __  
+	 ART="${GRAY}     ___         __             __  
 ${GRAY}    / _ )___ ___/ /______  ____/ /__
 ${GRAY}   / _  / -_) _  / __/ _ \\/ __/   _/
 ${GRAY}  /____/\\__/\\_,_/_/  \\___/\\__/_/\\_\\                            
@@ -651,10 +651,7 @@ pkg_count() {
     local pkgs=()
     local count
 
-    if command -v pacman >/dev/null; then
-        count=$(pacman -Qq 2>/dev/null | wc -l)
-        pkgs+=("$count (pacman)")
-    elif command -v dpkg >/dev/null; then
+    if command -v dpkg >/dev/null; then
         count=$(dpkg-query -f '${binary:Package}\n' -W 2>/dev/null | wc -l)
         pkgs+=("$count (dpkg)")
     elif command -v rpm >/dev/null; then
@@ -688,6 +685,9 @@ pkg_count() {
     elif command -v pkgutil >/dev/null || command -v pkg >/dev/null; then
         count=$(pkgutil --pkgs 2>/dev/null | wc -l)
         pkgs+=("$count (Fink/pkgutil)")
+    elif command -v pacman >/dev/null; then
+        count=$(pacman -Qq 2>/dev/null | wc -l)
+        pkgs+=("$count (pacman)")
     elif ls /Programs >/dev/null 2>&1; then
         count=$(ls /Programs 2>/dev/null | wc -l)
         pkgs+=("$count (programs)")
