@@ -825,7 +825,7 @@ else
     cache "gpu_usage" 'get_gpu_usage' 7; GPU_USAGE=$_CACHE_RESULT
 fi
 
-# Live Uptime
+# Animated Uptime
 
 get_uptime() {
     if [ "$(uname)" = "Linux" ]; then
