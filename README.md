@@ -89,7 +89,7 @@ Uses common tools like `lspci`, `lscpu` when available **(optional)**
 
 For those on `Arch` based systems, **synfetch** is available in the [AUR](https://aur.archlinux.org/packages/synfetch-git).
 
-For those on `Nix` systems, enable `flakes` and you can just run: 
+For those on `Nix` systems, make sure to have `flakes` enabled and you can just run: 
 
 ```bash
 nix run github:SXSLVT/synfetch
