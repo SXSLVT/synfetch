@@ -28,7 +28,7 @@
 
 ### Why synfetch?
 
-`synfetch` stands out to be the fastest feature-rich system fetch tool that is written entirely in pure **bash**.
+`synfetch` stands out to be the fastest, feature-rich system fetch tool written entirely in pure **bash**.
 
 ### Features
 
