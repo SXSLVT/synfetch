@@ -1,3 +1,5 @@
+# Synfetch
+
 ![Stars](https://img.shields.io/github/stars/SXSLVT/synfetch?style=social)
 ![Issues](https://img.shields.io/github/issues/SXSLVT/synfetch)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
@@ -9,8 +11,6 @@
 </div>
 
 <div align="center">
-
-# Synfetch
 
 </div>
 
