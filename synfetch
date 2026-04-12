@@ -83,7 +83,8 @@ detect_distro() {
                     ART="${C1}     ___           __ 
 ${C1}    / _ | ________/ / 
 ${C1}   / __ |/ __/ __/ _ \\
-${C1}  /_/ |_/_/  \\__/_//_/ "
+${C1}  /_/ |_/_/  \\__/_//_/ 
+                    "
                     ;;
                 cachy|cachyos)
                     ART="${C1}    _____         __        ____  ____
@@ -149,7 +150,8 @@ ${C1}    /  |/  /__ ____    (_)__ ________
 ${C1}   / /|_/ / _ \\/ _ \\  / / _ \\/ __/ _ \\
 ${C1}  /_/  /_/\\_,_/_//_/_/ /\\_,_/_/  \\___/
 ${C1}                  |___/               
-                    "                    ;;
+                    "    
+    		   ;;
                 opensuse*|sles)
                     ART="${C1}                       ______  __________
 ${C1}   ___  ___  ___ ___  / __/ / / / __/ __/
@@ -336,15 +338,6 @@ ${C1}  /_/  /_/\\_,_/\\__/\\____/___/
     esac
 }
 
-# Flags
-
-USE_NERD_FONTS=true
-USE_ASCII=true
-CUSTOM_DISTRO=""
-THEME="synthwave"
-LIVE_MODE=false
-REFRESH=false
-
 # Theme setter
 
 set_theme() {
@@ -461,7 +454,7 @@ set_theme() {
             BAR_LABEL_COLOR="${TOKYONIGHT}"
             FILLED1_COLOR="${TOKYONIGHT}"
             FILLED2_COLOR="${TOKYONIGHT}"   
-  	   EMPTY_COLOR="\e[38;2;41;46;66m"
+   	   EMPTY_COLOR="\e[38;2;41;46;66m"
             SEPARATOR_COLOR="${TOKYONIGHT}"
             ;;
         catppuccin)
@@ -501,9 +494,100 @@ set_theme() {
             FILLED2_COLOR="${GRUV_YELLOW}"
             EMPTY_COLOR="\e[38;2;60;56;54m"
             SEPARATOR_COLOR="\e[38;2;146;131;116m"
-            ;;       
-       esac
+            ;;   
+          custom)
+            C1=$(hex_to_ansi "${C1_HEX:-#51ffff}")
+            OS_COLOR=$(hex_to_ansi "${OS_HEX:-#51ffff}")
+            KERNEL_COLOR=$(hex_to_ansi "${KERNEL_HEX:-#51ffff}")
+            USER_COLOR=$(hex_to_ansi "${USER_HEX:-#51ffff}")
+            HOST_COLOR=$(hex_to_ansi "${HOST_HEX:-#51ffff}")
+            MOBO_COLOR=$(hex_to_ansi "${MOBO_HEX:-#51ffff}")
+            CPU_COLOR=$(hex_to_ansi "${CPU_HEX:-#51ffff}")
+            GPU_COLOR=$(hex_to_ansi "${GPU_HEX:-#51ffff}")
+            UPTIME_COLOR=$(hex_to_ansi "${UPTIME_HEX:-#51ffff}")
+            SHELL_COLOR=$(hex_to_ansi "${SHELL_HEX:-#51ffff}")
+            DEWM_COLOR=$(hex_to_ansi "${DEWM_HEX:-#51ffff}")
+            PKGS_COLOR=$(hex_to_ansi "${PKGS_HEX:-#51ffff}")
+            BAR_LABEL_COLOR=$(hex_to_ansi "${BAR_LABEL_HEX:-#ff55ff}")
+            FILLED1_COLOR=$(hex_to_ansi "${BAR_FILLED1_HEX:-#ff55ff}")
+            FILLED2_COLOR=$(hex_to_ansi "${BAR_FILLED2_HEX:-#51ffff}")
+            EMPTY_COLOR=$(hex_to_ansi "${BAR_EMPTY_HEX:-#282a36}")
+            SEPARATOR_COLOR=$(hex_to_ansi "${SEPARATOR_HEX:-#282a36}")
+            ;;
+    esac
 }
+
+# Flags
+
+USE_NERD_FONTS=${USE_NERD_FONTS:-true}
+USE_ASCII=${USE_ASCII:-true}
+CUSTOM_DISTRO=${CUSTOM_DISTRO:-""}
+THEME=${THEME:-"synthwave"}
+LIVE_MODE=${LIVE_MODE:-false}
+REFRESH=${REFRESH:-false}
+
+# Hex color
+
+hex_to_ansi() {
+    local hex="${1#\#}"
+    if [[ "$hex" =~ ^[0-9a-fA-F]{6}$ ]]; then
+        local r=$((16#${hex:0:2}))
+        local g=$((16#${hex:2:2}))
+        local b=$((16#${hex:4:2}))
+        printf "\e[38;2;%d;%d;%dm" "$r" "$g" "$b"
+    else
+        printf "\e[0m"
+    fi
+}
+
+# Config
+
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/synfetch"
+CONFIG_FILE="$CONFIG_DIR/config"
+
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    mkdir -p "$CONFIG_DIR" 2>/dev/null
+    cat <<EOF > "$CONFIG_FILE"
+# Available themes: synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox
+# Available distros: arch, cachyos, ubuntu, debian, devuan, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, macos
+
+# Set THEME to "custom" to use the hex colors below
+THEME="synthwave"
+
+# Custom Hex Colors 
+C1_HEX="#ff5555"    
+OS_HEX="#ffb86c"
+KERNEL_HEX="#f1fa8c"  
+USER_HEX="#50fa7b"   
+HOST_HEX="#8be9fd"       
+MOBO_HEX="#bd93f9"     
+CPU_HEX="#ff79c6" 
+GPU_HEX="#ff5555"  
+UPTIME_HEX="#ffb86c"   
+SHELL_HEX="#f1fa8c"    
+DEWM_HEX="#50fa7b"     
+PKGS_HEX="#8be9fd"    
+BAR_LABEL_HEX="#bd93f9"    
+BAR_FILLED1_HEX="#ff79c6"
+BAR_FILLED2_HEX="#ff5555"
+BAR_EMPTY_HEX="#282a36"  
+SEPARATOR_HEX="#444b6a" 
+
+# Toggle ASCII
+USE_ASCII=true
+
+# Toggle icons
+USE_NERD_FONTS=true
+
+# Use a different distro ASCII art (leave empty for default distro)
+CUSTOM_DISTRO="" 
+
+# Toggle Live mode on startup
+LIVE_MODE=false
+EOF
+fi
+
+source "$CONFIG_FILE"
 
 # Help
 
@@ -512,6 +596,7 @@ show_help() {
     echo -e "${BLUE}Usage:${RESET} synfetch [OPTIONS]"
     echo ""
     echo -e "${BOLD}Options:${RESET}"
+    echo -e "  ${PINK}--config${RESET}          Open or locate the configuration file"
     echo -e "  ${PINK}--nonerd${RESET}          Hide icons"
     echo -e "  ${PINK}--noascii${RESET}         Hide ASCII art"
     echo -e "  ${PINK}--distro${RESET} <name>   Display ASCII art of a different distro"
@@ -520,8 +605,13 @@ show_help() {
     echo -e "  ${PINK}--theme${RESET} <name>    Color theme"
     echo -e "  ${PINK}--help | -h${RESET}       Show this help message"
     echo ""
-    echo -e "${BLUE}Available themes:${RESET} synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox"
+echo -e "${BLUE}Config File:${RESET}"
+    echo -e "  Location: ${GRAY}${CONFIG_FILE}${RESET}"
+    echo -e "  Set ${PINK}THEME=\"custom\"${RESET} in the config to use your own Hex colors."
+    echo ""
+    echo -e "${BLUE}Available themes:${RESET} synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox, custom"
     echo -e "${BLUE}Available distros:${RESET} arch, cachyos, ubuntu, debian, devuan, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, macos"
+    echo ""
     exit 0
 }
 
@@ -530,7 +620,36 @@ show_help() {
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            --live)
+           --config)
+                echo -e "${BLUE}Config Location:${RESET} ${CONFIG_FILE}"
+                if [ -n "$EDITOR" ]; then
+                    $EDITOR "$CONFIG_FILE"
+                elif command -v nano >/dev/null 2>&1; then
+                    nano "$CONFIG_FILE"
+                elif command -v micro >/dev/null 2>&1; then
+                    micro "$CONFIG_FILE"
+                elif command -v nvim >/dev/null 2>&1; then
+                    nvim "$CONFIG_FILE"
+                elif command -v vim >/dev/null 2>&1; then
+                    vim "$CONFIG_FILE"
+                elif command -v vi >/dev/null 2>&1; then
+                    vi "$CONFIG_FILE"
+                elif command -v emacs >/dev/null 2>&1; then
+                    emacs -nw "$CONFIG_FILE"
+                elif command -v gedit >/dev/null 2>&1; then
+                    gedit "$CONFIG_FILE" >/dev/null 2>&1 &
+                elif command -v mousepad >/dev/null 2>&1; then
+                    mousepad "$CONFIG_FILE" >/dev/null 2>&1 &
+                elif command -v leafpad >/dev/null 2>&1; then
+                    leafpad "$CONFIG_FILE" >/dev/null 2>&1 &
+                elif command -v kate >/dev/null 2>&1; then
+                    kate "$CONFIG_FILE" >/dev/null 2>&1 &
+                elif command -v xed >/dev/null 2>&1; then
+                    xed "$CONFIG_FILE" >/dev/null 2>&1 &
+		fi                
+		exit 0
+		;;
+	   --live)
                 LIVE_MODE=true
                 ;;
             --theme)
@@ -569,10 +688,10 @@ parse_args "$@"
 
 validate_theme() {
     case "$THEME" in
-        synthwave|monochrome|minimal|dracula|nord|gruvbox|catppuccin|tokyonight) ;;
+        synthwave|monochrome|minimal|dracula|nord|gruvbox|catppuccin|tokyonight|custom) ;;
         *)
             echo -e "${PINK}Error:${RESET} Unknown theme '$THEME'"
-            echo -e "Available: synthwave, monochrome, minimal, dracula, nord, tokyonight, gruvbox, catppuccin"
+            echo -e "Available: synthwave, monochrome, minimal, dracula, nord, tokyonight, gruvbox, catppuccin, custom"
             exit 1
             ;;
     esac
@@ -1144,6 +1263,6 @@ ${SEPARATOR_COLOR}────────────────────�
     printf " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}\n"
 fi
 
-# CPU Usage stuff
+# CPU Usage stats
 read -r _ u n s i io ir so st _ _ < /proc/stat
 printf '%s %s %s %s %s %s %s %s\n' "$u" "$n" "$s" "$i" "$io" "$ir" "$so" "$st" > "$CACHE_DIR/cpu_stat.cache"
