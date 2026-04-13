@@ -1425,7 +1425,7 @@ LEFT_WIDTH=62
         done
 
         local bottom_row=$(( $(tput lines) - 1 ))
-        local status="[k: Kill] [c: Sort CPU] [r: Sort RAM] [/: Search] [q: quit]  "
+        local status="[k: kill] [c: sort CPU] [r: sort RAM] [/: search] [q: quit]  "
         [[ -n "$SEARCH_QUERY" ]] && status+="${YELLOW}Filter: $SEARCH_QUERY ${RESET}"
         if [[ "$status" != "$LAST_STATUS" ]]; then
             tput cup "$bottom_row" 0; tput el
