@@ -275,7 +275,7 @@ ${C1}     __   ________
 ${C1}    / /  / __/ __/
 ${C1}   / /__/ _/_\\ \\  
 ${C1}  /____/_/ /___/
-		   "
+		  "
                     ;;
                 gentoo)
                     ART="${C1}    _____         __          
@@ -345,7 +345,7 @@ ${C1}  /_/  /_/\\_,_/\\__/\\____/___/
 set_theme() {
     case "$THEME" in
        synthwave)
-	       C1="${BLUE}"
+	      C1="${BLUE}"
             OS_COLOR="${BLUE}"
             KERNEL_COLOR="${PURPLE}"
             USER_COLOR="${PINK}"
@@ -364,7 +364,7 @@ set_theme() {
             SEPARATOR_COLOR="${GRAY}"
             ;;
         monochrome)
-	       C1="${MONO_ACCENT}"
+	      C1="${MONO_ACCENT}"
             OS_COLOR="${MONO_ACCENT}"
             KERNEL_COLOR="${MONO_ACCENT}"
             USER_COLOR="${MONO_ACCENT}"
@@ -383,7 +383,7 @@ set_theme() {
             SEPARATOR_COLOR="\e[38;5;245m"
             ;;
         minimal)
-	       C1="${MIN_COLOR}"  
+	      C1="${MIN_COLOR}"  
             OS_COLOR="${MIN_COLOR}"
             KERNEL_COLOR="${MIN_COLOR}"
             USER_COLOR="${MIN_COLOR}"
@@ -455,7 +455,7 @@ set_theme() {
             BAR_LABEL_COLOR="${TOKYONIGHT}"
             FILLED1_COLOR="${TOKYONIGHT}"
             FILLED2_COLOR="${TOKYONIGHT}"   
-   	       EMPTY_COLOR="\e[38;2;41;46;66m"
+   	      EMPTY_COLOR="\e[38;2;41;46;66m"
             SEPARATOR_COLOR="${TOKYONIGHT}"
             ;;
         catppuccin)
@@ -666,7 +666,7 @@ parse_args() {
 		fi                
 		exit 0
 		;;
-	   --live)
+	  --live)
                 LIVE_MODE=true
                 ;;
             --theme)
@@ -688,10 +688,10 @@ parse_args() {
                 BAR_LABEL_HEX=$(rand_hex); BAR_FILLED1_HEX=$(rand_hex)
                 BAR_FILLED2_HEX=$(rand_hex); BAR_EMPTY_HEX=$(rand_hex)
                 SEPARATOR_HEX=$(rand_hex)
-	 
+	
                 THEME="custom" 
                 shift 
-	     ;;
+	    ;;
             --cycle-theme)
                 themes=("synthwave" "monochrome" "minimal" "dracula" "nord" "catppuccin" "tokyonight" "gruvbox" "custom")
                 THEME=${themes[$RANDOM % ${#themes[@]}]}
@@ -1254,7 +1254,7 @@ get_top_processes() {
     total_mem_mb=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo 2>/dev/null || echo 8192)
    
     local _ps_out
-    _ps_out=$(ps -eo pid,user,%cpu,%mem,comm --no-headers --sort="$sort_opt")
+    _ps_out=$(LC_ALL=C ps -eo pid,user,%cpu,%mem,comm --no-headers --sort="$sort_opt") 
 
     if [[ -n "$SEARCH_QUERY" ]]; then
         _ps_out=$(grep -i -- "$SEARCH_QUERY" <<< "$_ps_out")
@@ -1307,7 +1307,7 @@ synfetch_live() {
     trap 'tput cnorm; stty sane; clear; exit 0' INT EXIT
 
 LEFT_WIDTH=62
-    RIGHT_COL=$((LEFT_WIDTH + 2))
+    RIGHT_COL=$((LEFT_WIDTH + 2))    
     LAST_COLS=0
     LAST_LINES=0
     LAST_STATUS=""
@@ -1439,11 +1439,11 @@ local key=""
                 "q"|"Q") 
                     clear 
                     break 
-	    	   ;;
-	       "/")
+	   	  ;;
+	      "/")
                     local _sq=""
                     tput cup "$bottom_row" 0; tput el
-		   printf "${YELLOW}Search (leave blank to exit): ${RESET}"
+		  printf "${YELLOW}Search (leave blank to exit): ${RESET}"
                     while true; do
                         local _ch
                         read -r -s -n 1 _ch
@@ -1467,7 +1467,7 @@ local key=""
                     tput civis
                     SELECTED=0
                     ;;
-	       "k"|"K") kill_selected ;;
+	      "k"|"K") kill_selected ;;
                 "c"|"C") SORT_MODE="cpu"; SELECTED=0 ;;
                 "r"|"R") SORT_MODE="ram"; SELECTED=0 ;;
                 $'\e') 
