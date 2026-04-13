@@ -4,7 +4,7 @@
 
 <div align="center">
 
-<img width="514" height="452" alt="image" src="https://github.com/user-attachments/assets/8a6f5998-7cc4-416e-a0cb-34008024c9bf" />
+<img width="1098" height="550" alt="image" src="https://github.com/user-attachments/assets/a71310db-1ff7-4cc6-b807-42c0f8a969f2" />
 
 </div>
 
@@ -27,7 +27,7 @@
 
 ### Why synfetch?
 
-They told me **bash** wasn't meant for speed... I took that personally. `synfetch` stands out to be one of the fastest, feature-rich system fetch tool written entirely in pure **bash**.
+They told me **bash** wasn't meant for speed... I took that personally. `synfetch` stands out to be one of the fastest, unique and feature-rich system fetch + system monitor tool written entirely in pure **bash**.
 
 ### Features
 
@@ -95,6 +95,7 @@ nix run github:SXSLVT/synfetch
 ```
 
 For everyone else, run:
+
 ```bash
 wget https://raw.githubusercontent.com/SXSLVT/synfetch/main/synfetch && chmod +x synfetch && sudo mv synfetch /usr/bin/
 ```
@@ -127,7 +128,7 @@ To open or locate the configuration file:
 synfetch --config
 ```
 
-To display Uptime & CPU, GPU, RAM Usage in real-time:
+To display Uptime, CPU Usage, GPU Usage, RAM Usage and Processes in real-time:
 ```bash
 synfetch --live
 ```
@@ -175,7 +176,7 @@ Options:
   --nonerd          Hide icons
   --noascii         Hide ASCII art
   --distro <name>   Display ASCII art of a different distro
-  --live            Animated Uptime, CPU, GPU and RAM usage
+  --live            Animated Uptime, CPU, GPU and RAM usage + process manager
   --refresh         Force refresh all cache files (use after installing packages)
   --theme <name>    Color theme
   --cycle-theme     Pick a random built-in theme
