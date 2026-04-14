@@ -266,12 +266,11 @@ ${C1}  \\___/\\___/_.__/\\___/
 		"
 		;;
                 lfs|linux-from-scratch)
-                    ART="
-${C1}     __   ________
+                    ART="${C1}     __   ________
 ${C1}    / /  / __/ __/
 ${C1}   / /__/ _/_\\ \\  
 ${C1}  /____/_/ /___/
-		 "
+		"
                     ;;
                 gentoo)
                     ART="${C1}    _____         __          
@@ -340,7 +339,7 @@ ${C1}  /_/  /_/\\_,_/\\__/\\____/___/
 set_theme() {
     case "$THEME" in
        synthwave)
-	     C1="${BLUE}"
+	    C1="${BLUE}"
             OS_COLOR="${BLUE}"
             KERNEL_COLOR="${PURPLE}"
             USER_COLOR="${PINK}"
@@ -359,7 +358,7 @@ set_theme() {
             SEPARATOR_COLOR="${GRAY}"
             ;;
         monochrome)
-	     C1="${MONO_ACCENT}"
+	    C1="${MONO_ACCENT}"
             OS_COLOR="${MONO_ACCENT}"
             KERNEL_COLOR="${MONO_ACCENT}"
             USER_COLOR="${MONO_ACCENT}"
@@ -378,7 +377,7 @@ set_theme() {
             SEPARATOR_COLOR="\e[38;5;245m"
             ;;
         minimal)
-	     C1="${MIN_COLOR}"  
+	    C1="${MIN_COLOR}"  
             OS_COLOR="${MIN_COLOR}"
             KERNEL_COLOR="${MIN_COLOR}"
             USER_COLOR="${MIN_COLOR}"
@@ -450,7 +449,7 @@ set_theme() {
             BAR_LABEL_COLOR="${TOKYONIGHT}"
             FILLED1_COLOR="${TOKYONIGHT}"
             FILLED2_COLOR="${TOKYONIGHT}"   
-   	     EMPTY_COLOR="\e[38;2;41;46;66m"
+   	    EMPTY_COLOR="\e[38;2;41;46;66m"
             SEPARATOR_COLOR="${TOKYONIGHT}"
             ;;
         catppuccin)
@@ -656,7 +655,7 @@ parse_args() {
 		fi                
 		exit 0
 		;;
-	 --live)
+	--live)
                 LIVE_MODE=true
                 ;;
             --theme)
@@ -681,7 +680,7 @@ parse_args() {
 	
                 THEME="custom" 
                 shift 
-	   ;;
+	  ;;
             --cycle-theme)
                 themes=("synthwave" "monochrome" "minimal" "dracula" "nord" "catppuccin" "tokyonight" "gruvbox" "custom")
                 THEME=${themes[$RANDOM % ${#themes[@]}]}
@@ -1323,6 +1322,114 @@ pause_selected() {
     tput el
 }
 
+# Real-time Monitoring + Top
+MAX_PROCS=20
+SORT_MODE="cpu"
+declare -a PROC_PIDS PROC_USERS PROC_CPUS PROC_MEMS PROC_COMMS
+SELECTED=0
+SEARCH_QUERY=""
+
+get_top_processes() {
+    PROC_PIDS=() PROC_USERS=() PROC_CPUS=() PROC_MEMS=() PROC_COMMS=()
+    local sort_opt="-%cpu"
+    [[ "$SORT_MODE" == "ram" ]] && sort_opt="-%mem"
+
+    local total_mem_mb
+    total_mem_mb=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo 2>/dev/null || echo 8192)
+   
+    local _ps_out
+    _ps_out=$(LC_ALL=C ps -eo pid,user,%cpu,%mem,comm --no-headers --sort="$sort_opt") 
+
+    if [[ -n "$SEARCH_QUERY" ]]; then
+        _ps_out=$(grep -i -- "$SEARCH_QUERY" <<< "$_ps_out")
+    fi
+
+    while read -r pid user cpu mem_percent short_cmd; do
+        [[ -z "$pid" ]] && continue
+        local mem_mb
+        mem_mb=$(awk "BEGIN {printf \"%.0f\", $mem_percent * $total_mem_mb / 100}")
+        PROC_PIDS+=("$pid")
+        PROC_USERS+=("$user")
+        PROC_CPUS+=("$cpu")
+        PROC_MEMS+=("$mem_mb")
+        PROC_COMMS+=("$short_cmd")
+    done < <(head -n "$MAX_PROCS" <<< "$_ps_out")
+}
+
+kill_selected() {
+    local pid="${PROC_PIDS[$SELECTED]:-}"
+    if [[ -z "$pid" || "$pid" == "PID" ]]; then return; fi
+    local cmd="${PROC_COMMS[$SELECTED]:0:40}"
+    local msg_row=$(( $(tput lines) - 3 ))
+    local msg_col=5
+
+    tput cup "$msg_row" "$msg_col"
+    tput el
+    tput sc
+    printf "${C1}Kill PID %s [%s]?${RESET}  (t = SIGTERM)  (9 = SIGKILL)  (any = cancel)" "$pid" "$cmd"
+
+    local kkey=""
+    read -t 5 -n 1 -s kkey 2>/dev/null || true
+
+    tput rc
+    tput el
+
+    case "$kkey" in
+        t|T) kill -15 "$pid" 2>/dev/null; tput cup "$msg_row" "$msg_col"; printf "${GREEN}SIGTERM sent!${RESET}"; sleep 0.8 ;;
+        9)   kill -9  "$pid" 2>/dev/null; tput cup "$msg_row" "$msg_col"; printf "${RED}SIGKILL sent!${RESET}"; sleep 0.8 ;;
+        *)   return ;;
+    esac
+    
+    tput cup "$msg_row" "$msg_col"
+    tput el
+}
+
+pause_selected() {
+    local pid="${PROC_PIDS[$SELECTED]:-}"
+    if [[ -z "$pid" || "$pid" == "PID" ]]; then return; fi
+    local cmd="${PROC_COMMS[$SELECTED]:0:40}"
+    local msg_row=$(( $(tput lines) - 3 ))
+    local msg_col=5
+
+    tput cup "$msg_row" "$msg_col"
+    tput el
+    tput sc
+
+    local is_paused=false
+    for p in "${PAUSED_PIDS[@]}"; do
+        [[ "$p" == "$pid" ]] && is_paused=true && break
+    done
+
+    if $is_paused; then
+        printf "${C1}Resume PID %s [%s]? (y = yes)${RESET}" "$pid" "$cmd"
+    else
+        printf "${C1}Pause PID %s [%s]? (y = yes)${RESET}" "$pid" "$cmd"
+    fi
+
+    local kkey=""
+    read -t 5 -n 1 -s kkey 2>/dev/null || true
+
+    tput rc
+    tput el
+
+    if [[ "$kkey" == "y" || "$kkey" == "Y" ]]; then
+        if $is_paused; then
+            kill -CONT "$pid" 2>/dev/null
+            local -a new=()
+            for p in "${PAUSED_PIDS[@]}"; do
+                [[ "$p" != "$pid" ]] && new+=("$p")
+            done
+            PAUSED_PIDS=("${new[@]}")
+        else
+            kill -STOP "$pid" 2>/dev/null
+            PAUSED_PIDS+=("$pid")
+        fi
+    fi
+
+    tput cup "$msg_row" "$msg_col"
+    tput el
+}
+
 synfetch_live() {
     clear
     printf '\e[?25l'       
@@ -1333,6 +1440,8 @@ synfetch_live() {
     local LAST_COLS=0
     local LAST_LINES=0
     local WAS_TOO_SMALL=false
+    local SHOW_RIGHT_PANEL=true     
+    local LAST_SHOW_RIGHT_PANEL=true     
 
     while true; do
         local size
@@ -1362,14 +1471,14 @@ synfetch_live() {
             continue
         fi
 
-        if [ "$cols" != "$LAST_COLS" ] || [ "$lines" != "$LAST_LINES" ] || [ "$WAS_TOO_SMALL" = true ]; then
+        if [ "$cols" != "$LAST_COLS" ] || [ "$lines" != "$LAST_LINES" ] || [ "$WAS_TOO_SMALL" = true ] || [[ "$SHOW_RIGHT_PANEL" != "$LAST_SHOW_RIGHT_PANEL" ]]; then
             printf '\e[2J\e[H'
             LAST_COLS=$cols
             LAST_LINES=$lines
             WAS_TOO_SMALL=false
+            LAST_SHOW_RIGHT_PANEL="$SHOW_RIGHT_PANEL"
         fi
 
-        # Right panel sticks to right edge
         local RIGHT_PANEL_WIDTH=55
         local MIN_GAP=3
         local RIGHT_COL=$(( cols - RIGHT_PANEL_WIDTH ))
@@ -1419,56 +1528,58 @@ synfetch_live() {
             printf '\e[%d;%dH' $((row+1)) 1; echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"; row=$((row + 1))
         fi
 
-        local right_row=0
-        printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
-        printf "${C1} PID   PROGRAM           USER        MEMB    CPU   ${RESET}"
-        right_row=$((right_row + 1))
-
-        printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
-        printf "${SEPARATOR_COLOR}──────────────────────────────────────────────────${RESET}"
-        right_row=$((right_row + 1))
-
-        local _proc_start_row=$right_row
-        if [ ${#PROC_PIDS[@]} -eq 0 ]; then
+        if [[ "$SHOW_RIGHT_PANEL" == true ]]; then
+            local right_row=0
             printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
-            printf "${GRAY}No processes${RESET}"
+            printf "${C1} PID   PROGRAM           USER        MEMB    CPU   ${RESET}"
             right_row=$((right_row + 1))
-        else
-            for i in "${!PROC_PIDS[@]}"; do
+
+            printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
+            printf "${SEPARATOR_COLOR}──────────────────────────────────────────────────${RESET}"
+            right_row=$((right_row + 1))
+
+            local _proc_start_row=$right_row
+            if [ ${#PROC_PIDS[@]} -eq 0 ]; then
                 printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
-                local mem_display="${PROC_MEMS[$i]}M"
+                printf "${GRAY}No processes${RESET}"
+                right_row=$((right_row + 1))
+            else
+                for i in "${!PROC_PIDS[@]}"; do
+                    printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
+                    local mem_display="${PROC_MEMS[$i]}M"
 
-                local proc_color="${OS_COLOR}"
-                local is_paused=false
-                for p in "${PAUSED_PIDS[@]}"; do
-                    [[ "$p" == "${PROC_PIDS[$i]}" ]] && is_paused=true && break
+                    local proc_color="${OS_COLOR}"
+                    local is_paused=false
+                    for p in "${PAUSED_PIDS[@]}"; do
+                        [[ "$p" == "${PROC_PIDS[$i]}" ]] && is_paused=true && break
+                    done
+                    if $is_paused; then
+                        proc_color="${GREEN}"
+                    elif (( ${PROC_CPUS[$i]%%.*} >= 25 )) || (( ${PROC_MEMS[$i]} >= 1024 )); then
+                        proc_color="${RED}"
+                    fi
+
+                    if [ "$i" -eq "$SELECTED" ]; then
+                        printf "\e[7m${proc_color} %-5s %-17s %-8s %7s %6.1f%% \e[27m\e[0m" \
+                            "${PROC_PIDS[$i]}" "${PROC_COMMS[$i]:0:17}" "${PROC_USERS[$i]}" \
+                            "$mem_display" "${PROC_CPUS[$i]}"
+                    else
+                        printf "${proc_color} %-5s %-17s %-8s %7s %6.1f%% ${RESET}" \
+                            "${PROC_PIDS[$i]}" "${PROC_COMMS[$i]:0:17}" "${PROC_USERS[$i]}" \
+                            "$mem_display" "${PROC_CPUS[$i]}"
+                    fi
+                    right_row=$((right_row + 1))
                 done
-                if $is_paused; then
-                    proc_color="${GREEN}"
-                elif (( ${PROC_CPUS[$i]%%.*} >= 25 )) || (( ${PROC_MEMS[$i]} >= 1024 )); then
-                    proc_color="${RED}"
-                fi
-
-                if [ "$i" -eq "$SELECTED" ]; then
-                    printf "\e[7m${proc_color} %-5s %-17s %-8s %7s %6.1f%% \e[27m\e[0m" \
-                        "${PROC_PIDS[$i]}" "${PROC_COMMS[$i]:0:17}" "${PROC_USERS[$i]}" \
-                        "$mem_display" "${PROC_CPUS[$i]}"
-                else
-                    printf "${proc_color} %-5s %-17s %-8s %7s %6.1f%% ${RESET}" \
-                        "${PROC_PIDS[$i]}" "${PROC_COMMS[$i]:0:17}" "${PROC_USERS[$i]}" \
-                        "$mem_display" "${PROC_CPUS[$i]}"
-                fi
+            fi
+            while (( right_row < _proc_start_row + MAX_PROCS + 2 )); do
+                printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
+                printf '\e[K'
                 right_row=$((right_row + 1))
             done
         fi
-        while (( right_row < _proc_start_row + MAX_PROCS + 2 )); do
-            printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
-            printf '\e[K'
-            right_row=$((right_row + 1))
-        done
 
         local bottom_row=$(( lines - 1 ))
-        local status="[k: kill] [p: pause/resume] [c: sort CPU] [r: sort RAM] [/: search] [q: quit]  "
+        local status="[k: kill] [p: pause/resume] [c: sort CPU] [r: sort RAM] [/: search] [h: toggle panel] [q: quit]  "
         [[ -n "$SEARCH_QUERY" ]] && status+="${YELLOW}Filter: $SEARCH_QUERY ${RESET}"
         printf '\e[%d;%dH' $((bottom_row+1)) 1
         printf '\e[K'
@@ -1505,6 +1616,13 @@ synfetch_live() {
                 "p"|"P") pause_selected ;;
                 "c"|"C") SORT_MODE="cpu"; SELECTED=0 ;;
                 "r"|"R") SORT_MODE="ram"; SELECTED=0 ;;
+                "h"|"H") 
+                    if [[ "$SHOW_RIGHT_PANEL" == true ]]; then
+                        SHOW_RIGHT_PANEL=false
+                    else
+                        SHOW_RIGHT_PANEL=true
+                    fi
+                    ;;
                 $'\e') 
                     read -t 0.05 -n 1 -s key2; read -t 0.05 -n 1 -s key3
                     [[ "$key3" == "A" ]] && ((SELECTED--))
@@ -1514,6 +1632,17 @@ synfetch_live() {
         fi
     done
 }
+
+# Check for live req 
+if [[ "$LIVE_MODE" == true ]]; then
+    if ! command -v ps >/dev/null 2>&1; then
+        echo -e "${RED}Error:${RESET} 'procps' is required for --live mode."
+        exit 1
+    fi
+    if ! command -v tput >/dev/null 2>&1; then
+        echo -e "${YELLOW}Warning:${RESET} 'ncurses' (tput) not found. UI may flicker."
+    fi
+fi
 
 # Check for live req 
 if [[ "$LIVE_MODE" == true ]]; then
