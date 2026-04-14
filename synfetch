@@ -339,7 +339,7 @@ ${C1}  /_/  /_/\\_,_/\\__/\\____/___/
 set_theme() {
     case "$THEME" in
        synthwave)
-	    C1="${BLUE}"
+	   C1="${BLUE}"
             OS_COLOR="${BLUE}"
             KERNEL_COLOR="${PURPLE}"
             USER_COLOR="${PINK}"
@@ -358,7 +358,7 @@ set_theme() {
             SEPARATOR_COLOR="${GRAY}"
             ;;
         monochrome)
-	    C1="${MONO_ACCENT}"
+	   C1="${MONO_ACCENT}"
             OS_COLOR="${MONO_ACCENT}"
             KERNEL_COLOR="${MONO_ACCENT}"
             USER_COLOR="${MONO_ACCENT}"
@@ -377,7 +377,7 @@ set_theme() {
             SEPARATOR_COLOR="\e[38;5;245m"
             ;;
         minimal)
-	    C1="${MIN_COLOR}"  
+	   C1="${MIN_COLOR}"  
             OS_COLOR="${MIN_COLOR}"
             KERNEL_COLOR="${MIN_COLOR}"
             USER_COLOR="${MIN_COLOR}"
@@ -449,7 +449,7 @@ set_theme() {
             BAR_LABEL_COLOR="${TOKYONIGHT}"
             FILLED1_COLOR="${TOKYONIGHT}"
             FILLED2_COLOR="${TOKYONIGHT}"   
-   	    EMPTY_COLOR="\e[38;2;41;46;66m"
+   	   EMPTY_COLOR="\e[38;2;41;46;66m"
             SEPARATOR_COLOR="${TOKYONIGHT}"
             ;;
         catppuccin)
@@ -680,7 +680,7 @@ parse_args() {
 	
                 THEME="custom" 
                 shift 
-	  ;;
+	 ;;
             --cycle-theme)
                 themes=("synthwave" "monochrome" "minimal" "dracula" "nord" "catppuccin" "tokyonight" "gruvbox" "custom")
                 THEME=${themes[$RANDOM % ${#themes[@]}]}
@@ -1109,104 +1109,93 @@ elif [ -n "${DESKTOP_SESSION:-}" ]; then
 fi
 
 case "${de_wm,,}" in
-    *x-cinnamon*)                    de_wm="Cinnamon" ;;
-    *ubuntu:gnome* | zorin:gnome | *gnome*)de_wm="GNOME" ;;
-    *kde* | *plasma*)                de_wm="KDE Plasma" ;;
-    *xfce*)                          de_wm="XFCE" ;;
-    *mate*)                          de_wm="MATE" ;;
-    *budgie*)                        de_wm="Budgie" ;;
-    *pantheon* | *elementary*)       de_wm="Pantheon" ;;
-    *deepin* | *dde*)                de_wm="Deepin DDE" ;;
-    *cosmic*)                        de_wm="COSMIC" ;;
-    *ukui*)                          de_wm="UKUI" ;;
-    *lumina*)                        de_wm="Lumina" ;;
+    *x-cinnamon*) de_wm="Cinnamon" ;;
+    *ubuntu:gnome* | zorin:gnome | *gnome*) de_wm="GNOME" ;;
+    *kde* | *plasma*) de_wm="KDE Plasma" ;;
+    *xfce*) de_wm="XFCE" ;;
+    *mate*) de_wm="MATE" ;;
+    *budgie*) de_wm="Budgie" ;;
+    *pantheon* | *elementary*) de_wm="Pantheon" ;;
+    *deepin* | *dde*) de_wm="Deepin DDE" ;;
+    *cosmic*) de_wm="COSMIC" ;;
+    *ukui*) de_wm="UKUI" ;;
+    *lumina*) de_wm="Lumina" ;;
 esac
 
 if [[ "$de_wm" == "Unknown" || -z "$de_wm" ]]; then
     de_wm="tty"
 
-    progs_regex="gnome-shell|gnome-session|mutter|plasmashell|kwin_wayland|kwin_x11|kded5|kded6|cinnamon|cinnamon-session|muffin|xfwm4|xfce4-session|xfce4-panel|mate-session|marco|budgie-wm|budgie-panel|budgie-session|pantheon-session|pantheon-shell|gala|deepin-session|dde-desktop|dde-dock|ukui-session|ukui-panel|lxsession|lxqt-session|lxqt-panel|openbox|enlightenment|e17|e16|e22|moksha|trinity|tde-session|unity|unity-panel-service|cosmic-comp|cosmic-session|hyprland|sway|i3|i3wm|river|wayfire|labwc|niri|dwl|awesome|bspwm|dwm|qtile|xmonad|herbstluftwm|spectrwm|stumpwm|fluxbox|blackbox|jwm|icewm|afterstep|windowmaker|fvwm|pekwm|twm|ctwm|metacity|sawfish|compiz|berry|hikari|cage|waybox|oxwm|exwm"
-
-    detected_wm=$(ps -eo comm= 2>/dev/null | grep -E "^(${progs_regex})$" | head -n 1)
-
-    if [[ -n "$detected_wm" ]]; then
-        de_wm="$detected_wm"
+    if [[ -n "${DISPLAY:-}" ]] || [[ -n "${WAYLAND_DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" =~ ^(x11|wayland)$ ]]; then
+        progs_regex="gnome-shell|gnome-session|mutter|plasmashell|kwin_wayland|kwin_x11|kded5|kded6|cinnamon|cinnamon-session|muffin|xfwm4|xfce4-session|mate-session|marco|budgie-wm|budgie-session|pantheon-session|gala|deepin-session|dde-desktop|ukui-session|lxsession|lxqt-session|openbox|enlightenment|moksha|unity|cosmic-comp|hyprland|sway|i3|river|wayfire|labwc|niri|dwl|awesome|bspwm|dwm|qtile|xmonad|herbstluftwm|spectrwm|stumpwm|fluxbox|icewm|windowmaker|fvwm|pekwm|twm|metacity|compiz|cage|exwm|blackbox|jwm|afterstep|berry|hikari|waybox|oxwm|leftwm|newm"
+        detected_wm=$(ps -eo comm= 2>/dev/null | grep -Eiw "^(${progs_regex})$" | head -n 1)
+        if [[ -z "$detected_wm" ]]; then
+            detected_wm=$(ps -eo comm= 2>/dev/null | grep -Eiw "^\.(${progs_regex})-wrapped$" | sed 's/^\.//; s/-wrapped$//' | head -n 1)
+        fi
+        if [[ -n "$detected_wm" ]]; then
+            de_wm="$detected_wm"
+        fi
     fi
 fi
 
 case "${de_wm,,}" in
-    gnome* | gnome-shell | mutter)          de_wm="GNOME" ;;
-    plasma* | kde* | plasmashell | kwin*)   de_wm="KDE Plasma" ;;
-    xfce* | xfwm4 | xfce4-session)          de_wm="XFCE" ;;
-    mate* | marco)                          de_wm="MATE" ;;
-    cinnamon* | muffin)                     de_wm="Cinnamon" ;;
-    budgie*)                                de_wm="Budgie" ;;
-    pantheon* | gala)                       de_wm="Pantheon" ;;
-    deepin* | dde*)                         de_wm="Deepin DDE" ;;
-    ukui*)                                  de_wm="UKUI" ;;
-    lxde* | lxsession)                      de_wm="LXDE" ;;
-    lxqt* | lxqt-session)                   de_wm="LXQt" ;;
+    gnome* | mutter) de_wm="GNOME" ;;
+    plasma* | kde* | kwin* | plasmashell) de_wm="KDE Plasma" ;;
+    xfce* | xfwm4) de_wm="XFCE" ;;
+    mate* | marco) de_wm="MATE" ;;
+    cinnamon* | muffin) de_wm="Cinnamon" ;;
+    budgie*) de_wm="Budgie" ;;
+    pantheon* | gala) de_wm="Pantheon" ;;
+    deepin* | dde*) de_wm="Deepin DDE" ;;
+    ukui*) de_wm="UKUI" ;;
+    lxde* | lxsession) de_wm="LXDE" ;;
+    lxqt*) de_wm="LXQt" ;;
     enlightenment | e17 | e16 | e22 | moksha) de_wm="Enlightenment" ;;
-    trinity | tde*)                         de_wm="Trinity (TDE)" ;;
-    unity*)                                 de_wm="Unity" ;;
-    cosmic*)                                de_wm="COSMIC (System76)" ;;
-    lumina*)                                de_wm="Lumina" ;;
-    i3 | i3wm)                              de_wm="i3" ;;
-    sway)                                   de_wm="Sway" ;;
-    hyprland)                               de_wm="Hyprland" ;;
-    river)                                  de_wm="River" ;;
-    wayfire)                                de_wm="Wayfire" ;;
-    labwc)                                  de_wm="LabWC" ;;
-    niri)                                   de_wm="Niri" ;;
-    dwl)                                    de_wm="dwl" ;;
-    awesome)                                de_wm="Awesome" ;;
-    bspwm)                                  de_wm="bspwm" ;;
-    dwm)                                    de_wm="dwm" ;;
-    qtile)                                  de_wm="Qtile" ;;
-    xmonad)                                 de_wm="XMonad" ;;
-    herbstluftwm)                           de_wm="herbstluftwm" ;;
-    spectrwm)                               de_wm="spectrwm" ;;
-    stumpwm)                                de_wm="StumpWM" ;;
-    openbox)                                de_wm="Openbox" ;;
-    fluxbox)                                de_wm="Fluxbox" ;;
-    blackbox)                               de_wm="Blackbox" ;;
-    jwm)                                    de_wm="JWM" ;;
-    icewm)                                  de_wm="IceWM" ;;
-    afterstep)                              de_wm="AfterStep" ;;
-    windowmaker | wmaker)                   de_wm="Window Maker" ;;
-    fvwm)                                   de_wm="FVWM" ;;
-    pekwm)                                  de_wm="PekWM" ;;
-    twm | ctwm)                             de_wm="TWM" ;;
-    metacity)                               de_wm="Metacity" ;;
-    compiz)                                 de_wm="Compiz" ;;
-    berry)                                  de_wm="berry" ;;
-    hikari)                                 de_wm="Hikari" ;;
-    cage)                                   de_wm="Cage (kiosk)" ;;
-    waybox)                                 de_wm="Waybox" ;;
-    oxwm)                                   de_wm="oxwm" ;;
-    exwm)                                   de_wm="exwm" ;;
+    trinity | tde*) de_wm="Trinity (TDE)" ;;
+    unity*) de_wm="Unity" ;;
+    cosmic*) de_wm="COSMIC (System76)" ;;
+    lumina*) de_wm="Lumina" ;;
+    i3 | i3wm) de_wm="i3" ;;
+    sway) de_wm="Sway" ;;
+    hyprland) de_wm="Hyprland" ;;
+    river) de_wm="River" ;;
+    wayfire) de_wm="Wayfire" ;;
+    labwc) de_wm="LabWC" ;;
+    niri) de_wm="Niri" ;;
+    dwl) de_wm="dwl" ;;
+    awesome) de_wm="Awesome" ;;
+    bspwm) de_wm="bspwm" ;;
+    dwm) de_wm="dwm" ;;
+    qtile) de_wm="Qtile" ;;
+    xmonad) de_wm="XMonad" ;;
+    herbstluftwm) de_wm="herbstluftwm" ;;
+    spectrwm) de_wm="spectrwm" ;;
+    stumpwm) de_wm="StumpWM" ;;
+    openbox) de_wm="Openbox" ;;
+    fluxbox) de_wm="Fluxbox" ;;
+    blackbox) de_wm="Blackbox" ;;
+    jwm) de_wm="JWM" ;;
+    icewm) de_wm="IceWM" ;;
+    afterstep) de_wm="AfterStep" ;;
+    windowmaker | wmaker) de_wm="Window Maker" ;;
+    fvwm) de_wm="FVWM" ;;
+    pekwm) de_wm="PekWM" ;;
+    twm | ctwm) de_wm="TWM" ;;
+    metacity) de_wm="Metacity" ;;
+    compiz) de_wm="Compiz" ;;
+    berry) de_wm="berry" ;;
+    hikari) de_wm="Hikari" ;;
+    cage) de_wm="Cage (kiosk)" ;;
+    waybox) de_wm="Waybox" ;;
+    oxwm) de_wm="oxwm" ;;
+    exwm) de_wm="exwm" ;;
 esac
 
-if [[ "$(uname -s)" == "Darwin" ]]; then
-    de_wm="macOS (Aqua)"
-fi
-
-if [[ "${de_wm}" == "GNOME" || "${de_wm}" == "KDE Plasma" || \
-      "${de_wm}" == "Cinnamon" || "${de_wm}" == "XFCE" || \
-      "${de_wm}" == "MATE" || "${de_wm}" == "LXQt" || \
-      "${de_wm}" == "Enlightenment" || "${de_wm}" == "UKUI" ]]; then
-    session_suffix=""
-    if [ -n "${XDG_SESSION_TYPE:-}" ]; then
-        case "${XDG_SESSION_TYPE}" in
-            wayland) session_suffix=" (Wayland)" ;;
-            x11)     session_suffix=" (X11)" ;;
-        esac
-    elif [ -n "${WAYLAND_DISPLAY:-}" ]; then
-        session_suffix=" (Wayland)"
-    elif [ -n "${DISPLAY:-}" ]; then
-        session_suffix=" (X11)"
+if [[ "$de_wm" == "GNOME" || "$de_wm" == "KDE Plasma" ]]; then
+    if [[ -n "${WAYLAND_DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]]; then
+        de_wm="${de_wm} (Wayland)"
+    elif [[ -n "${DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "x11" ]]; then
+        de_wm="${de_wm} (X11)"
     fi
-    de_wm="${de_wm}${session_suffix}"
 fi
 
 # Precomputed Variables
@@ -1215,11 +1204,26 @@ fi
 SHELL_NAME="${SHELL##*/}"
 
 # Real-time Monitoring + Top
+
 MAX_PROCS=20
 SORT_MODE="cpu"
 declare -a PROC_PIDS PROC_USERS PROC_CPUS PROC_MEMS PROC_COMMS
+declare -a PAUSED_PIDS 
 SELECTED=0
 SEARCH_QUERY=""
+
+get_fallback_mobo() {
+    printf "%s %s" "$(< /sys/class/dmi/id/board_vendor 2>/dev/null || echo "")" \
+                   "$(< /sys/class/dmi/id/board_name 2>/dev/null || echo "")" 2>/dev/null || echo "Unknown MoBo"
+}
+
+get_fallback_cpu() {
+    get_cpu_model  
+}
+
+get_fallback_gpu() {
+    get_gpu      
+}
 
 get_top_processes() {
     PROC_PIDS=() PROC_USERS=() PROC_CPUS=() PROC_MEMS=() PROC_COMMS=()
@@ -1228,9 +1232,9 @@ get_top_processes() {
 
     local total_mem_mb
     total_mem_mb=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo 2>/dev/null || echo 8192)
-   
+
     local _ps_out
-    _ps_out=$(LC_ALL=C ps -eo pid,user,%cpu,%mem,comm --no-headers --sort="$sort_opt") 
+    _ps_out=$(LC_ALL=C ps -eo pid,user,%cpu,%mem,comm --no-headers --sort="$sort_opt")
 
     if [[ -n "$SEARCH_QUERY" ]]; then
         _ps_out=$(grep -i -- "$SEARCH_QUERY" <<< "$_ps_out")
@@ -1258,11 +1262,9 @@ kill_selected() {
     tput cup "$msg_row" "$msg_col"
     tput el
     tput sc
-    printf "${C1}Kill PID %s [%s]?${RESET}  (t = SIGTERM)  (9 = SIGKILL)  (any = cancel)" "$pid" "$cmd"
-
+    printf "${C1}Kill PID %s [%s]?${RESET} (t = SIGTERM) (9 = SIGKILL) (any = cancel)" "$pid" "$cmd"
     local kkey=""
     read -t 5 -n 1 -s kkey 2>/dev/null || true
-
     tput rc
     tput el
 
@@ -1271,7 +1273,6 @@ kill_selected() {
         9)   kill -9  "$pid" 2>/dev/null; tput cup "$msg_row" "$msg_col"; printf "${RED}SIGKILL sent!${RESET}"; sleep 0.8 ;;
         *)   return ;;
     esac
-    
     tput cup "$msg_row" "$msg_col"
     tput el
 }
@@ -1300,115 +1301,6 @@ pause_selected() {
 
     local kkey=""
     read -t 5 -n 1 -s kkey 2>/dev/null || true
-
-    tput rc
-    tput el
-
-    if [[ "$kkey" == "y" || "$kkey" == "Y" ]]; then
-        if $is_paused; then
-            kill -CONT "$pid" 2>/dev/null
-            local -a new=()
-            for p in "${PAUSED_PIDS[@]}"; do
-                [[ "$p" != "$pid" ]] && new+=("$p")
-            done
-            PAUSED_PIDS=("${new[@]}")
-        else
-            kill -STOP "$pid" 2>/dev/null
-            PAUSED_PIDS+=("$pid")
-        fi
-    fi
-
-    tput cup "$msg_row" "$msg_col"
-    tput el
-}
-
-# Real-time Monitoring + Top
-MAX_PROCS=20
-SORT_MODE="cpu"
-declare -a PROC_PIDS PROC_USERS PROC_CPUS PROC_MEMS PROC_COMMS
-SELECTED=0
-SEARCH_QUERY=""
-
-get_top_processes() {
-    PROC_PIDS=() PROC_USERS=() PROC_CPUS=() PROC_MEMS=() PROC_COMMS=()
-    local sort_opt="-%cpu"
-    [[ "$SORT_MODE" == "ram" ]] && sort_opt="-%mem"
-
-    local total_mem_mb
-    total_mem_mb=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo 2>/dev/null || echo 8192)
-   
-    local _ps_out
-    _ps_out=$(LC_ALL=C ps -eo pid,user,%cpu,%mem,comm --no-headers --sort="$sort_opt") 
-
-    if [[ -n "$SEARCH_QUERY" ]]; then
-        _ps_out=$(grep -i -- "$SEARCH_QUERY" <<< "$_ps_out")
-    fi
-
-    while read -r pid user cpu mem_percent short_cmd; do
-        [[ -z "$pid" ]] && continue
-        local mem_mb
-        mem_mb=$(awk "BEGIN {printf \"%.0f\", $mem_percent * $total_mem_mb / 100}")
-        PROC_PIDS+=("$pid")
-        PROC_USERS+=("$user")
-        PROC_CPUS+=("$cpu")
-        PROC_MEMS+=("$mem_mb")
-        PROC_COMMS+=("$short_cmd")
-    done < <(head -n "$MAX_PROCS" <<< "$_ps_out")
-}
-
-kill_selected() {
-    local pid="${PROC_PIDS[$SELECTED]:-}"
-    if [[ -z "$pid" || "$pid" == "PID" ]]; then return; fi
-    local cmd="${PROC_COMMS[$SELECTED]:0:40}"
-    local msg_row=$(( $(tput lines) - 3 ))
-    local msg_col=5
-
-    tput cup "$msg_row" "$msg_col"
-    tput el
-    tput sc
-    printf "${C1}Kill PID %s [%s]?${RESET}  (t = SIGTERM)  (9 = SIGKILL)  (any = cancel)" "$pid" "$cmd"
-
-    local kkey=""
-    read -t 5 -n 1 -s kkey 2>/dev/null || true
-
-    tput rc
-    tput el
-
-    case "$kkey" in
-        t|T) kill -15 "$pid" 2>/dev/null; tput cup "$msg_row" "$msg_col"; printf "${GREEN}SIGTERM sent!${RESET}"; sleep 0.8 ;;
-        9)   kill -9  "$pid" 2>/dev/null; tput cup "$msg_row" "$msg_col"; printf "${RED}SIGKILL sent!${RESET}"; sleep 0.8 ;;
-        *)   return ;;
-    esac
-    
-    tput cup "$msg_row" "$msg_col"
-    tput el
-}
-
-pause_selected() {
-    local pid="${PROC_PIDS[$SELECTED]:-}"
-    if [[ -z "$pid" || "$pid" == "PID" ]]; then return; fi
-    local cmd="${PROC_COMMS[$SELECTED]:0:40}"
-    local msg_row=$(( $(tput lines) - 3 ))
-    local msg_col=5
-
-    tput cup "$msg_row" "$msg_col"
-    tput el
-    tput sc
-
-    local is_paused=false
-    for p in "${PAUSED_PIDS[@]}"; do
-        [[ "$p" == "$pid" ]] && is_paused=true && break
-    done
-
-    if $is_paused; then
-        printf "${C1}Resume PID %s [%s]? (y = yes)${RESET}" "$pid" "$cmd"
-    else
-        printf "${C1}Pause PID %s [%s]? (y = yes)${RESET}" "$pid" "$cmd"
-    fi
-
-    local kkey=""
-    read -t 5 -n 1 -s kkey 2>/dev/null || true
-
     tput rc
     tput el
 
@@ -1432,16 +1324,16 @@ pause_selected() {
 
 synfetch_live() {
     clear
-    printf '\e[?25l'       
+    printf '\e[?25l'
     stty -icanon -echo
     trap 'printf "\e[?25h\e[2J\e[H"; stty sane; clear; exit 0' INT EXIT
 
-    local -a PAUSED_PIDS=()
+    PAUSED_PIDS=()           
     local LAST_COLS=0
     local LAST_LINES=0
     local WAS_TOO_SMALL=false
-    local SHOW_RIGHT_PANEL=true     
-    local LAST_SHOW_RIGHT_PANEL=true     
+    local SHOW_RIGHT_PANEL=true
+    local LAST_SHOW_RIGHT_PANEL=true
 
     while true; do
         local size
@@ -1465,8 +1357,7 @@ synfetch_live() {
             echo -e "   You have      → ${GRAY}${cols} × ${lines}${RESET}"
             printf '\e[%d;%dH' $((warn_row+4)) $((warn_col+1))
             echo -e "${GRAY}Ctrl+C to exit${RESET}"
-            
-            WAS_TOO_SMALL=true 
+            WAS_TOO_SMALL=true
             sleep 0.5
             continue
         fi
@@ -1510,15 +1401,25 @@ synfetch_live() {
         [[ "${SHOW_KERNEL:-true}" == true ]] && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_KERNEL" "Kernel" "$KERNEL"      "$KERNEL_COLOR"; row=$((row+1)); }
         [[ "${SHOW_USER:-true}" == true ]]   && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_USER"   "User"   "$USER"        "$USER_COLOR"; row=$((row+1)); }
         [[ "${SHOW_HOST:-true}" == true ]]   && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_HOST"   "Host"   "$HOSTNAME"    "$HOST_COLOR"; row=$((row+1)); }
-        [[ "${SHOW_MOBO:-true}" == true ]]   && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_MOBO"   "MoBo"   "$MOBO"        "$MOBO_COLOR"; row=$((row+1)); }
-        [[ "${SHOW_CPU:-true}" == true ]]    && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_CPU"    "CPU"    "$CPU_MODEL"   "$CPU_COLOR"; row=$((row+1)); }
-        [[ "${SHOW_GPU:-true}" == true ]]    && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_GPU"    "GPU"    "$GPU"         "$GPU_COLOR"; row=$((row+1)); }
+
+        local mobo_print="${MOBO:-}"
+        [[ -z "$mobo_print" || "$mobo_print" == *"Unknown"* ]] && mobo_print=$(get_fallback_mobo)
+        [[ "${SHOW_MOBO:-true}" == true ]] && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_MOBO" "MoBo" "$mobo_print" "$MOBO_COLOR"; row=$((row+1)); }
+
+        local cpu_print="${CPU_MODEL:-}"
+        [[ -z "$cpu_print" || "$cpu_print" == "Unknown CPU" ]] && cpu_print=$(get_fallback_cpu)
+        [[ "${SHOW_CPU:-true}" == true ]] && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_CPU" "CPU" "$cpu_print" "$CPU_COLOR"; row=$((row+1)); }
+
+        local gpu_print="${GPU:-}"
+        [[ -z "$gpu_print" || "$gpu_print" == "Unknown GPU" ]] && gpu_print=$(get_fallback_gpu)
+        [[ "${SHOW_GPU:-true}" == true ]] && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_GPU" "GPU" "$gpu_print" "$GPU_COLOR"; row=$((row+1)); }
+
         [[ "${SHOW_UPTIME:-true}" == true ]] && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_UPTIME" "Uptime" "$(get_uptime)" "$UPTIME_COLOR"; row=$((row+1)); }
         [[ "${SHOW_SHELL:-true}" == true ]]  && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_SHELL"  "Shell"  "$SHELL_NAME"  "$SHELL_COLOR"; row=$((row+1)); }
         [[ "${SHOW_DEWM:-true}" == true ]]   && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_DEWM"   "DE/WM"  "$de_wm"       "$DEWM_COLOR"; row=$((row+1)); }
         [[ "${SHOW_PKGS:-true}" == true ]]   && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_PKGS"   "Pkgs"   "$PKG_COUNT"   "$PKGS_COLOR"; row=$((row+1)); }
-
-        if [[ "${SHOW_USAGE_BARS:-true}" == true ]]; then
+       
+       	if [[ "${SHOW_USAGE_BARS:-true}" == true ]]; then
             printf '\e[%d;%dH' $((row+1)) 1; echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"; row=$((row + 1))
             printf '\e[%d;%dH' $((row+1)) 1; printf " ${BAR_LABEL_COLOR}CPU${RESET}     %b\n" "$(cyber_bar "${CPU}")"; row=$((row + 1))
             printf '\e[%d;%dH' $((row+1)) 1; printf " ${BAR_LABEL_COLOR}RAM${RESET}     %b\n" "$(cyber_bar "${RAM}")"; row=$((row + 1))
@@ -1531,23 +1432,21 @@ synfetch_live() {
         if [[ "$SHOW_RIGHT_PANEL" == true ]]; then
             local right_row=0
             printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
-            printf "${C1} PID   PROGRAM           USER        MEMB    CPU   ${RESET}"
+            printf "${C1} PID   PROGRAM           USER        MEMB    CPU ${RESET}"
             right_row=$((right_row + 1))
-
             printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
             printf "${SEPARATOR_COLOR}──────────────────────────────────────────────────${RESET}"
             right_row=$((right_row + 1))
-
             local _proc_start_row=$right_row
+
             if [ ${#PROC_PIDS[@]} -eq 0 ]; then
                 printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
-                printf "${GRAY}No processes${RESET}"
+                printf "${GRAY}No processes                                               ${RESET}"
                 right_row=$((right_row + 1))
             else
                 for i in "${!PROC_PIDS[@]}"; do
                     printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
                     local mem_display="${PROC_MEMS[$i]}M"
-
                     local proc_color="${OS_COLOR}"
                     local is_paused=false
                     for p in "${PAUSED_PIDS[@]}"; do
@@ -1571,6 +1470,7 @@ synfetch_live() {
                     right_row=$((right_row + 1))
                 done
             fi
+
             while (( right_row < _proc_start_row + MAX_PROCS + 2 )); do
                 printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
                 printf '\e[K'
@@ -1589,7 +1489,7 @@ synfetch_live() {
         if read -t 0.08 -n 1 -s key 2>/dev/null; then
             case "$key" in
                 "q"|"Q") printf '\e[2J\e[H'; break ;;
-                "/") 
+                "/")
                     local _sq=""
                     printf '\e[%d;%dH' $((bottom_row+1)) 1
                     printf '\e[K'
@@ -1616,14 +1516,14 @@ synfetch_live() {
                 "p"|"P") pause_selected ;;
                 "c"|"C") SORT_MODE="cpu"; SELECTED=0 ;;
                 "r"|"R") SORT_MODE="ram"; SELECTED=0 ;;
-                "h"|"H") 
+                "h"|"H")
                     if [[ "$SHOW_RIGHT_PANEL" == true ]]; then
                         SHOW_RIGHT_PANEL=false
                     else
                         SHOW_RIGHT_PANEL=true
                     fi
                     ;;
-                $'\e') 
+                $'\e')
                     read -t 0.05 -n 1 -s key2; read -t 0.05 -n 1 -s key3
                     [[ "$key3" == "A" ]] && ((SELECTED--))
                     [[ "$key3" == "B" ]] && ((SELECTED++))
@@ -1633,18 +1533,7 @@ synfetch_live() {
     done
 }
 
-# Check for live req 
-if [[ "$LIVE_MODE" == true ]]; then
-    if ! command -v ps >/dev/null 2>&1; then
-        echo -e "${RED}Error:${RESET} 'procps' is required for --live mode."
-        exit 1
-    fi
-    if ! command -v tput >/dev/null 2>&1; then
-        echo -e "${YELLOW}Warning:${RESET} 'ncurses' (tput) not found. UI may flicker."
-    fi
-fi
-
-# Check for live req 
+# Check for live requirements
 if [[ "$LIVE_MODE" == true ]]; then
     if ! command -v ps >/dev/null 2>&1; then
         echo -e "${RED}Error:${RESET} 'procps' is required for --live mode."
