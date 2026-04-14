@@ -1325,9 +1325,9 @@ pause_selected() {
 
 synfetch_live() {
     clear
-    tput civis
+    printf '\e[?25l'     
     stty -icanon -echo
-    trap 'tput cnorm; stty sane; clear; exit 0' INT EXIT
+    trap 'printf "\e[?25h\e[2J\e[H"; stty sane; clear; exit 0' INT EXIT
 
     local -a PAUSED_PIDS=()
     local LAST_COLS=0
@@ -1335,25 +1335,24 @@ synfetch_live() {
     local WAS_TOO_SMALL=false
 
     while true; do
-        local cols=$(tput cols 2>/dev/null)
-        local lines=$(tput lines 2>/dev/null)
+        local cols=$(tput cols 2>/dev/null || echo 80)   
+        local lines=$(tput lines 2>/dev/null || echo 24)
 
         [[ -z "$cols" || "$cols" -lt 20 ]] && cols=80
         [[ -z "$lines" || "$lines" -lt 5 ]] && lines=24
 
         if (( cols < 115 || lines < 24 )); then
-            clear
+            printf '\e[2J\e[H'   # clear
             local warn_row=$(( lines / 2 - 4 ))
             local warn_col=$(( (cols - 68) / 2 ))
             (( warn_col < 0 )) && warn_col=0
-            tput cup "$warn_row" "$warn_col"
+            printf '\e[%d;%dH' $((warn_row+1)) $((warn_col+1))
             echo -e "${RED}-- TERMINAL TOO SMALL --${RESET}"
-            
-            tput cup $((warn_row+1)) "$warn_col"
+            printf '\e[%d;%dH' $((warn_row+2)) $((warn_col+1))
             echo -e "   Need at least → ${YELLOW}115 × 24${RESET}"
-            tput cup $((warn_row+2)) "$warn_col"
+            printf '\e[%d;%dH' $((warn_row+3)) $((warn_col+1))
             echo -e "   You have      → ${GRAY}${cols} × ${lines}${RESET}"
-            tput cup $((warn_row+3)) "$warn_col"
+            printf '\e[%d;%dH' $((warn_row+4)) $((warn_col+1))
             echo -e "${GRAY}Ctrl+C to exit${RESET}"
             
             WAS_TOO_SMALL=true 
@@ -1362,16 +1361,15 @@ synfetch_live() {
         fi
 
         if [ "$cols" != "$LAST_COLS" ] || [ "$lines" != "$LAST_LINES" ] || [ "$WAS_TOO_SMALL" = true ]; then
-            clear
+            printf '\e[2J\e[H'
             LAST_COLS=$cols
             LAST_LINES=$lines
             WAS_TOO_SMALL=false
         fi
 
-        local RIGHT_PANEL_WIDTH=55      
+        local RIGHT_PANEL_WIDTH=55
         local MIN_GAP=3
         local RIGHT_COL=$(( cols - RIGHT_PANEL_WIDTH ))
-
         if (( RIGHT_COL < 62 + MIN_GAP )); then
             RIGHT_COL=$((62 + MIN_GAP))
         fi
@@ -1386,55 +1384,55 @@ synfetch_live() {
 
         local row=0
 
-        tput cup "$row" 0
+        printf '\e[%d;%dH' $((row+1)) 1
         if $USE_ASCII; then
             while IFS= read -r art_line; do
-                tput cup "$row" 0
+                printf '\e[%d;%dH' $((row+1)) 1
                 printf "%b${RESET}" "$art_line"
                 row=$((row + 1))
             done <<< "$ART"
-            tput cup "$row" 0; printf "\n"; row=$((row + 1))
+            printf '\e[%d;%dH' $((row+1)) 1; printf "\n"; row=$((row + 1))
         fi
 
-        [[ "${SHOW_OS:-true}" == true ]]     && { tput cup "$row" 0; prin "$ICON_OS"     "OS"     "$DISTRO"      "$OS_COLOR"; row=$((row+1)); }
-        [[ "${SHOW_KERNEL:-true}" == true ]] && { tput cup "$row" 0; prin "$ICON_KERNEL" "Kernel" "$KERNEL"      "$KERNEL_COLOR"; row=$((row+1)); }
-        [[ "${SHOW_USER:-true}" == true ]]   && { tput cup "$row" 0; prin "$ICON_USER"   "User"   "$USER"        "$USER_COLOR"; row=$((row+1)); }
-        [[ "${SHOW_HOST:-true}" == true ]]   && { tput cup "$row" 0; prin "$ICON_HOST"   "Host"   "$HOSTNAME"    "$HOST_COLOR"; row=$((row+1)); }
-        [[ "${SHOW_MOBO:-true}" == true ]]   && { tput cup "$row" 0; prin "$ICON_MOBO"   "MoBo"   "$MOBO"        "$MOBO_COLOR"; row=$((row+1)); }
-        [[ "${SHOW_CPU:-true}" == true ]]    && { tput cup "$row" 0; prin "$ICON_CPU"    "CPU"    "$CPU_MODEL"   "$CPU_COLOR"; row=$((row+1)); }
-        [[ "${SHOW_GPU:-true}" == true ]]    && { tput cup "$row" 0; prin "$ICON_GPU"    "GPU"    "$GPU"         "$GPU_COLOR"; row=$((row+1)); }
-        [[ "${SHOW_UPTIME:-true}" == true ]] && { tput cup "$row" 0; prin "$ICON_UPTIME" "Uptime" "$(get_uptime)" "$UPTIME_COLOR"; row=$((row+1)); }
-        [[ "${SHOW_SHELL:-true}" == true ]]  && { tput cup "$row" 0; prin "$ICON_SHELL"  "Shell"  "$SHELL_NAME"  "$SHELL_COLOR"; row=$((row+1)); }
-        [[ "${SHOW_DEWM:-true}" == true ]]   && { tput cup "$row" 0; prin "$ICON_DEWM"   "DE/WM"  "$de_wm"       "$DEWM_COLOR"; row=$((row+1)); }
-        [[ "${SHOW_PKGS:-true}" == true ]]   && { tput cup "$row" 0; prin "$ICON_PKGS"   "Pkgs"   "$PKG_COUNT"   "$PKGS_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_OS:-true}" == true ]]     && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_OS"     "OS"     "$DISTRO"      "$OS_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_KERNEL:-true}" == true ]] && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_KERNEL" "Kernel" "$KERNEL"      "$KERNEL_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_USER:-true}" == true ]]   && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_USER"   "User"   "$USER"        "$USER_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_HOST:-true}" == true ]]   && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_HOST"   "Host"   "$HOSTNAME"    "$HOST_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_MOBO:-true}" == true ]]   && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_MOBO"   "MoBo"   "$MOBO"        "$MOBO_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_CPU:-true}" == true ]]    && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_CPU"    "CPU"    "$CPU_MODEL"   "$CPU_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_GPU:-true}" == true ]]    && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_GPU"    "GPU"    "$GPU"         "$GPU_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_UPTIME:-true}" == true ]] && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_UPTIME" "Uptime" "$(get_uptime)" "$UPTIME_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_SHELL:-true}" == true ]]  && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_SHELL"  "Shell"  "$SHELL_NAME"  "$SHELL_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_DEWM:-true}" == true ]]   && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_DEWM"   "DE/WM"  "$de_wm"       "$DEWM_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_PKGS:-true}" == true ]]   && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_PKGS"   "Pkgs"   "$PKG_COUNT"   "$PKGS_COLOR"; row=$((row+1)); }
 
         if [[ "${SHOW_USAGE_BARS:-true}" == true ]]; then
-            tput cup "$row" 0; echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"; row=$((row + 1))
-            tput cup "$row" 0; printf " ${BAR_LABEL_COLOR}CPU${RESET}     %b\n" "$(cyber_bar "${CPU}")"; row=$((row + 1))
-            tput cup "$row" 0; printf " ${BAR_LABEL_COLOR}RAM${RESET}     %b\n" "$(cyber_bar "${RAM}")"; row=$((row + 1))
+            printf '\e[%d;%dH' $((row+1)) 1; echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"; row=$((row + 1))
+            printf '\e[%d;%dH' $((row+1)) 1; printf " ${BAR_LABEL_COLOR}CPU${RESET}     %b\n" "$(cyber_bar "${CPU}")"; row=$((row + 1))
+            printf '\e[%d;%dH' $((row+1)) 1; printf " ${BAR_LABEL_COLOR}RAM${RESET}     %b\n" "$(cyber_bar "${RAM}")"; row=$((row + 1))
             if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
-                tput cup "$row" 0; printf " ${BAR_LABEL_COLOR}GPU${RESET}     %b\n" "$(cyber_bar "${GPU_USAGE}")     "; row=$((row + 1))
+                printf '\e[%d;%dH' $((row+1)) 1; printf " ${BAR_LABEL_COLOR}GPU${RESET}     %b\n" "$(cyber_bar "${GPU_USAGE}")     "; row=$((row + 1))
             fi
-            tput cup "$row" 0; echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"; row=$((row + 1))
+            printf '\e[%d;%dH' $((row+1)) 1; echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"; row=$((row + 1))
         fi
 
         local right_row=0
-        tput cup "$right_row" "$RIGHT_COL"
+        printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
         printf "${C1} PID   PROGRAM           USER        MEMB    CPU   ${RESET}"
         right_row=$((right_row + 1))
 
-        tput cup "$right_row" "$RIGHT_COL"
+        printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
         printf "${SEPARATOR_COLOR}──────────────────────────────────────────────────${RESET}"
         right_row=$((right_row + 1))
 
         local _proc_start_row=$right_row
         if [ ${#PROC_PIDS[@]} -eq 0 ]; then
-            tput cup "$right_row" "$RIGHT_COL"
+            printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
             printf "${GRAY}No processes${RESET}"
             right_row=$((right_row + 1))
         else
             for i in "${!PROC_PIDS[@]}"; do
-                tput cup "$right_row" "$RIGHT_COL"
+                printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
                 local mem_display="${PROC_MEMS[$i]}M"
 
                 local proc_color="${OS_COLOR}"
@@ -1461,23 +1459,26 @@ synfetch_live() {
             done
         fi
         while (( right_row < _proc_start_row + MAX_PROCS + 2 )); do
-            tput cup "$right_row" "$RIGHT_COL"; tput el
+            printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
+            printf '\e[K'   # clear line (was tput el)
             right_row=$((right_row + 1))
         done
 
-        local bottom_row=$(( $(tput lines) - 1 ))
+        local bottom_row=$(( lines - 1 ))
         local status="[k: kill] [p: pause/resume] [c: sort CPU] [r: sort RAM] [/: search] [q: quit]  "
         [[ -n "$SEARCH_QUERY" ]] && status+="${YELLOW}Filter: $SEARCH_QUERY ${RESET}"
-        tput cup "$bottom_row" 0; tput el
+        printf '\e[%d;%dH' $((bottom_row+1)) 1
+        printf '\e[K'   # clear line
         printf "${GRAY}${status}${RESET}"
 
         local key=""
-        if read -t 0.08 -n 1 -s key 2>/dev/null; then 
+        if read -t 0.08 -n 1 -s key 2>/dev/null; then
             case "$key" in
-                "q"|"Q") clear; break ;;
+                "q"|"Q") printf '\e[2J\e[H'; break ;;
                 "/") 
                     local _sq=""
-                    tput cup "$bottom_row" 0; tput el
+                    printf '\e[%d;%dH' $((bottom_row+1)) 1
+                    printf '\e[K'
                     printf "${YELLOW}Search (leave blank to exit): ${RESET}"
                     while true; do
                         local _ch
@@ -1485,15 +1486,16 @@ synfetch_live() {
                         if [[ "$_ch" == "" ]]; then break
                         elif [[ "$_ch" == $'\x7f' || "$_ch" == $'\b' ]]; then
                             [[ -n "$_sq" ]] && _sq="${_sq%?}"
-                            tput cup "$bottom_row" 0; tput el
+                            printf '\e[%d;%dH' $((bottom_row+1)) 1
+                            printf '\e[K'
                             printf "${YELLOW}Search: ${RESET}${_sq}"
                         elif [[ "$_ch" == $'\e' ]]; then _sq=""; break
                         else _sq+="$_ch"; printf "%s" "$_ch"
                         fi
                     done
                     SEARCH_QUERY="$_sq"
-                    tput cup "$bottom_row" 0; tput el
-                    tput civis
+                    printf '\e[%d;%dH' $((bottom_row+1)) 1
+                    printf '\e[K'
                     SELECTED=0
                     ;;
                 "k"|"K") kill_selected ;;
