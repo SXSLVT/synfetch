@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # Colors
-
 RESET="\e[0m"
 PINK="\e[38;5;201m"
 BLUE="\e[38;5;51m"
@@ -14,7 +13,6 @@ WHITE="\e[97m"
 GRAY="\e[38;5;245m"
 
 # Theme colors
-
 DRACULA_CYAN="\e[38;5;81m"
 DRACULA_PURPLE="\e[38;5;141m"
 DRACULA_PINK="\e[38;5;212m"
@@ -22,6 +20,7 @@ DRACULA_GREEN="\e[38;5;78m"
 DRACULA_YELLOW="\e[38;5;228m"
 DRACULA_RED="\e[38;5;203m"
 MONO_ACCENT="\e[38;5;51m" 
+MIN_COLOR="\e[38;5;244m"
 NORD_ACCENT="\e[38;5;116m" 
 TOKYONIGHT="\e[38;2;122;162;247m"
 CAT_MAUVE="\e[38;2;203;166;247m"
@@ -32,7 +31,6 @@ GRUV_YELLOW="\e[38;2;250;189;47m"
 GRUV_AQUA="\e[38;2;142;192;124m"
 
 # Theme variables
-
 C1=""
 OS_COLOR=""
 KERNEL_COLOR=""
@@ -52,7 +50,6 @@ EMPTY_COLOR=""
 SEPARATOR_COLOR=""
 
 # ASCII Detector
-
 detect_distro() {
     local target_distro="${CUSTOM_DISTRO}"
     if [[ -z "$target_distro" ]]; then
@@ -151,7 +148,7 @@ ${C1}   / /|_/ / _ \\/ _ \\  / / _ \\/ __/ _ \\
 ${C1}  /_/  /_/\\_,_/_//_/_/ /\\_,_/_/  \\___/
 ${C1}                  |___/               
                     "    
-    		  ;;
+    		;;
                 opensuse*|sles)
                     ART="${C1}                       ______  __________
 ${C1}   ___  ___  ___ ___  / __/ / / / __/ __/
@@ -269,11 +266,12 @@ ${C1}  \\___/\\___/_.__/\\___/
 		"
 		;;
                 lfs|linux-from-scratch)
-                    ART="${C1}     __   _                  ____                 ____             __      __ 
-${C1}    / /  (_)__  __ ____ __  / __/______  __ _    / __/__________ _/ /_____/ / 
-${C1}   / /__/ / _ \\/ // /\\ \\ / / _// __/ _ \\/  ' \\  _\\ \\/ __/ __/ _ \\/ __/ __/ _ \\
-${C1}  /____/_/_//_/\\_,_//_\\_\\ /_/ /_/  \\___/_/_/_/ /___/\\__/_/  \\_,_/\\__/\\__/_//_/  
-                    "
+                    ART="
+${C1}     __   ________
+${C1}    / /  / __/ __/
+${C1}   / /__/ _/_\\ \\  
+${C1}  /____/_/ /___/
+		 "
                     ;;
                 gentoo)
                     ART="${C1}    _____         __          
@@ -339,11 +337,10 @@ ${C1}  /_/  /_/\\_,_/\\__/\\____/___/
 }
 
 # Theme setter
-
 set_theme() {
     case "$THEME" in
        synthwave)
-	        C1="${BLUE}"
+	     C1="${BLUE}"
             OS_COLOR="${BLUE}"
             KERNEL_COLOR="${PURPLE}"
             USER_COLOR="${PINK}"
@@ -362,7 +359,7 @@ set_theme() {
             SEPARATOR_COLOR="${GRAY}"
             ;;
         monochrome)
-	        C1="${MONO_ACCENT}"
+	     C1="${MONO_ACCENT}"
             OS_COLOR="${MONO_ACCENT}"
             KERNEL_COLOR="${MONO_ACCENT}"
             USER_COLOR="${MONO_ACCENT}"
@@ -381,8 +378,7 @@ set_theme() {
             SEPARATOR_COLOR="\e[38;5;245m"
             ;;
         minimal)
-            MIN_COLOR="\e[38;5;244m"
-	        C1="${MIN_COLOR}"  
+	     C1="${MIN_COLOR}"  
             OS_COLOR="${MIN_COLOR}"
             KERNEL_COLOR="${MIN_COLOR}"
             USER_COLOR="${MIN_COLOR}"
@@ -454,7 +450,7 @@ set_theme() {
             BAR_LABEL_COLOR="${TOKYONIGHT}"
             FILLED1_COLOR="${TOKYONIGHT}"
             FILLED2_COLOR="${TOKYONIGHT}"   
-   	        EMPTY_COLOR="\e[38;2;41;46;66m"
+   	     EMPTY_COLOR="\e[38;2;41;46;66m"
             SEPARATOR_COLOR="${TOKYONIGHT}"
             ;;
         catppuccin)
@@ -509,7 +505,7 @@ set_theme() {
             DEWM_COLOR=$(hex_to_ansi "${DEWM_HEX:-#51ffff}")
             PKGS_COLOR=$(hex_to_ansi "${PKGS_HEX:-#51ffff}")
             BAR_LABEL_COLOR=$(hex_to_ansi "${BAR_LABEL_HEX:-#ff55ff}")
-            FILLED1_COLOR=$(hex_to_ansi "${BAR_FILLED1_HEX:-#ff55ff}")
+            FILLED1_COLOR=$(hex_to_ansi "${BAR_FILLED1_HEX:-#ff79c6}")
             FILLED2_COLOR=$(hex_to_ansi "${BAR_FILLED2_HEX:-#51ffff}")
             EMPTY_COLOR=$(hex_to_ansi "${BAR_EMPTY_HEX:-#282a36}")
             SEPARATOR_COLOR=$(hex_to_ansi "${SEPARATOR_HEX:-#282a36}")
@@ -518,7 +514,6 @@ set_theme() {
 }
 
 # Flags
-
 USE_NERD_FONTS=${USE_NERD_FONTS:-true}
 USE_ASCII=${USE_ASCII:-true}
 CUSTOM_DISTRO=${CUSTOM_DISTRO:-""}
@@ -527,7 +522,6 @@ LIVE_MODE=${LIVE_MODE:-false}
 REFRESH=${REFRESH:-false}
 
 # Hex color
-
 hex_to_ansi() {
     local hex="${1#\#}"
     if [[ "$hex" =~ ^[0-9a-fA-F]{6}$ ]]; then
@@ -541,7 +535,6 @@ hex_to_ansi() {
 }
 
 # Config
-
 CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/synfetch"
 CONFIG_FILE="$CONFIG_DIR/config"
 
@@ -604,7 +597,6 @@ fi
 source "$CONFIG_FILE"
 
 # Help
-
 show_help() {
     echo ""
     echo -e "${BLUE}Usage:${RESET} synfetch [OPTIONS]"
@@ -614,7 +606,7 @@ show_help() {
     echo -e "  ${PINK}--nonerd${RESET}          Hide icons"
     echo -e "  ${PINK}--noascii${RESET}         Hide ASCII art"
     echo -e "  ${PINK}--distro${RESET} <name>   Display ASCII art of a different distro"
-    echo -e "  ${PINK}--live${RESET}            Animated Uptime, CPU, GPU and RAM usage"
+    echo -e "  ${PINK}--live${RESET}            Animated Uptime, CPU, GPU and RAM usage + app killer"
     echo -e "  ${PINK}--refresh${RESET}         Force refresh all cache files (use after installing packages)"
     echo -e "  ${PINK}--theme${RESET} <name>    Color theme"
     echo -e "  ${PINK}--cycle-theme${RESET}     Pick a random built-in theme"
@@ -632,7 +624,6 @@ show_help() {
 }
 
 # Argument Parsing
-
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
@@ -665,7 +656,7 @@ parse_args() {
 		fi                
 		exit 0
 		;;
-	   --live)
+	 --live)
                 LIVE_MODE=true
                 ;;
             --theme)
@@ -687,10 +678,10 @@ parse_args() {
                 BAR_LABEL_HEX=$(rand_hex); BAR_FILLED1_HEX=$(rand_hex)
                 BAR_FILLED2_HEX=$(rand_hex); BAR_EMPTY_HEX=$(rand_hex)
                 SEPARATOR_HEX=$(rand_hex)
-	   
+	
                 THEME="custom" 
                 shift 
-	       ;;
+	   ;;
             --cycle-theme)
                 themes=("synthwave" "monochrome" "minimal" "dracula" "nord" "catppuccin" "tokyonight" "gruvbox" "custom")
                 THEME=${themes[$RANDOM % ${#themes[@]}]}
@@ -725,7 +716,6 @@ parse_args() {
 parse_args "$@"
 
 # Validate theme
-
 validate_theme() {
     case "$THEME" in
         synthwave|monochrome|minimal|dracula|nord|gruvbox|catppuccin|tokyonight|custom) ;;
@@ -740,7 +730,6 @@ validate_theme
 set_theme 
 
 # GPU & GPU Usage Detector
-
 get_gpu() {
     local gpu_list=()
     
@@ -836,7 +825,6 @@ get_gpu_usage() {
 }
 
 # CPU Model Detector
-
 get_cpu_model() {
     if [ "$(uname)" = "Darwin" ]; then
         sysctl -n machdep.cpu.brand_string 2>/dev/null || echo "Unknown CPU"
@@ -873,7 +861,6 @@ get_cpu_model() {
 }
 
 # Package Detector
-
 pkg_count() {
     local pkgs=()
     local count
@@ -935,7 +922,6 @@ pkg_count() {
 }
 
 # Cache for speed
-
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/synfetch"
 [[ -d "$CACHE_DIR" ]] || mkdir -p "$CACHE_DIR" 2>/dev/null || true
 REFRESH=${REFRESH:-false}
@@ -973,14 +959,12 @@ if [[ "$REFRESH" == true ]] || [[ ! -f "$CACHE_DIR/preload.stamp" ]]; then
 fi
 
 # Preload cached values
-
 cache "cpu"  'get_cpu_model';              CPU_MODEL=$_CACHE_RESULT
 cache "mobo" 'printf "%s %s\n" "$(< /sys/class/dmi/id/board_vendor)" "$(< /sys/class/dmi/id/board_name)" 2>/dev/null'; MOBO=$_CACHE_RESULT
 cache "gpu"  'get_gpu';                    GPU=$_CACHE_RESULT
 cache "pkgs" 'pkg_count' 120;              PKG_COUNT=$_CACHE_RESULT
 
 # CPU Usage & RAM Usage Detector
-
 get_cpu_usage() {
     local stat_cache="$CACHE_DIR/cpu_stat.cache"
     local u n s i io ir so st
@@ -1025,7 +1009,6 @@ get_ram_usage() {
 RAM=$(get_ram_usage)
 
 # Cyber bar theme
-
 cyber_bar() {
     local percent=$1
     local width=22
@@ -1057,7 +1040,6 @@ else
 fi
 
 # Prin
-
 prin() {
     local icon=$1    
     local label=$2   
@@ -1068,7 +1050,6 @@ prin() {
 }
 
 # Animated Uptime
-
 get_uptime() {
     if [ "$(uname)" = "Linux" ]; then
         local up _
@@ -1093,7 +1074,6 @@ get_uptime() {
 }
 
 # Nerd Fonts
-
 if $USE_NERD_FONTS; then
     ICON_OS=" "
     ICON_KERNEL="󰌢 "
@@ -1121,7 +1101,6 @@ else
 fi
 
 # DE/WM Detector 
-
 de_wm="Unknown"
 
 if [ -n "${XDG_CURRENT_DESKTOP:-}" ]; then
@@ -1232,59 +1211,306 @@ if [[ "${de_wm}" == "GNOME" || "${de_wm}" == "KDE Plasma" || \
 fi
 
 # Precomputed Variables
-
 { read -r KERNEL; } < /proc/sys/kernel/osrelease 2>/dev/null || KERNEL=$(uname -r)
 : "${HOSTNAME:=$(hostname 2>/dev/null)}"
 SHELL_NAME="${SHELL##*/}"
 
-# Real-time Monitoring
+# Real-time Monitoring + Top
+MAX_PROCS=20
+SORT_MODE="cpu"
+declare -a PROC_PIDS PROC_USERS PROC_CPUS PROC_MEMS PROC_COMMS
+SELECTED=0
+SEARCH_QUERY=""
+
+get_top_processes() {
+    PROC_PIDS=() PROC_USERS=() PROC_CPUS=() PROC_MEMS=() PROC_COMMS=()
+    local sort_opt="-%cpu"
+    [[ "$SORT_MODE" == "ram" ]] && sort_opt="-%mem"
+
+    local total_mem_mb
+    total_mem_mb=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo 2>/dev/null || echo 8192)
+   
+    local _ps_out
+    _ps_out=$(LC_ALL=C ps -eo pid,user,%cpu,%mem,comm --no-headers --sort="$sort_opt") 
+
+    if [[ -n "$SEARCH_QUERY" ]]; then
+        _ps_out=$(grep -i -- "$SEARCH_QUERY" <<< "$_ps_out")
+    fi
+
+    while read -r pid user cpu mem_percent short_cmd; do
+        [[ -z "$pid" ]] && continue
+        local mem_mb
+        mem_mb=$(awk "BEGIN {printf \"%.0f\", $mem_percent * $total_mem_mb / 100}")
+        PROC_PIDS+=("$pid")
+        PROC_USERS+=("$user")
+        PROC_CPUS+=("$cpu")
+        PROC_MEMS+=("$mem_mb")
+        PROC_COMMS+=("$short_cmd")
+    done < <(head -n "$MAX_PROCS" <<< "$_ps_out")
+}
+
+kill_selected() {
+    local pid="${PROC_PIDS[$SELECTED]:-}"
+    if [[ -z "$pid" || "$pid" == "PID" ]]; then return; fi
+    local cmd="${PROC_COMMS[$SELECTED]:0:40}"
+    local msg_row=$(( $(tput lines) - 3 ))
+    local msg_col=5
+
+    tput cup "$msg_row" "$msg_col"
+    tput el
+    tput sc
+    printf "${C1}Kill PID %s [%s]?${RESET}  (t = SIGTERM)  (9 = SIGKILL)  (any = cancel)" "$pid" "$cmd"
+
+    local kkey=""
+    read -t 5 -n 1 -s kkey 2>/dev/null || true
+
+    tput rc
+    tput el
+
+    case "$kkey" in
+        t|T) kill -15 "$pid" 2>/dev/null; tput cup "$msg_row" "$msg_col"; printf "${GREEN}SIGTERM sent!${RESET}"; sleep 0.8 ;;
+        9)   kill -9  "$pid" 2>/dev/null; tput cup "$msg_row" "$msg_col"; printf "${RED}SIGKILL sent!${RESET}"; sleep 0.8 ;;
+        *)   return ;;
+    esac
+    
+    tput cup "$msg_row" "$msg_col"
+    tput el
+}
+
+pause_selected() {
+    local pid="${PROC_PIDS[$SELECTED]:-}"
+    if [[ -z "$pid" || "$pid" == "PID" ]]; then return; fi
+    local cmd="${PROC_COMMS[$SELECTED]:0:40}"
+    local msg_row=$(( $(tput lines) - 3 ))
+    local msg_col=5
+
+    tput cup "$msg_row" "$msg_col"
+    tput el
+    tput sc
+
+    local is_paused=false
+    for p in "${PAUSED_PIDS[@]}"; do
+        [[ "$p" == "$pid" ]] && is_paused=true && break
+    done
+
+    if $is_paused; then
+        printf "${C1}Resume PID %s [%s]? (y = yes)${RESET}" "$pid" "$cmd"
+    else
+        printf "${C1}Pause PID %s [%s]? (y = yes)${RESET}" "$pid" "$cmd"
+    fi
+
+    local kkey=""
+    read -t 5 -n 1 -s kkey 2>/dev/null || true
+
+    tput rc
+    tput el
+
+    if [[ "$kkey" == "y" || "$kkey" == "Y" ]]; then
+        if $is_paused; then
+            kill -CONT "$pid" 2>/dev/null
+            local -a new=()
+            for p in "${PAUSED_PIDS[@]}"; do
+                [[ "$p" != "$pid" ]] && new+=("$p")
+            done
+            PAUSED_PIDS=("${new[@]}")
+        else
+            kill -STOP "$pid" 2>/dev/null
+            PAUSED_PIDS+=("$pid")
+        fi
+    fi
+
+    tput cup "$msg_row" "$msg_col"
+    tput el
+}
 
 synfetch_live() {
     clear
     tput civis
+    stty -icanon -echo
+    trap 'tput cnorm; stty sane; clear; exit 0' INT EXIT
 
-    trap 'tput cnorm; clear; exit 0' INT
+    local -a PAUSED_PIDS=()
+    local LAST_COLS=0
+    local LAST_LINES=0
+    local WAS_TOO_SMALL=false
 
     while true; do
+        local cols=$(tput cols 2>/dev/null)
+        local lines=$(tput lines 2>/dev/null)
+
+        [[ -z "$cols" || "$cols" -lt 20 ]] && cols=80
+        [[ -z "$lines" || "$lines" -lt 5 ]] && lines=24
+
+        if (( cols < 115 || lines < 24 )); then
+            clear
+            local warn_row=$(( lines / 2 - 4 ))
+            local warn_col=$(( (cols - 68) / 2 ))
+            (( warn_col < 0 )) && warn_col=0
+            tput cup "$warn_row" "$warn_col"
+            echo -e "${RED}-- TERMINAL TOO SMALL --${RESET}"
+            
+            tput cup $((warn_row+1)) "$warn_col"
+            echo -e "   Need at least → ${YELLOW}115 × 24${RESET}"
+            tput cup $((warn_row+2)) "$warn_col"
+            echo -e "   You have      → ${GRAY}${cols} × ${lines}${RESET}"
+            tput cup $((warn_row+3)) "$warn_col"
+            echo -e "${GRAY}Ctrl+C to exit${RESET}"
+            
+            WAS_TOO_SMALL=true 
+            sleep 0.5
+            continue
+        fi
+
+        if [ "$cols" != "$LAST_COLS" ] || [ "$lines" != "$LAST_LINES" ] || [ "$WAS_TOO_SMALL" = true ]; then
+            clear
+            LAST_COLS=$cols
+            LAST_LINES=$lines
+            WAS_TOO_SMALL=false
+        fi
+
+        local RIGHT_PANEL_WIDTH=55      
+        local MIN_GAP=3
+        local RIGHT_COL=$(( cols - RIGHT_PANEL_WIDTH ))
+
+        if (( RIGHT_COL < 62 + MIN_GAP )); then
+            RIGHT_COL=$((62 + MIN_GAP))
+        fi
+
         CPU=$(get_cpu_usage 2>/dev/null || echo 0)
         RAM=$(get_ram_usage 2>/dev/null || echo 0)
         GPU_USAGE=$(get_gpu_usage 2>/dev/null || echo 0)
+        get_top_processes
 
-        tput cup 0 0
+        (( SELECTED >= ${#PROC_PIDS[@]} )) && SELECTED=$(( ${#PROC_PIDS[@]} - 1 ))
+        [ ${#PROC_PIDS[@]} -eq 0 ] && SELECTED=0
 
+        local row=0
+
+        tput cup "$row" 0
         if $USE_ASCII; then
-            echo -e "$ART"
-            echo
+            while IFS= read -r art_line; do
+                tput cup "$row" 0
+                printf "%b${RESET}" "$art_line"
+                row=$((row + 1))
+            done <<< "$ART"
+            tput cup "$row" 0; printf "\n"; row=$((row + 1))
         fi
-       
-       	prin "$ICON_OS"     "OS"     "$DISTRO"      "$OS_COLOR"
-        prin "$ICON_KERNEL" "Kernel" "$KERNEL"      "$KERNEL_COLOR"
-        prin "$ICON_USER"   "User"   "$USER"        "$USER_COLOR"
-        prin "$ICON_HOST"   "Host"   "$HOSTNAME"    "$HOST_COLOR"
-        prin "$ICON_MOBO"   "MoBo"   "$MOBO"        "$MOBO_COLOR"
-        prin "$ICON_CPU"    "CPU"    "$CPU_MODEL"   "$CPU_COLOR"
-        prin "$ICON_GPU"    "GPU"    "$GPU"         "$GPU_COLOR"
-        prin "$ICON_UPTIME" "Uptime" "$(get_uptime)" "$UPTIME_COLOR"
-        prin "$ICON_SHELL"  "Shell"  "$SHELL_NAME"  "$SHELL_COLOR"
-        prin "$ICON_DEWM"   "DE/WM"  "$de_wm"       "$DEWM_COLOR"
-        prin "$ICON_PKGS"   "Pkgs"   "$PKG_COUNT"   "$PKGS_COLOR"
 
-	if [[ "${SHOW_USAGE_BARS:-true}" == true ]]; then
-          echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"
-          printf " ${BAR_LABEL_COLOR}CPU${RESET}     %b\n" "$(cyber_bar "${CPU}")"
-          printf " ${BAR_LABEL_COLOR}RAM${RESET}     %b\n" "$(cyber_bar "${RAM}")"
-          if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
-          printf " ${BAR_LABEL_COLOR}GPU${RESET}     %b\n" "$(cyber_bar "${GPU_USAGE}")      "
+        [[ "${SHOW_OS:-true}" == true ]]     && { tput cup "$row" 0; prin "$ICON_OS"     "OS"     "$DISTRO"      "$OS_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_KERNEL:-true}" == true ]] && { tput cup "$row" 0; prin "$ICON_KERNEL" "Kernel" "$KERNEL"      "$KERNEL_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_USER:-true}" == true ]]   && { tput cup "$row" 0; prin "$ICON_USER"   "User"   "$USER"        "$USER_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_HOST:-true}" == true ]]   && { tput cup "$row" 0; prin "$ICON_HOST"   "Host"   "$HOSTNAME"    "$HOST_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_MOBO:-true}" == true ]]   && { tput cup "$row" 0; prin "$ICON_MOBO"   "MoBo"   "$MOBO"        "$MOBO_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_CPU:-true}" == true ]]    && { tput cup "$row" 0; prin "$ICON_CPU"    "CPU"    "$CPU_MODEL"   "$CPU_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_GPU:-true}" == true ]]    && { tput cup "$row" 0; prin "$ICON_GPU"    "GPU"    "$GPU"         "$GPU_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_UPTIME:-true}" == true ]] && { tput cup "$row" 0; prin "$ICON_UPTIME" "Uptime" "$(get_uptime)" "$UPTIME_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_SHELL:-true}" == true ]]  && { tput cup "$row" 0; prin "$ICON_SHELL"  "Shell"  "$SHELL_NAME"  "$SHELL_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_DEWM:-true}" == true ]]   && { tput cup "$row" 0; prin "$ICON_DEWM"   "DE/WM"  "$de_wm"       "$DEWM_COLOR"; row=$((row+1)); }
+        [[ "${SHOW_PKGS:-true}" == true ]]   && { tput cup "$row" 0; prin "$ICON_PKGS"   "Pkgs"   "$PKG_COUNT"   "$PKGS_COLOR"; row=$((row+1)); }
+
+        if [[ "${SHOW_USAGE_BARS:-true}" == true ]]; then
+            tput cup "$row" 0; echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"; row=$((row + 1))
+            tput cup "$row" 0; printf " ${BAR_LABEL_COLOR}CPU${RESET}     %b\n" "$(cyber_bar "${CPU}")"; row=$((row + 1))
+            tput cup "$row" 0; printf " ${BAR_LABEL_COLOR}RAM${RESET}     %b\n" "$(cyber_bar "${RAM}")"; row=$((row + 1))
+            if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
+                tput cup "$row" 0; printf " ${BAR_LABEL_COLOR}GPU${RESET}     %b\n" "$(cyber_bar "${GPU_USAGE}")     "; row=$((row + 1))
+            fi
+            tput cup "$row" 0; echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"; row=$((row + 1))
         fi
-        echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"
+
+        local right_row=0
+        tput cup "$right_row" "$RIGHT_COL"
+        printf "${C1} PID   PROGRAM           USER        MEMB    CPU   ${RESET}"
+        right_row=$((right_row + 1))
+
+        tput cup "$right_row" "$RIGHT_COL"
+        printf "${SEPARATOR_COLOR}──────────────────────────────────────────────────${RESET}"
+        right_row=$((right_row + 1))
+
+        local _proc_start_row=$right_row
+        if [ ${#PROC_PIDS[@]} -eq 0 ]; then
+            tput cup "$right_row" "$RIGHT_COL"
+            printf "${GRAY}No processes${RESET}"
+            right_row=$((right_row + 1))
+        else
+            for i in "${!PROC_PIDS[@]}"; do
+                tput cup "$right_row" "$RIGHT_COL"
+                local mem_display="${PROC_MEMS[$i]}M"
+
+                local proc_color="${OS_COLOR}"
+                local is_paused=false
+                for p in "${PAUSED_PIDS[@]}"; do
+                    [[ "$p" == "${PROC_PIDS[$i]}" ]] && is_paused=true && break
+                done
+                if $is_paused; then
+                    proc_color="${GREEN}"
+                elif (( ${PROC_CPUS[$i]%%.*} >= 25 )) || (( ${PROC_MEMS[$i]} >= 1024 )); then
+                    proc_color="${RED}"
+                fi
+
+                if [ "$i" -eq "$SELECTED" ]; then
+                    printf "\e[7m${proc_color} %-5s %-17s %-8s %7s %6.1f%% \e[27m\e[0m" \
+                        "${PROC_PIDS[$i]}" "${PROC_COMMS[$i]:0:17}" "${PROC_USERS[$i]}" \
+                        "$mem_display" "${PROC_CPUS[$i]}"
+                else
+                    printf "${proc_color} %-5s %-17s %-8s %7s %6.1f%% ${RESET}" \
+                        "${PROC_PIDS[$i]}" "${PROC_COMMS[$i]:0:17}" "${PROC_USERS[$i]}" \
+                        "$mem_display" "${PROC_CPUS[$i]}"
+                fi
+                right_row=$((right_row + 1))
+            done
         fi
-        echo -e " ${GRAY}Press Ctrl+C to exit live mode${RESET}                "
-       	sleep 0.4
+        while (( right_row < _proc_start_row + MAX_PROCS + 2 )); do
+            tput cup "$right_row" "$RIGHT_COL"; tput el
+            right_row=$((right_row + 1))
+        done
+
+        local bottom_row=$(( $(tput lines) - 1 ))
+        local status="[k: kill] [p: pause/resume] [c: sort CPU] [r: sort RAM] [/: search] [q: quit]  "
+        [[ -n "$SEARCH_QUERY" ]] && status+="${YELLOW}Filter: $SEARCH_QUERY ${RESET}"
+        tput cup "$bottom_row" 0; tput el
+        printf "${GRAY}${status}${RESET}"
+
+        local key=""
+        if read -t 0.08 -n 1 -s key 2>/dev/null; then 
+            case "$key" in
+                "q"|"Q") clear; break ;;
+                "/") 
+                    local _sq=""
+                    tput cup "$bottom_row" 0; tput el
+                    printf "${YELLOW}Search (leave blank to exit): ${RESET}"
+                    while true; do
+                        local _ch
+                        read -r -s -n 1 _ch
+                        if [[ "$_ch" == "" ]]; then break
+                        elif [[ "$_ch" == $'\x7f' || "$_ch" == $'\b' ]]; then
+                            [[ -n "$_sq" ]] && _sq="${_sq%?}"
+                            tput cup "$bottom_row" 0; tput el
+                            printf "${YELLOW}Search: ${RESET}${_sq}"
+                        elif [[ "$_ch" == $'\e' ]]; then _sq=""; break
+                        else _sq+="$_ch"; printf "%s" "$_ch"
+                        fi
+                    done
+                    SEARCH_QUERY="$_sq"
+                    tput cup "$bottom_row" 0; tput el
+                    tput civis
+                    SELECTED=0
+                    ;;
+                "k"|"K") kill_selected ;;
+                "p"|"P") pause_selected ;;
+                "c"|"C") SORT_MODE="cpu"; SELECTED=0 ;;
+                "r"|"R") SORT_MODE="ram"; SELECTED=0 ;;
+                $'\e') 
+                    read -t 0.05 -n 1 -s key2; read -t 0.05 -n 1 -s key3
+                    [[ "$key3" == "A" ]] && ((SELECTED--))
+                    [[ "$key3" == "B" ]] && ((SELECTED++))
+                    ;;
+            esac
+        fi
     done
 }
 
 # Main Output
-
 detect_distro
 
 if [[ "${LIVE_MODE:-false}" == true ]]; then
@@ -1295,18 +1521,18 @@ else
         echo
     fi
 
-    prin "$ICON_OS"     "OS"     "$DISTRO"      "$OS_COLOR"
-    prin "$ICON_KERNEL" "Kernel" "$KERNEL"      "$KERNEL_COLOR"
-    prin "$ICON_USER"   "User"   "$USER"        "$USER_COLOR"
-    prin "$ICON_HOST"   "Host"   "$HOSTNAME"    "$HOST_COLOR"
-    prin "$ICON_MOBO"   "MoBo"   "$MOBO"        "$MOBO_COLOR"
-    prin "$ICON_CPU"    "CPU"    "$CPU_MODEL"   "$CPU_COLOR"
-    prin "$ICON_GPU"    "GPU"    "$GPU"         "$GPU_COLOR"
-    prin "$ICON_UPTIME" "Uptime" "$(get_uptime)" "$UPTIME_COLOR"
-    prin "$ICON_SHELL"  "Shell"  "$SHELL_NAME"  "$SHELL_COLOR"
-    prin "$ICON_DEWM"   "DE/WM"  "$de_wm"       "$DEWM_COLOR"
-    prin "$ICON_PKGS"   "Pkgs"   "$PKG_COUNT"   "$PKGS_COLOR"
-
+    [[ "${SHOW_OS:-true}" == true ]]     && prin "$ICON_OS"     "OS"     "$DISTRO"      "$OS_COLOR"
+    [[ "${SHOW_KERNEL:-true}" == true ]] && prin "$ICON_KERNEL" "Kernel" "$KERNEL"      "$KERNEL_COLOR"
+    [[ "${SHOW_USER:-true}" == true ]]   && prin "$ICON_USER"   "User"   "$USER"        "$USER_COLOR"
+    [[ "${SHOW_HOST:-true}" == true ]]   && prin "$ICON_HOST"   "Host"   "$HOSTNAME"    "$HOST_COLOR"
+    [[ "${SHOW_MOBO:-true}" == true ]]   && prin "$ICON_MOBO"   "MoBo"   "$MOBO"        "$MOBO_COLOR"
+    [[ "${SHOW_CPU:-true}" == true ]]    && prin "$ICON_CPU"    "CPU"    "$CPU_MODEL"   "$CPU_COLOR"
+    [[ "${SHOW_GPU:-true}" == true ]]    && prin "$ICON_GPU"    "GPU"    "$GPU"         "$GPU_COLOR"
+    [[ "${SHOW_UPTIME:-true}" == true ]] && prin "$ICON_UPTIME" "Uptime" "$(get_uptime)" "$UPTIME_COLOR"
+    [[ "${SHOW_SHELL:-true}" == true ]]  && prin "$ICON_SHELL"  "Shell"  "$SHELL_NAME"  "$SHELL_COLOR"
+    [[ "${SHOW_DEWM:-true}" == true ]]   && prin "$ICON_DEWM"   "DE/WM"  "$de_wm"       "$DEWM_COLOR"
+    [[ "${SHOW_PKGS:-true}" == true ]]   && prin "$ICON_PKGS"   "Pkgs"   "$PKG_COUNT"   "$PKGS_COLOR"
+    
     if [[ "${SHOW_USAGE_BARS:-true}" == true ]]; then
         echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"
         printf " ${BAR_LABEL_COLOR}CPU${RESET}     %b\n" "$(cyber_bar "${CPU}")"
@@ -1319,6 +1545,5 @@ else
 fi
 
 # CPU Usage stats cache update
-
 read -r _ u n s i io ir so st _ _ < /proc/stat
 printf '%s %s %s %s %s %s %s %s\n' "$u" "$n" "$s" "$i" "$io" "$ir" "$so" "$st" > "$CACHE_DIR/cpu_stat.cache"
