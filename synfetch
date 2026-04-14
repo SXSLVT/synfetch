@@ -1467,7 +1467,6 @@ synfetch_live() {
             right_row=$((right_row + 1))
         done
 
-        # Bottom status bar
         local bottom_row=$(( lines - 1 ))
         local status="[k: kill] [p: pause/resume] [c: sort CPU] [r: sort RAM] [/: search] [q: quit]  "
         [[ -n "$SEARCH_QUERY" ]] && status+="${YELLOW}Filter: $SEARCH_QUERY ${RESET}"
@@ -1515,6 +1514,17 @@ synfetch_live() {
         fi
     done
 }
+
+# Check for live req 
+if [[ "$LIVE_MODE" == true ]]; then
+    if ! command -v ps >/dev/null 2>&1; then
+        echo -e "${RED}Error:${RESET} 'procps' is required for --live mode."
+        exit 1
+    fi
+    if ! command -v tput >/dev/null 2>&1; then
+        echo -e "${YELLOW}Warning:${RESET} 'ncurses' (tput) not found. UI may flicker."
+    fi
+fi
 
 # Main Output
 detect_distro
