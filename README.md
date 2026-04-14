@@ -163,7 +163,7 @@ To set a theme:
 synfetch --theme <name>
 ```
 
-To randomize colors and distro:
+To pick random colors and distro:
 ```bash
 synfetch --random
 ```
