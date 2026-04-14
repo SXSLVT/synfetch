@@ -895,12 +895,12 @@ pkg_count() {
     elif command -v pkgutil >/dev/null || command -v pkg >/dev/null; then
         count=$(pkgutil --pkgs 2>/dev/null | wc -l)
         pkgs+=("$count (Fink/pkgutil)")
-    elif command -v nix-store >/dev/null; then
-        count=$(nix-store -q --requisites /run/current-system 2>/dev/null | wc -l || echo 0)
-        pkgs+=("$count (nix)")
     elif command -v pacman >/dev/null; then
         count=$(pacman -Qq 2>/dev/null | wc -l)
         pkgs+=("$count (pacman)")
+    elif command -v nix-store >/dev/null; then
+        count=$(nix-store -q --requisites /run/current-system 2>/dev/null | wc -l || echo 0)
+        pkgs+=("$count (nix)")
     elif ls /Programs >/dev/null 2>&1; then
         count=$(ls /Programs 2>/dev/null | wc -l)
         pkgs+=("$count (programs)")
