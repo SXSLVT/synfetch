@@ -170,7 +170,7 @@ synfetch --random
 
 Output of `synfetch --help`
 ```bash
-Usage:
+Usage: 
   synfetch [OPTIONS]
 
 Options:
@@ -178,7 +178,7 @@ Options:
   --nonerd          Hide icons
   --noascii         Hide ASCII art
   --distro <name>   Display ASCII art of a different distro
-  --live            Animated Uptime, CPU, GPU and RAM usage + process manager
+  --live            Animated Uptime, CPU, GPU and RAM usage + app killer
   --refresh         Force refresh all cache files (use after installing packages)
   --theme <name>    Color theme
   --cycle-theme     Pick a random built-in theme
@@ -189,8 +189,11 @@ Config File:
   Location: /home/syner/.config/synfetch/config
   Set THEME="custom" in the config to use your own Hex colors.
 
-Available themes: synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox, custom
-Available distros: arch, cachyos, ubuntu, debian, devuan, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, macos
+Available themes:
+  synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox, custom
+
+Available distros:
+  arch, cachyos, ubuntu, debian, devuan, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, macos
 ```
 
 ### Uninstallation
