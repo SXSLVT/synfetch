@@ -370,7 +370,7 @@ ${C1}  /_/  /_/\\_,_/\\__/\\____/___/
 set_theme() {
     case "$THEME" in
        synthwave)
-	   C1="${BLUE}"
+	  C1="${BLUE}"
             OS_COLOR="${BLUE}"
             KERNEL_COLOR="${PURPLE}"
             USER_COLOR="${PINK}"
@@ -389,7 +389,7 @@ set_theme() {
             SEPARATOR_COLOR="${GRAY}"
             ;;
         monochrome)
-	   C1="${MONO_ACCENT}"
+	  C1="${MONO_ACCENT}"
             OS_COLOR="${MONO_ACCENT}"
             KERNEL_COLOR="${MONO_ACCENT}"
             USER_COLOR="${MONO_ACCENT}"
@@ -408,7 +408,7 @@ set_theme() {
             SEPARATOR_COLOR="\e[38;5;245m"
             ;;
         minimal)
-	   C1="${MIN_COLOR}"  
+	  C1="${MIN_COLOR}"  
             OS_COLOR="${MIN_COLOR}"
             KERNEL_COLOR="${MIN_COLOR}"
             USER_COLOR="${MIN_COLOR}"
@@ -480,7 +480,7 @@ set_theme() {
             BAR_LABEL_COLOR="${TOKYONIGHT}"
             FILLED1_COLOR="${TOKYONIGHT}"
             FILLED2_COLOR="${TOKYONIGHT}"   
-   	   EMPTY_COLOR="\e[38;2;41;46;66m"
+   	  EMPTY_COLOR="\e[38;2;41;46;66m"
             SEPARATOR_COLOR="${TOKYONIGHT}"
             ;;
         catppuccin)
@@ -711,7 +711,7 @@ parse_args() {
 	
                 THEME="custom" 
                 shift 
-	 ;;
+	;;
             --cycle-theme)
                 themes=("synthwave" "monochrome" "minimal" "dracula" "nord" "catppuccin" "tokyonight" "gruvbox" "custom")
                 THEME=${themes[$RANDOM % ${#themes[@]}]}
@@ -1479,6 +1479,7 @@ synfetch_live() {
                 printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
                 printf "${GRAY}No processes                                        ${RESET}"
                 right_row=$((right_row + 1))
+
             else
                 for i in "${!PROC_PIDS[@]}"; do
                     printf '\e[%d;%dH' $((right_row+1)) $((RIGHT_COL+1))
@@ -1494,7 +1495,7 @@ synfetch_live() {
                         proc_color="${RED}"
                     fi
 
-                    if [ "$i" -eq "$SELECTED" ]; then
+                    if [ "$i" -eq "$SELECTED" ]; then
                         LC_NUMERIC=C printf "\e[7m${proc_color} %-5s %-17s %-8s %7s %6.1f%% \e[27m\e[0m" \
                             "${PROC_PIDS[$i]}" "${PROC_COMMS[$i]:0:17}" "${PROC_USERS[$i]}" \
                             "$mem_display" "${PROC_CPUS[$i]}"
