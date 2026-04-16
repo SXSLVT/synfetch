@@ -1,0 +1,50 @@
+# Available themes: synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox
+# Available distros: arch, cachyos, ubuntu, debian, devuan, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, macos
+
+# Set THEME to "custom" to use the hex colors below
+THEME="synthwave"
+
+# Show/Hide modules
+SHOW_OS=true
+SHOW_KERNEL=true
+SHOW_USER=true
+SHOW_HOST=true
+SHOW_MOBO=true
+SHOW_CPU=true
+SHOW_GPU=true
+SHOW_UPTIME=true
+SHOW_SHELL=true
+SHOW_DEWM=true
+SHOW_PKGS=true
+SHOW_USAGE_BARS=true
+
+# Custom hex colors 
+C1_HEX="#ff5555"            # ASCII Art
+OS_HEX="#ffb86c"            # OS
+KERNEL_HEX="#f1fa8c"        # Kernel
+USER_HEX="#50fa7b"          # User
+HOST_HEX="#8be9fd"          # Hostname
+MOBO_HEX="#bd93f9"          # Motherboard
+CPU_HEX="#ff79c6"           # CPU
+GPU_HEX="#ff5555"           # GPU
+UPTIME_HEX="#ffb86c"        # Uptime
+SHELL_HEX="#f1fa8c"         # Shell
+DEWM_HEX="#50fa7b"          # DE/WM
+PKGS_HEX="#8be9fd"          # Packages
+BAR_LABEL_HEX="#bd93f9"     # Bar label
+BAR_FILLED1_HEX="#ff79c6"   # Filled bar 1
+BAR_FILLED2_HEX="#ff5555"   # Filled bar 2
+BAR_EMPTY_HEX="#282a36"     # Empty bar
+SEPARATOR_HEX="#444b6a"     # Separator
+
+# Toggle ASCII
+USE_ASCII=true
+
+# Toggle icons
+USE_NERD_FONTS=true
+
+# Use a different distro ASCII art (leave empty for default distro)
+CUSTOM_DISTRO="" 
+
+# Toggle Live mode on startup
+LIVE_MODE=false
