@@ -1495,7 +1495,6 @@ synfetch_live() {
                     fi
 
                     if [ "$i" -eq "$SELECTED" ]; then
-                    if [ "$i" -eq "$SELECTED" ]; then
                         LC_NUMERIC=C printf "\e[7m${proc_color} %-5s %-17s %-8s %7s %6.1f%% \e[27m\e[0m" \
                        "${PROC_PIDS[$i]}" "${PROC_COMMS[$i]:0:17}" "${PROC_USERS[$i]}" \
                        "$mem_display" "${PROC_CPUS[$i]}"
