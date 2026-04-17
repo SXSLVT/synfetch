@@ -57,7 +57,7 @@ detect_distro() {
             Linux*)
                 if [ -f /etc/os-release ]; then . /etc/os-release; fi
                 target_distro="${ID:-unknown}"
-                DISTRO="${PRETTY_NAME:-$NAME Linux}"
+                DISTRO="${PRETTY_NAME:-$NAME:-Linux}"
                 ;;
             *)
                 DISTRO="Unknown"
