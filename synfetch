@@ -360,7 +360,9 @@ ${C1}  /_/  /_/\\_,_/\\__/\\____/___/
 "
 ;;
         *)
-            ART="${C1} Unsupported OS :(
+            ART="
+
+${C1} Unsupported OS :(
             "
             ;;
     esac
