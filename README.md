@@ -93,7 +93,7 @@ Optional dependencies for GPU/CPU detection:
 
 `lspci`, `lscpu` for most GPUs and CPUs.
 
-`nvidia-smi` for NVIDIA GPU usage and detection.
+`nvidia-utils` for NVIDIA GPU usage and detection.
 
 `intel_gpu_top`, `timeout` for Intel GPU usage.
 
