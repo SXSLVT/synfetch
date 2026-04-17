@@ -770,7 +770,7 @@ get_gpu() {
     if command -v lspci >/dev/null 2>&1; then
         while read -r line; do
             [[ -n "$line" ]] && gpu_list+=("$line")
-        done < <(lspci -nn 2>/dev/null | grep -E 'VGA|3D|Display' | sed 's/.*: //' | sed '
+        done < <(lspci -nn 2>/dev/null | grep '^[0-9a-f]\+\.[0-9a-f]\+ *[0-9a-f]\+03' | sed 's/.*: //' | sed '
             s/ (rev .*)$//;
             s/\[[0-9a-fx:]\+\]//g;
             s/Advanced Micro Devices, Inc\. \[AMD\/ATI\]/AMD Radeon/;
@@ -798,7 +798,7 @@ get_gpu() {
     fi
 
     if [ ${#gpu_list[@]} -gt 0 ]; then
-        (IFS=' + '; echo "${gpu_list[*]}")
+        printf '%s\n' "${gpu_list[@]}"
     else
         if [ -d /sys/class/drm/card0/device ]; then
             local vendor
@@ -1192,7 +1192,7 @@ case "${de_wm,,}" in
     cosmic*) de_wm="COSMIC (System76)" ;;
     lumina*) de_wm="Lumina" ;;
     i3 | i3wm) de_wm="i3" ;;
-    sway) de_wm="Sway" ;;
+    *sway*) de_wm="Sway" ;;
     hyprland) de_wm="Hyprland" ;;
     river) de_wm="River" ;;
     wayfire) de_wm="Wayfire" ;;
@@ -1455,16 +1455,23 @@ synfetch_live() {
         [[ -z "$cpu_print" || "$cpu_print" == "Unknown CPU" ]] && cpu_print=$(get_fallback_cpu)
         [[ "${SHOW_CPU:-true}" == true ]] && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_CPU" "CPU" "$cpu_print" "$CPU_COLOR"; row=$((row+1)); }
 
-        local gpu_print="${GPU:-}"
-        [[ -z "$gpu_print" || "$gpu_print" == "Unknown GPU" ]] && gpu_print=$(get_fallback_gpu)
-        [[ "${SHOW_GPU:-true}" == true ]] && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_GPU" "GPU" "$gpu_print" "$GPU_COLOR"; row=$((row+1)); }
+        if [[ "${SHOW_GPU:-true}" == true ]]; then
+            local gpu_print="${GPU:-}"
+            [[ -z "$gpu_print" || "$gpu_print" == "Unknown GPU" ]] && gpu_print=$(get_fallback_gpu)
+            while IFS= read -r gpu_line || [[ -n "$gpu_line" ]]; do
+                [[ -z "$gpu_line" ]] && continue
+                printf '\e[%d;%dH' $((row+1)) 1
+                prin "$ICON_GPU" "GPU" "$gpu_line" "$GPU_COLOR"
+                row=$((row + 1))
+            done <<< "$gpu_print"
+        fi
 
         [[ "${SHOW_UPTIME:-true}" == true ]] && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_UPTIME" "Uptime" "$(get_uptime)" "$UPTIME_COLOR"; row=$((row+1)); }
         [[ "${SHOW_SHELL:-true}" == true ]]  && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_SHELL"  "Shell"  "$SHELL_NAME"  "$SHELL_COLOR"; row=$((row+1)); }
         [[ "${SHOW_DEWM:-true}" == true ]]   && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_DEWM"   "DE/WM"  "$de_wm"       "$DEWM_COLOR"; row=$((row+1)); }
         [[ "${SHOW_PKGS:-true}" == true ]]   && { printf '\e[%d;%dH' $((row+1)) 1; prin "$ICON_PKGS"   "Pkgs"   "$PKG_COUNT"   "$PKGS_COLOR"; row=$((row+1)); }
        
-       	if [[ "${SHOW_USAGE_BARS:-true}" == true ]]; then
+           	if [[ "${SHOW_USAGE_BARS:-true}" == true ]]; then
             printf '\e[%d;%dH' $((row+1)) 1; echo -e " ${SEPARATOR_COLOR}────────────────────────────────────────${RESET}"; row=$((row + 1))
             printf '\e[%d;%dH' $((row+1)) 1; printf " ${BAR_LABEL_COLOR}CPU${RESET}     %b\n" "$(cyber_bar "${CPU}")"; row=$((row + 1))
             printf '\e[%d;%dH' $((row+1)) 1; printf " ${BAR_LABEL_COLOR}RAM${RESET}     %b\n" "$(cyber_bar "${RAM}")"; row=$((row + 1))
@@ -1614,7 +1621,12 @@ else
     [[ "${SHOW_HOST:-true}" == true ]]   && prin "$ICON_HOST"   "Host"   "$HOSTNAME"    "$HOST_COLOR"
     [[ "${SHOW_MOBO:-true}" == true ]]   && prin "$ICON_MOBO"   "MoBo"   "$MOBO"        "$MOBO_COLOR"
     [[ "${SHOW_CPU:-true}" == true ]]    && prin "$ICON_CPU"    "CPU"    "$CPU_MODEL"   "$CPU_COLOR"
-    [[ "${SHOW_GPU:-true}" == true ]]    && prin "$ICON_GPU"    "GPU"    "$GPU"         "$GPU_COLOR"
+    if [[ "${SHOW_GPU:-true}" == true ]]; then
+        while IFS= read -r gpu_line || [[ -n "$gpu_line" ]]; do
+            [[ -z "$gpu_line" ]] && continue
+            prin "$ICON_GPU" "GPU" "$gpu_line" "$GPU_COLOR"
+        done <<< "${GPU:-Unknown GPU}"
+    fi
     [[ "${SHOW_UPTIME:-true}" == true ]] && prin "$ICON_UPTIME" "Uptime" "$(get_uptime)" "$UPTIME_COLOR"
     [[ "${SHOW_SHELL:-true}" == true ]]  && prin "$ICON_SHELL"  "Shell"  "$SHELL_NAME"  "$SHELL_COLOR"
     [[ "${SHOW_DEWM:-true}" == true ]]   && prin "$ICON_DEWM"   "DE/WM"  "$de_wm"       "$DEWM_COLOR"
