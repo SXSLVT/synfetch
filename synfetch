@@ -1165,13 +1165,19 @@ case "${de_wm,,}" in
     *cosmic*) de_wm="COSMIC" ;;
     *ukui*) de_wm="UKUI" ;;
     *lumina*) de_wm="Lumina" ;;
+    *ede*) de_wm="EDE" ;;
+    *cde* | *dtwm*) de_wm="CDE" ;;
+    *sugar*) de_wm="Sugar" ;;
+    *rox*) de_wm="ROX Desktop" ;;
+    *razor*) de_wm="Razor-qt" ;;
+    *trinity* | *tde*) de_wm="Trinity (TDE)" ;;
 esac
 
 if [[ "$de_wm" == "Unknown" || -z "$de_wm" ]]; then
     de_wm="tty"
 
     if [[ -n "${DISPLAY:-}" ]] || [[ -n "${WAYLAND_DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" =~ ^(x11|wayland)$ ]]; then
-        progs_regex="gnome-shell|gnome-session|mutter|plasmashell|kwin_wayland|kwin_x11|kded5|kded6|cinnamon|cinnamon-session|muffin|xfwm4|xfce4-session|mate-session|marco|budgie-wm|budgie-session|pantheon-session|gala|deepin-session|dde-desktop|ukui-session|lxsession|lxqt-session|openbox|enlightenment|moksha|unity|cosmic-comp|hyprland|sway|i3|river|wayfire|labwc|niri|dwl|awesome|bspwm|dwm|qtile|xmonad|herbstluftwm|spectrwm|stumpwm|fluxbox|icewm|windowmaker|fvwm|pekwm|twm|metacity|compiz|cage|exwm|blackbox|jwm|afterstep|berry|hikari|waybox|oxwm|leftwm|newm|vxwm|exwm"
+        progs_regex="gnome-shell|gnome-session|mutter|plasmashell|kwin_wayland|kwin_x11|kded5|kded6|cinnamon|cinnamon-session|muffin|xfwm4|xfce4-session|mate-session|marco|budgie-wm|budgie-session|pantheon-session|gala|deepin-session|dde-desktop|ukui-session|lxsession|lxqt-session|openbox|enlightenment|moksha|unity|cosmic-comp|hyprland|sway|i3|river|wayfire|labwc|niri|dwl|awesome|bspwm|dwm|qtile|xmonad|herbstluftwm|spectrwm|stumpwm|fluxbox|icewm|windowmaker|fvwm|pekwm|twm|metacity|compiz|cage|exwm|blackbox|jwm|afterstep|berry|hikari|waybox|oxwm|leftwm|newm|vxwm|exwm|dtwm|2bwm|9wm|aewm|aewm\+\+|amiwm|echinus|evilwm|goomwwm|lwm|matchbox|ratpoison|sapphire|sawfish|wmii|zwm|cagebreak"
         detected_wm=$(ps -eo comm= 2>/dev/null | grep -Eiw "^(${progs_regex})$" | head -n 1)
         if [[ -z "$detected_wm" ]]; then
             detected_wm=$(ps -eo comm= 2>/dev/null | grep -Eiw "^\.(${progs_regex})-wrapped$" | sed 's/^\.//; s/-wrapped$//' | head -n 1)
@@ -1234,6 +1240,28 @@ case "${de_wm,,}" in
     oxwm) de_wm="oxwm" ;;
     exwm) de_wm="exwm" ;;
     vxwm) de_wm="vxwm" ;;
+    *2bwm*) de_wm="2bWM" ;;
+    *9wm*) de_wm="9wm" ;;
+    *aewm*) de_wm="aewm" ;;
+    *amiwm*) de_wm="AmiWM" ;;
+    *echinus*) de_wm="Echinus" ;;
+    *evilwm*) de_wm="evilwm" ;;
+    *goomwwm*) de_wm="goomwwm" ;;
+    *lwm*) de_wm="lwm" ;;
+    *matchbox*) de_wm="Matchbox" ;;
+    *ratpoison*) de_wm="Ratpoison" ;;
+    *sapphire*) de_wm="Sapphire" ;;
+    *sawfish*) de_wm="Sawfish" ;;
+    *wmii*) de_wm="wmii" ;;
+    *zwm*) de_wm="zwm" ;;
+    *dtwm*) de_wm="CDE" ;;
+    *cagebreak*) de_wm="Cagebreak" ;;
+    leftwm) de_wm="leftwm" ;;
+    newm) de_wm="newm" ;;
+    *ede*) de_wm="EDE" ;;
+    *sugar*) de_wm="Sugar" ;;
+    *rox*) de_wm="ROX Desktop" ;;
+    *razor*) de_wm="Razor-qt" ;;
 esac
 
 if [[ "$de_wm" == "GNOME" || "$de_wm" == "KDE Plasma" ]]; then
