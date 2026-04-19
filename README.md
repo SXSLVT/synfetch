@@ -48,7 +48,6 @@ If you are experiencing issues with synfetch, please create an [issue](https://g
 - BlackArch
 - Arco
 - Archcraft
-- Puppy
 - SteamOS
 - Parabola
 - Artix
@@ -85,6 +84,7 @@ If you are experiencing issues with synfetch, please create an [issue](https://g
 - Bedrock
 - Guix
 - Gobo
+- Puppy
 - NixOS
 - QubesOS
 - CentOS
