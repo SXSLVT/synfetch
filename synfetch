@@ -858,8 +858,8 @@ get_gpu() {
         while read -r line; do
             [ -n "$line" ] && gpu_list+=("$line")
         done < <(lspci 2>/dev/null | grep -E "VGA|3D|Display" | sed '
-            s/^.*: //;                    # remove bus address
-            s/ \[.*\]//g;                 # remove [rev ...]
+            s/^.*: //;   
+            s/ \[.*\]//g;          
             s/ (rev .*)$//;
             s/Corporation //g;
             s/Inc\. //g;
@@ -869,6 +869,9 @@ get_gpu() {
             s/3D controller //gi;
             s/Display controller //gi;
             s/ASUSTeK//gi;
+            # === AMD normalization ===
+            s/Advanced Micro Devices, /AMD /g;
+            s/Advanced Micro Devices/AMD /g;
             s/^ //; s/ $//;
         ' | awk '!seen[$0]++')
     fi
