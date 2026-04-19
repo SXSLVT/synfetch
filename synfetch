@@ -1289,7 +1289,7 @@ case "${de_wm,,}" in
     cinnamon* | muffin) de_wm="Cinnamon" ;;
     budgie*) de_wm="Budgie" ;;
     pantheon* | gala) de_wm="Pantheon" ;;
-    deepin* | dde*) de_wm="Deepin DDE" ;;
+    de* epin| dde*) de_wm="Deepin DDE" ;;
     ukui*) de_wm="UKUI" ;;
     lxde* | lxsession) de_wm="LXDE" ;;
     lxqt*) de_wm="LXQt" ;;
@@ -1300,11 +1300,11 @@ case "${de_wm,,}" in
     i3 | i3wm) de_wm="i3" ;;
     *sway*) de_wm="Sway" ;;
     hyprland) de_wm="Hyprland" ;;
-    river) de_wm="River" ;;
-    wayfire) de_wm="Wayfire" ;;
-    labwc) de_wm="LabWC" ;;
-    niri) de_wm="Niri" ;;
-    dwl) de_wm="dwl" ;;
+    *river*) de_wm="River" ;;
+    *wayfire*) de_wm="Wayfire" ;;
+    *labwc*) de_wm="LabWC" ;;
+    *niri*) de_wm="Niri" ;;
+    *dwl*) de_wm="dwl" ;;
     awesome) de_wm="Awesome" ;;
     bspwm) de_wm="bspwm" ;;
     dwm) de_wm="dwm" ;;
@@ -1326,9 +1326,9 @@ case "${de_wm,,}" in
     metacity) de_wm="Metacity" ;;
     compiz) de_wm="Compiz" ;;
     berry) de_wm="berry" ;;
-    hikari) de_wm="Hikari" ;;
-    cage) de_wm="Cage (kiosk)" ;;
-    waybox) de_wm="Waybox" ;;
+    *hikari*) de_wm="Hikari" ;;
+    *cage*) de_wm="Cage (kiosk)" ;;
+    *waybox*) de_wm="Waybox" ;;
     oxwm) de_wm="oxwm" ;;
     exwm) de_wm="exwm" ;;
     vxwm) de_wm="vxwm" ;;
@@ -1349,7 +1349,7 @@ case "${de_wm,,}" in
     *dtwm*) de_wm="CDE" ;;
     *cagebreak*) de_wm="Cagebreak" ;;
     leftwm) de_wm="leftwm" ;;
-    newm) de_wm="newm" ;;
+    *newm*) de_wm="newm" ;;
 esac
 
 if [[ -n "${WAYLAND_DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]]; then
