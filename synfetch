@@ -1265,15 +1265,13 @@ if [[ "$de_wm" == "Unknown" || -z "$de_wm" ]]; then
         if [[ -z "$detected_wm" ]]; then
             detected_wm=$(ps -eo comm= 2>/dev/null | grep -Eiw "^\.(${progs_regex})-wrapped$" | sed 's/^\.//; s/-wrapped$//' | head -n 1)
         fi
-        if [[ -n "$detected_wm" ]]; then
-            de_wm="$detected_wm"
-        fi
+        [[ -n "$detected_wm" ]] && de_wm="$detected_wm"
     fi
 fi
 
 case "${de_wm,,}" in
     gnome* | mutter) de_wm="GNOME" ;;
-    plasma* | kde* | kwin* | plasmashell) de_wm="KDE Plasma" ;;
+    plasma* | kde* | kwin*) de_wm="KDE Plasma" ;;
     xfce* | xfwm4) de_wm="XFCE" ;;
     mate* | marco) de_wm="MATE" ;;
     cinnamon* | muffin) de_wm="Cinnamon" ;;
@@ -1287,7 +1285,6 @@ case "${de_wm,,}" in
     trinity | tde*) de_wm="Trinity (TDE)" ;;
     unity*) de_wm="Unity" ;;
     cosmic*) de_wm="COSMIC (System76)" ;;
-    lumina*) de_wm="Lumina" ;;
     i3 | i3wm) de_wm="i3" ;;
     *sway*) de_wm="Sway" ;;
     hyprland) de_wm="Hyprland" ;;
@@ -1341,25 +1338,15 @@ case "${de_wm,,}" in
     *cagebreak*) de_wm="Cagebreak" ;;
     leftwm) de_wm="leftwm" ;;
     newm) de_wm="newm" ;;
-    *ede*) de_wm="EDE" ;;
-    *sugar*) de_wm="Sugar" ;;
-    *rox*) de_wm="ROX Desktop" ;;
-    *razor*) de_wm="Razor-qt" ;;
 esac
 
-if [[ "$de_wm" == "GNOME" || "$de_wm" == "KDE Plasma" ]]; then
-    if [[ -n "${WAYLAND_DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]]; then
-        de_wm="${de_wm} (Wayland)"
-    elif [[ -n "${DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "x11" ]]; then
-        if command -v xdpyinfo >/dev/null 2>&1; then
-            if xdpyinfo 2>/dev/null | grep -qi "xlibre"; then
-                de_wm="${de_wm} (Xlibre)"
-            else
-                de_wm="${de_wm} (X11)"
-            fi
-        else
-            de_wm="${de_wm} (X11)"
-        fi
+if [[ -n "${WAYLAND_DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]]; then
+    de_wm="${de_wm} (Wayland)"
+elif [[ -n "${DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "x11" ]]; then
+    if command -v xdpyinfo >/dev/null 2>&1 && xdpyinfo 2>/dev/null | grep -qi "xlibre"; then
+        de_wm="${de_wm} (XLibre)"
+    else
+        de_wm="${de_wm} (X11)"
     fi
 fi
 
