@@ -103,15 +103,15 @@ They told me **bash** wasn't meant for speed... I took that personally. `synfetc
 
 ### Dependencies
 
-`wget` is required to download `synfetch` from GitHub!
+- `wget` is required to download `synfetch` from GitHub!
 
-Core dependencies **(necessary)**:
+- Core dependencies **(necessary)**:
 `bash`, `coreutils` and `procps`/`procps-ng`.
 
-Required dependencies for Live mode (--live):
+- Required dependencies for Live mode (--live):
 `tput` and `stty`.
 
-Optional dependencies for better GPU/CPU detection:
+- Optional dependencies for better GPU/CPU detection:
 
 `pciutils` for most GPUs and CPUs.
 
@@ -119,7 +119,7 @@ Optional dependencies for better GPU/CPU detection:
 
 `intel-gpu-tools` for Intel GPU usage.
 
-MacOS-specific dependencies:
+- MacOS-specific dependencies:
 `sysctl`, `vm_stat` and `date`. 
 
 ### Building and Installation
