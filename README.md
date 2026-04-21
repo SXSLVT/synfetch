@@ -35,10 +35,15 @@ They told me **bash** wasn't meant for speed... I took that personally. `synfetc
 ### Features
 
 Pure bash (no compiled binaries) with smart caching (feels instant on every run)
+
 Beautiful synthwave aesthetic with vibrant neon colors
+
 Lightweight, minimal, and highly customizable
+
 Real-time monitoring mode
+
 Excellent Linux + macOS support
+
 Perfect for ricing and showing off your setup
 
 ### Support
