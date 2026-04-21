@@ -113,11 +113,11 @@ They told me **bash** wasn't meant for speed... I took that personally. `synfetc
 
 - Optional dependencies for better GPU/CPU detection:
 
-`pciutils` for most GPUs and CPUs.
+  `pciutils` for most GPUs and CPUs.
 
-`nvidia-utils` for NVIDIA GPU usage.
+  `nvidia-utils` for NVIDIA GPU usage.
 
-`intel-gpu-tools` for Intel GPU usage.
+  `intel-gpu-tools` for Intel GPU usage.
 
 - MacOS-specific dependencies:
 `sysctl`, `vm_stat` and `date`. 
