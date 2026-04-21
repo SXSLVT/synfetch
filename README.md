@@ -139,7 +139,7 @@ For everyone else, run:
 ```bash
 wget https://raw.githubusercontent.com/SXSLVT/synfetch/main/synfetch && chmod +x synfetch && sudo mv synfetch /usr/bin/
 ```
-What this command does:
+- What this command does:
 
   `wget ...` → downloads **synfetch** from GitHub
 
