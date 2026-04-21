@@ -47,8 +47,8 @@ They told me **bash** wasn't meant for speed... I took that personally. `synfetc
 
 - Arch
 - BlackArch
-- Arco
-- Archcraft
+- ArcoLinux
+- Archcraft 
 - SteamOS
 - Parabola
 - Artix
@@ -84,7 +84,7 @@ They told me **bash** wasn't meant for speed... I took that personally. `synfetc
 - Alpine
 - Bedrock
 - Guix
-- Gobo
+- GoboLinux
 - Puppy
 - NixOS
 - QubesOS
