@@ -103,7 +103,7 @@ They told me **bash** wasn't meant for speed... I took that personally. `synfetc
 
 - The `--live` feature can be slow, especially on older hardware
 
-- **NOT** all the OSes listed in [Support](#support) are tested
+- Not all the OSes listed in [Support](#support) are tested
 
 - Very young project (undiscovered bugs might exist)
 
