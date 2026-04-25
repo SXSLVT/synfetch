@@ -101,7 +101,7 @@ They told me **bash** wasn't meant for speed... I took that personally. `synfetc
 
 - No support for BSD family and Windows (Windows can run synfetch via `WSL` and will probably add support for BSD family soon)
 
-- The `--live` feature can be slow, especially on older hardware
+- The `--live` feature can be slow, especially on older hardware and it's **experimental**
 
 - Not all the OSes listed in [Support](#support) are tested
 
