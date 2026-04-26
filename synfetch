@@ -1423,14 +1423,33 @@ esac
 if [[ -n "${WAYLAND_DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]]; then
     de_wm="${de_wm} (Wayland)"
 elif [[ -n "${DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "x11" ]]; then
+    local is_xlibre=false
+
+
     if command -v xdpyinfo >/dev/null 2>&1; then
-        if xdpyinfo 2>/dev/null | grep -qi "vendor string.*xlibre" || \
-           xdpyinfo 2>/dev/null | grep -qi "XLibre" || \
-           [ -x /usr/bin/X ] && /usr/bin/X --version 2>&1 | grep -qi "xlibre"; then
-            de_wm="${de_wm} (XLibre)"
-        else
-            de_wm="${de_wm} (X11)"
+        if xdpyinfo 2>/dev/null | grep -qiE "vendor string.*xlibre|XLibre"; then
+            is_xlibre=true
         fi
+    fi
+
+    if [[ "$is_xlibre" == false ]] && command -v X >/dev/null 2>&1; then
+        if X --version 2>&1 | grep -qiE "xlibre|XLibre" || \
+           [[ "$(readlink -f "$(command -v X)" 2>/dev/null)" == *xlibre* ]]; then
+            is_xlibre=true
+        fi
+    fi
+
+    if [[ "$is_xlibre" == false ]]; then
+        for path in /usr/bin/X /usr/lib/xorg/X /opt/xlibre/bin/X /usr/local/bin/X; do
+            if [ -x "$path" ] && "$path" --version 2>&1 | grep -qiE "xlibre|XLibre"; then
+                is_xlibre=true
+                break
+            fi
+        done
+    fi
+
+    if [[ "$is_xlibre" == true ]]; then
+        de_wm="${de_wm} (XLibre)"
     else
         de_wm="${de_wm} (X11)"
     fi
