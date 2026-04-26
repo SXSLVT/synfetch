@@ -1109,7 +1109,7 @@ fi
 
 # Preload cached values
 cache "cpu"  'get_cpu_model';              CPU_MODEL=$_CACHE_RESULT
-cache "mobo" 'printf "%s %s\n" "$(< /sys/class/dmi/id/board_vendor)" "$(< /sys/class/dmi/id/board_name)" 2>/dev/null'; MOBO=$_CACHE_RESULT
+cache "mobo" 'get_mobo_info';              MOBO=$_CACHE_RESULT
 cache "gpu"  'get_gpu';                    GPU=$_CACHE_RESULT
 cache "pkgs" 'pkg_count' 120;              PKG_COUNT=$_CACHE_RESULT
 
@@ -1159,42 +1159,44 @@ RAM=$(get_ram_usage)
 
 # Motherboard Detector 
 get_mobo_info() {
-    local vendor="" name="" product=""
-
-    if [ "$(uname)" = "Darwin" ]; then
-        name=$(sysctl -n hw.model 2>/dev/null)
-        vendor="Apple"
-        if [ -n "$name" ]; then
-            printf "%s %s" "$vendor" "$name"
-            return
-        fi
-    fi
+    local vendor="" name="" version=""
 
     [ -r /sys/class/dmi/id/board_vendor ] && vendor=$(< /sys/class/dmi/id/board_vendor 2>/dev/null)
     [ -r /sys/class/dmi/id/board_name ]   && name=$(< /sys/class/dmi/id/board_name 2>/dev/null)
+    [ -r /sys/class/dmi/id/board_version ] && version=$(< /sys/class/dmi/id/board_version 2>/dev/null)
 
-    if [ -z "$vendor" ] || [ -z "$name" ] || [[ "$name" == "None" || "$name" == "" || "$name" == *"Default string"* || "$name" == *"To be filled"* ]]; then
+    if [[ -z "$vendor" || -z "$name" || "$name" == "None" || "$name" == "" || "$name" == "To be filled by O.E.M." ]]; then
         [ -r /sys/class/dmi/id/sys_vendor ]    && vendor=$(< /sys/class/dmi/id/sys_vendor 2>/dev/null)
         [ -r /sys/class/dmi/id/product_name ]  && name=$(< /sys/class/dmi/id/product_name 2>/dev/null)
+        [ -r /sys/class/dmi/id/product_version ] && version=$(< /sys/class/dmi/id/product_version 2>/dev/null)
     fi
 
-    if [ -z "$name" ] || [[ "$name" == "None" || "$name" == *"Default string"* ]]; then
-        if [ -r /sys/firmware/devicetree/base/model ]; then
-            name=$(tr -d '\0' < /sys/firmware/devicetree/base/model 2>/dev/null)
-            vendor=""
-        fi
+    if [[ -z "$vendor" || -z "$name" || "$name" == "None" || "$name" == "" || "$name" == "To be filled by O.E.M." ]]; then
+        [ -r /sys/class/dmi/id/chassis_vendor ] && vendor=$(< /sys/class/dmi/id/chassis_vendor 2>/dev/null)
+        [ -r /sys/class/dmi/id/product_family ] && name=$(< /sys/class/dmi/id/product_family 2>/dev/null)
     fi
 
     vendor=${vendor//QEMU Standard PC/QEMU}
     vendor=${vendor//Bochs/Bochs}
-    name=${name//Standard PC (i440FX + PIIX, 1996)/QEMU VM}
+    name=${name//Standard PC \(i440FX + PIIX, 1996\)/QEMU VM}
+    name=${name//To be filled by O.E.M./}
+    name=${name//None/}
+    version=${version//To be filled by O.E.M./}
+    version=${version//None/}
 
-    if [[ -n "$vendor" && -n "$name" && "$vendor" != " " && "$name" != " " && "$vendor" != "$name" ]]; then
-        printf "%s %s" "$vendor" "$name"
-    elif [[ -n "$name" && "$name" != " " && "$name" != "None" ]]; then
-        printf "%s" "$name"
+    vendor=$(echo "$vendor" | xargs)
+    name=$(echo "$name" | xargs)
+    version=$(echo "$version" | xargs)
+
+    local result=""
+    [[ -n "$vendor" ]] && result="${vendor}"
+    [[ -n "$name" ]] && result="${result:+$result }${name}"
+    [[ -n "$version" && "$version" != "$name" ]] && result="${result:+$result }${version}"
+
+    if [[ -n "$result" ]]; then
+        printf "%s" "$result"
     else
-        echo "Unknown MoBo"
+        echo "Unknown"
     fi
 }
 
