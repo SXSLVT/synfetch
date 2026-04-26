@@ -129,7 +129,7 @@ They told me **bash** wasn't meant for speed... I took that personally. `synfetc
 For those on `Arch` based systems, **synfetch** is available in the [AUR](https://aur.archlinux.org/packages/synfetch-git).
 
 For those on `Nix`
-systems, keep in mind that it can be buggy, make sure to have `flakes` enabled and you can just run: 
+systems, keep in mind that it won't work properly, make sure to have `flakes` enabled and you can just run: 
 
 ```bash
 nix run github:SXSLVT/synfetch
