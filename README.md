@@ -28,7 +28,7 @@
 
 ### Why synfetch?
 
-They told me **bash** wasn't meant for speed... I took that personally. `synfetch` stands out to be one of the fastest, unique and feature-rich system fetch + system monitor tool written entirely in pure **bash**.
+They told me **bash** wasn't meant for speed... I took that personally. `synfetch` stands out to be one of the fastest, unique and minimal system fetch + system monitor tool written entirely in pure **bash**.
 
 ### Features
 
@@ -46,9 +46,7 @@ They told me **bash** wasn't meant for speed... I took that personally. `synfetc
 
 ### Support
 
-`synfetch` currently supports **MacOS** and the following **Linux** distributions. If you are experiencing issues with synfetch, please create an [issue](https://github.com/SXSLVT/synfetch/issues/new).
-
-- Arch
+`synfetch` currently supports **MacOS** and the following **Linux** distributions. Please create an [issue](https://github.com/SXSLVT/synfetch/issues/new), if you are experiencing issues.
 - BlackArch
 - ArcoLinux
 - Archcraft 
@@ -127,7 +125,7 @@ They told me **bash** wasn't meant for speed... I took that personally. `synfetc
 For those on `Arch` based systems, **synfetch** is available in the [AUR](https://aur.archlinux.org/packages/synfetch-git).
 
 For those on `Nix`
-systems, keep in mind that it won't work properly, make sure to have `flakes` enabled and you can just run: 
+systems, keep in mind that running **synfetch** with nix can be buggy, make sure to have `flakes` enabled and you can just run: 
 
 ```bash
 nix run github:SXSLVT/synfetch
