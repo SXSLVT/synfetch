@@ -1424,8 +1424,9 @@ if [[ -n "${WAYLAND_DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]]
     de_wm="${de_wm} (Wayland)"
 elif [[ -n "${DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "x11" ]]; then
     if { command -v xdpyinfo >/dev/null 2>&1 && xdpyinfo 2>/dev/null | grep -qi "xlibre"; } || \
+       { command -v Xorg >/dev/null 2>&1 && Xorg -version 2>&1 | grep -qi "xlibre"; } || \
        { command -v X >/dev/null 2>&1 && X -version 2>&1 | grep -qi "xlibre"; } || \
-       { command -v Xorg >/dev/null 2>&1 && Xorg -version 2>&1 | grep -qi "xlibre"; }; then
+       { [ -x /usr/bin/X ] && /usr/bin/X -version 2>&1 | grep -qi "xlibre"; }; then
         de_wm="${de_wm} (XLibre)"
     else
         de_wm="${de_wm} (X11)"
