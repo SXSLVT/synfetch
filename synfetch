@@ -1423,10 +1423,14 @@ esac
 if [[ -n "${WAYLAND_DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]]; then
     de_wm="${de_wm} (Wayland)"
 elif [[ -n "${DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "x11" ]]; then
-    if command -v xdpyinfo >/dev/null 2>&1 && xdpyinfo 2>/dev/null | grep -qi "xlibre"; then
-        de_wm="${de_wm} (XLibre)"
-    elif command -v xdpyinfo >/dev/null 2>&1 && xdpyinfo 2>/dev/null | grep -qi "X.Org X Server"; then
-        de_wm="${de_wm} (X11)"
+    if command -v xdpyinfo >/dev/null 2>&1; then
+        local xvendor
+        xvendor=$(xdpyinfo 2>/dev/null | grep -i "vendor string" | head -n1)
+        if echo "$xvendor" | grep -qi "xlibre"; then
+            de_wm="${de_wm} (XLibre)"
+        else
+            de_wm="${de_wm} (X11)"
+        fi
     else
         de_wm="${de_wm} (X11)"
     fi
