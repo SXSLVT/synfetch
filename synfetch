@@ -1172,34 +1172,49 @@ RAM=$(get_ram_usage)
 
 # Motherboard Detector 
 get_mobo_info() {
-    local vendor="" name="" version="" product=""
+    local vendor="" name=""
 
-    [ -r /sys/class/dmi/id/board_vendor ] && vendor=$(< /sys/class/dmi/id/board_vendor 2>/dev/null | xargs)
-    [ -r /sys/class/dmi/id/board_name ]   && name=$(< /sys/class/dmi/id/board_name 2>/dev/null | xargs)
-
-    if [[ -z "$vendor" || -z "$name" || "$name" == "None" || -z "${name// /}" ]]; then
-        [ -r /sys/class/dmi/id/sys_vendor ]   && vendor=$(< /sys/class/dmi/id/sys_vendor 2>/dev/null | xargs)
-        [ -r /sys/class/dmi/id/product_name ] && name=$(< /sys/class/dmi/id/product_name 2>/dev/null | xargs)
+    if [ "$(uname)" = "Darwin" ]; then
+        name=$(sysctl -n hw.model 2>/dev/null)
+        echo "${name:-Unknown}"
+        return
     fi
 
-    if [[ -z "$name" || "$name" == "None" || -z "${name// /}" ]]; then
-        [ -r /sys/class/dmi/id/product_version ] && name=$(< /sys/class/dmi/id/product_version 2>/dev/null | xargs)
+    if [ -r /sys/class/dmi/id/board_vendor ]; then
+        vendor=$(< /sys/class/dmi/id/board_vendor 2>/dev/null)
     fi
+    if [ -r /sys/class/dmi/id/board_name ]; then
+        name=$(< /sys/class/dmi/id/board_name 2>/dev/null)
+    fi
+
+    if [[ -z "$vendor" || "$vendor" == "None" ]]; then
+        [ -r /sys/class/dmi/id/sys_vendor ] && vendor=$(< /sys/class/dmi/id/sys_vendor 2>/dev/null)
+    fi
+    if [[ -z "$name" || "$name" == "None" ]]; then
+        [ -r /sys/class/dmi/id/product_name ] && name=$(< /sys/class/dmi/id/product_name 2>/dev/null)
+    fi
+
+    if [[ -z "$name" || "$name" == "None" ]] && [ -r /sys/firmware/devicetree/base/model ]; then
+        # tr removes the null byte (\0) that exists at the end of devicetree strings
+        name=$(tr -d '\0' < /sys/firmware/devicetree/base/model 2>/dev/null)
+    fi
+
+    vendor=$(echo "$vendor" | xargs 2>/dev/null)
+    name=$(echo "$name" | xargs 2>/dev/null)
 
     vendor=${vendor//QEMU Standard PC/QEMU}
     vendor=${vendor//Bochs/Bochs}
     name=${name//Standard PC \(i440FX + PIIX, 1996\)/QEMU VM}
-    name=${name//None/}
-    name=${name//To Be Filled By O.E.M./}
-    name=${name//Default string/}
-    name=${name//System Product Name/}
-    name=${name//System Version/}
-
-    vendor=$(echo "$vendor" | xargs)
-    name=$(echo "$name" | xargs)
+    
+    local junk_regex="^(None|To be filled by O\.E\.M\.|To Be Filled By O\.E\.M\.|Default string|System Product Name|System Version|OEM)$"
+    
+    if [[ "$vendor" =~ $junk_regex ]]; then vendor=""; fi
+    if [[ "$name" =~ $junk_regex ]]; then name=""; fi
 
     if [[ -n "$vendor" && -n "$name" ]]; then
-        if [[ "$name" == *"$vendor"* ]]; then
+        # Prevent outputting "Lenovo Lenovo" or "Asus ASUS"
+        # We uppercase both strings just for the comparison check
+        if [[ "${name^^}" == *"${vendor^^}"* ]]; then
             echo "$name"
         else
             echo "$vendor $name"
