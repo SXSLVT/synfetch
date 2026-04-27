@@ -79,7 +79,8 @@ case "$target_distro" in
             manjaro)           DISTRO="Manjaro" ;;
             opensuse*|sles)    DISTRO="openSUSE" ;;
             slackware)         DISTRO="Slackware" ;;
-            centos|centos-stream|rhel) DISTRO="CentOS" ;;
+	    redhat|rhel)       DISTRO="Red Hat Enterprise Linux" ;;
+            centos|centos-stream) DISTRO="CentOS" ;;
             mxlinux|mx-linux)  DISTRO="MX Linux" ;;
             guix)              DISTRO="GNU Guix" ;;
             qubesos|qubes)     DISTRO="Qubes OS" ;;
@@ -206,13 +207,21 @@ ${C1}   _\\ \\/ / _ \\/ __/  '_/ |/|/ / _ \\/ __/ -_)
 ${C1}  /___/_/\\_,_/\\__/_/\\_\\|__,__/\\_,_/_/  \\__/
                     "
                     ;;
-                centos|centos-stream|rhel)
+                centos|centos-stream)
                     ART="${C1}    _____         __  ____  ____
 ${C1}   / ___/__ ___  / /_/ __ \\/ __/
 ${C1}  / /__/ -_) _ \\/ __/ /_/ /\\ \\  
 ${C1}  \\___/\\__/_//_/\\__/\\____/___/  
                     "
                     ;;
+                 redhat|rhel)
+			 ART="
+${C1}     ___         __  __ __     __ 
+${C1}    / _ \\___ ___/ / / // /__ _/ /_
+${C1}   / , _/ -_) _  / / _  / _ \\/ __/
+${C1}  /_/|_|\\__/\\_,_/ /_//_/\\_,_/\\__/ 
+			 "
+			 ;;
 	mx-linux|mxlinux)
 		ART="${C1}     __  ___       __   _               
 ${C1}    /  |/  /_ __  / /  (_)__  __ ____ __
@@ -669,7 +678,7 @@ if [[ ! -f "$CONFIG_FILE" ]]; then
     mkdir -p "$CONFIG_DIR" 2>/dev/null
     cat <<EOF > "$CONFIG_FILE"
 # Available themes: synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox
-# Available distros: arch, cachyos, ubuntu, debian, devuan, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, blackarch, arco, archcraft, puppy, parrotos, peppermint, parabola, steamos, tails, pikaos, chimera, macos
+# Available distros: arch, cachyos, ubuntu, debian, devuan, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, redhat, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, blackarch, arco, archcraft, puppy, parrotos, peppermint, parabola, steamos, tails, pikaos, chimera, macos
 
 # Set THEME to "custom" to use the hex colors below
 THEME="synthwave"
@@ -749,7 +758,7 @@ show_help() {
     echo -e "  synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox, custom"
     echo ""
     echo -e "${BLUE}Available distros:${RESET}" 
-    echo -e "  arch, cachyos, ubuntu, debian, devuan, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, blackarch, arco, archcraft, puppy, parrotos, peppermint, parabola, steamos, tails, pikaos, chimera, macos"
+    echo -e "  arch, cachyos, ubuntu, debian, devuan, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, redhat, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, blackarch, arco, archcraft, puppy, parrotos, peppermint, parabola, steamos, tails, pikaos, chimera, macos"
     echo ""
     exit 0
 }
@@ -795,7 +804,7 @@ parse_args() {
                 THEME="${1,,}"
                 ;;
             --random)
-                distros=("arch" "cachyos" "ubuntu" "debian" "devuan" "fedora" "linuxmint" "zorinos" "popos" "manjaro" "opensuse" "slackware" "centos" "mxlinux" "guix" "qubesos" "antix" "garuda" "nobara" "bazzite" "kali" "elementaryos" "kdeneon" "deepin" "alpine" "gobo" "lfs" "gentoo" "endeavouros" "artix" "void" "bedrock" "bodhi" "nixos" "macos" "blackarch" "arco" "archcraft" "puppy" "parrotos" "peppermint" "parabola" "steamos" "tails" "pikaos" "chimera") 
+                distros=("arch" "cachyos" "ubuntu" "debian" "devuan" "fedora" "linuxmint" "zorinos" "popos" "manjaro" "opensuse" "slackware" "centos" "redhat" "mxlinux" "guix" "qubesos" "antix" "garuda" "nobara" "bazzite" "kali" "elementaryos" "kdeneon" "deepin" "alpine" "gobo" "lfs" "gentoo" "endeavouros" "artix" "void" "bedrock" "bodhi" "nixos" "macos" "blackarch" "arco" "archcraft" "puppy" "parrotos" "peppermint" "parabola" "steamos" "tails" "pikaos" "chimera") 
                 CUSTOM_DISTRO=${distros[$RANDOM % ${#distros[@]}]}
 
                 rand_hex() { 
@@ -1380,7 +1389,7 @@ if [[ "$de_wm" == "Unknown" || -z "$de_wm" ]]; then
     de_wm="tty"
 
     if [[ -n "${DISPLAY:-}" ]] || [[ -n "${WAYLAND_DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" =~ ^(x11|wayland)$ ]]; then
-        progs_regex="gnome-shell|gnome-session|mutter|plasmashell|kwin_wayland|kwin_x11|kded5|kded6|cinnamon|cinnamon-session|muffin|xfwm4|xfce4-session|mate-session|marco|budgie-wm|budgie-session|pantheon-session|gala|deepin-session|dde-desktop|ukui-session|lxsession|lxqt-session|openbox|enlightenment|moksha|unity|cosmic-comp|hyprland|sway|i3|river|wayfire|labwc|niri|dwl|awesome|bspwm|dwm|qtile|xmonad|herbstluftwm|spectrwm|stumpwm|fluxbox|icewm|wmaker|fvwm|pekwm|twm|metacity|compiz|cage|exwm|blackbox|jwm|afterstep|berry|hikari|waybox|oxwm|leftwm|newm|vxwm|exwm|dtwm|2bwm|9wm|aewm|aewm\+\+|amiwm|echinus|evilwm|goomwwm|lwm|matchbox|ratpoison|sapphire|sawfish|wmii|zwm|cagebreak"
+        progs_regex="gnome-shell|gnome-session|mutter|plasmashell|kwin_wayland|kwin_x11|kded5|kded6|cinnamon|cinnamon-session|muffin|xfwm4|xfce4-session|mate-session|marco|budgie-wm|budgie-session|pantheon-session|gala|deepin-session|dde-desktop|ukui-session|lxsession|lxqt-session|openbox|enlightenment|moksha|unity|cosmic-comp|hyprland|sway|i3|river|wayfire|labwc|niri|dwl|awesome|bspwm|dwm|qtile|xmonad|herbstluftwm|spectrwm|stumpwm|fluxbox|icewm|wmaker|fvwm|pekwm|twm|metacity|compiz|cage|exwm|blackbox|jwm|afterstep|berry|hikari|waybox|sxwm|oxwm|leftwm|newm|vxwm|exwm|dtwm|2bwm|9wm|aewm|aewm\+\+|amiwm|echinus|evilwm|goomwwm|lwm|matchbox|ratpoison|sapphire|sawfish|wmii|zwm|cagebreak"
         detected_wm=$(ps -eo comm= 2>/dev/null | grep -Eiw "^(${progs_regex})$" | head -n 1)
         if [[ -z "$detected_wm" ]]; then
             detected_wm=$(ps -eo comm= 2>/dev/null | grep -Eiw "^\.(${progs_regex})-wrapped$" | sed 's/^\.//; s/-wrapped$//' | head -n 1)
@@ -1454,6 +1463,7 @@ case "${de_wm,,}" in
     *sawfish*) de_wm="Sawfish" ;;
     *wmii*) de_wm="wmii" ;;
     *zwm*) de_wm="zwm" ;;
+    sxwm) de_wm="sxwm" ;;
     *dtwm*) de_wm="CDE" ;;
     *cagebreak*) de_wm="Cagebreak" ;;
     leftwm) de_wm="leftwm" ;;
