@@ -1,7 +1,8 @@
-# Available themes: synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox
+# Available themes: synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox, custom, automatic
 # Available distros: arch, cachyos, ubuntu, debian, devuan, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, redhat, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, blackarch, arco, archcraft, puppy, parrotos, peppermint, parabola, steamos, tails, pikaos, chimera, macos
 
-# Set THEME to "custom" to use the hex colors below
+# Set theme to "automatic" to use pywal for wallpaper's accent color
+# Set theme to "custom" to use the hex colors below
 THEME="synthwave"
 
 # Show/Hide modules
