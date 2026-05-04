@@ -226,11 +226,10 @@ Options:
   --help | -h       Show this help message
 
 Config:
-  Location: /home/$USER/.config/synfetch/config
-  Set THEME="custom" in the config to use your own Hex colors.
+  Location: /home/syner/.config/synfetch/config
 
 Available themes:
-  synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox, custom
+  synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox, custom, automatic
 
 Available distros:
   arch, cachyos, ubuntu, debian, devuan, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, redhat, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, blackarch, arco, archcraft, puppy, parrotos, peppermint, parabola, steamos, tails, pikaos, chimera, macos
