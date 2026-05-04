@@ -646,6 +646,31 @@ set_theme() {
             EMPTY_COLOR=$(hex_to_ansi "${BAR_EMPTY_HEX:-#282a36}")
             SEPARATOR_COLOR=$(hex_to_ansi "${SEPARATOR_HEX:-#282a36}")
             ;;
+       automatic)
+            if [[ -n "${foreground:-}" ]]; then
+                ACCENT=$(hex_to_ansi "${foreground}")
+            elif [[ -n "${color15:-}" ]]; then
+                ACCENT=$(hex_to_ansi "${color15}")
+            else
+                ACCENT="\e[38;5;51m" 
+            fi
+            C1="\e[1;96m"
+            OS_COLOR="\e[1;96m"
+            KERNEL_COLOR="\e[1;96m"
+            USER_COLOR="\e[1;96m"
+            HOST_COLOR="\e[1;96m"
+            MOBO_COLOR="\e[1;96m"
+            CPU_COLOR="\e[1;96m"
+            GPU_COLOR="\e[1;96m"
+            UPTIME_COLOR="\e[1;96m"
+            SHELL_COLOR="\e[1;96m"
+            DEWM_COLOR="\e[1;96m"
+            PKGS_COLOR="\e[1;96m"
+            BAR_LABEL_COLOR="\e[1;96m"
+            FILLED1_COLOR="\e[1;96m"
+            FILLED2_COLOR="\e[1;96m"
+            EMPTY_COLOR="\e[38;5;237m"
+            SEPARATOR_COLOR="\e[38;5;245m"
     esac
 }
 
@@ -666,7 +691,7 @@ hex_to_ansi() {
         local b=$((16#${hex:4:2}))
         printf "\e[38;2;%d;%d;%dm" "$r" "$g" "$b"
     else
-        printf "\e[0m"
+        printf "\e[38;5;51m"  # fallback cyan
     fi
 }
 
@@ -677,10 +702,11 @@ CONFIG_FILE="$CONFIG_DIR/config"
 if [[ ! -f "$CONFIG_FILE" ]]; then
     mkdir -p "$CONFIG_DIR" 2>/dev/null
     cat <<EOF > "$CONFIG_FILE"
-# Available themes: synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox
+# Available themes: synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox, custom, automatic
 # Available distros: arch, cachyos, ubuntu, debian, devuan, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, redhat, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, blackarch, arco, archcraft, puppy, parrotos, peppermint, parabola, steamos, tails, pikaos, chimera, macos
 
-# Set THEME to "custom" to use the hex colors below
+# Set theme to "automatic" to use pywal for wallpaper's accent color
+# Set theme to "custom" to use the hex colors below
 THEME="synthwave"
 
 # Show/Hide modules
@@ -755,7 +781,7 @@ show_help() {
     echo -e "  Set ${PINK}THEME=\"custom\"${RESET} in the config to use your own Hex colors."
     echo ""
     echo -e "${BLUE}Available themes:${RESET}" 
-    echo -e "  synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox, custom"
+    echo -e "  synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox, custom, automatic"
     echo ""
     echo -e "${BLUE}Available distros:${RESET}" 
     echo -e "  arch, cachyos, ubuntu, debian, devuan, fedora, linuxmint, zorinos, popos, manjaro, opensuse, slackware, centos, redhat, mxlinux, guix, qubesos, antix, garuda, nobara, bazzite, kali, elementaryos, kdeneon, deepin, alpine, gobo, lfs, gentoo, endeavouros, artix, void, bedrock, bodhi, nixos, blackarch, arco, archcraft, puppy, parrotos, peppermint, parabola, steamos, tails, pikaos, chimera, macos"
@@ -823,7 +849,7 @@ parse_args() {
                 shift 
 	;;
             --cycle-theme)
-                themes=("synthwave" "monochrome" "minimal" "dracula" "nord" "catppuccin" "tokyonight" "gruvbox" "custom")
+                themes=("synthwave" "monochrome" "minimal" "dracula" "nord" "catppuccin" "tokyonight" "gruvbox" "custom" "automatic")
                 THEME=${themes[$RANDOM % ${#themes[@]}]}
                 shift 
 		;;
@@ -858,10 +884,10 @@ parse_args "$@"
 # Validate theme
 validate_theme() {
     case "$THEME" in
-        synthwave|monochrome|minimal|dracula|nord|gruvbox|catppuccin|tokyonight|custom) ;;
+        synthwave|monochrome|minimal|dracula|nord|gruvbox|catppuccin|tokyonight|custom|automatic) ;;
         *)
             echo -e "${PINK}Error:${RESET} Unknown theme '$THEME'"
-            echo -e "Available: synthwave, monochrome, minimal, dracula, nord, tokyonight, gruvbox, catppuccin, custom"
+            echo -e "Available: synthwave, monochrome, minimal, dracula, nord, tokyonight, gruvbox, catppuccin, custom, automatic"
             exit 1
             ;;
     esac
