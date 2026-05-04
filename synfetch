@@ -778,7 +778,6 @@ show_help() {
     echo ""
     echo -e "${BLUE}Config:${RESET}"
     echo -e "  Location: ${GRAY}${CONFIG_FILE}${RESET}"
-    echo -e "  Set ${PINK}THEME=\"custom\"${RESET} in the config to use your own Hex colors."
     echo ""
     echo -e "${BLUE}Available themes:${RESET}" 
     echo -e "  synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox, custom, automatic"
