@@ -5,20 +5,6 @@
 # Set theme to "custom" to use the hex colors below
 THEME="synthwave"
 
-# Show/Hide modules
-SHOW_OS=true
-SHOW_KERNEL=true
-SHOW_USER=true
-SHOW_HOST=true
-SHOW_MOBO=true
-SHOW_CPU=true
-SHOW_GPU=true
-SHOW_UPTIME=true
-SHOW_SHELL=true
-SHOW_DEWM=true
-SHOW_PKGS=true
-SHOW_USAGE_BARS=true
-
 # Custom hex colors 
 C1_HEX="#ff5555"            # ASCII Art
 OS_HEX="#ffb86c"            # OS
@@ -37,6 +23,20 @@ BAR_FILLED1_HEX="#ff79c6"   # Filled bar 1
 BAR_FILLED2_HEX="#ff5555"   # Filled bar 2
 BAR_EMPTY_HEX="#282a36"     # Empty bar
 SEPARATOR_HEX="#444b6a"     # Separator
+
+# Show/Hide modules
+SHOW_OS=true
+SHOW_KERNEL=true
+SHOW_USER=true
+SHOW_HOST=true
+SHOW_MOBO=true
+SHOW_CPU=true
+SHOW_GPU=true
+SHOW_UPTIME=true
+SHOW_SHELL=true
+SHOW_DEWM=true
+SHOW_PKGS=true
+SHOW_USAGE_BARS=true
 
 # Toggle ASCII
 USE_ASCII=true
