@@ -1145,7 +1145,7 @@ fi
 
 # Preload cached values
 cache "cpu"  'get_cpu_model';              CPU_MODEL=$_CACHE_RESULT
-cache "mobo" 'printf "%s %s\n" "$(< /sys/class/dmi/id/board_vendor)" "$(< /sys/class/dmi/id/board_name)" 2>/dev/null'; MOBO=$_CACHE_RESULT
+cache "mobo" 'get_mobo_info';              MOBO=$_CACHE_RESULT
 cache "gpu"  'get_gpu';                    GPU=$_CACHE_RESULT
 cache "pkgs" 'pkg_count' 120;              PKG_COUNT=$_CACHE_RESULT
 
@@ -1197,7 +1197,7 @@ RAM=$(get_ram_usage)
 
 # Motherboard Detector 
 get_mobo_info() {
-    local vendor="" name=""
+    local vendor="" name="" version=""
 
     if [ "$(uname)" = "Darwin" ]; then
         name=$(sysctl -n hw.model 2>/dev/null)
@@ -1205,40 +1205,42 @@ get_mobo_info() {
         return
     fi
 
-    if [ -r /sys/class/dmi/id/board_vendor ]; then
-        vendor=$(< /sys/class/dmi/id/board_vendor 2>/dev/null)
-    fi
-    if [ -r /sys/class/dmi/id/board_name ]; then
-        name=$(< /sys/class/dmi/id/board_name 2>/dev/null)
-    fi
+    [ -r /sys/class/dmi/id/board_vendor ]  && vendor=$(< /sys/class/dmi/id/board_vendor)
+    [ -r /sys/class/dmi/id/board_name ]    && name=$(< /sys/class/dmi/id/board_name)
+    [ -r /sys/class/dmi/id/board_version ] && version=$(< /sys/class/dmi/id/board_version)
 
     if [[ -z "$vendor" || "$vendor" == "None" ]]; then
-        [ -r /sys/class/dmi/id/sys_vendor ] && vendor=$(< /sys/class/dmi/id/sys_vendor 2>/dev/null)
+        [ -r /sys/class/dmi/id/sys_vendor ] && vendor=$(< /sys/class/dmi/id/sys_vendor)
     fi
     if [[ -z "$name" || "$name" == "None" ]]; then
-        [ -r /sys/class/dmi/id/product_name ] && name=$(< /sys/class/dmi/id/product_name 2>/dev/null)
+        [ -r /sys/class/dmi/id/product_name ] && name=$(< /sys/class/dmi/id/product_name)
     fi
 
     if [[ -z "$name" || "$name" == "None" ]] && [ -r /sys/firmware/devicetree/base/model ]; then
-        # tr removes the null byte (\0) that exists at the end of devicetree strings
         name=$(tr -d '\0' < /sys/firmware/devicetree/base/model 2>/dev/null)
     fi
 
     vendor=$(echo "$vendor" | xargs 2>/dev/null)
     name=$(echo "$name" | xargs 2>/dev/null)
+    version=$(echo "$version" | xargs 2>/dev/null)
 
     vendor=${vendor//QEMU Standard PC/QEMU}
-    vendor=${vendor//Bochs/Bochs}
     name=${name//Standard PC \(i440FX + PIIX, 1996\)/QEMU VM}
-    
-    local junk_regex="^(None|To be filled by O\.E\.M\.|To Be Filled By O\.E\.M\.|Default string|System Product Name|System Version|OEM)$"
-    
-    if [[ "$vendor" =~ $junk_regex ]]; then vendor=""; fi
-    if [[ "$name" =~ $junk_regex ]]; then name=""; fi
 
+    local junk_regex="^(None|To [Bb]e [Ff]illed [Bb]y O\.E\.M\.|Default string|System Product Name|System Version|OEM|Not Applicable|Not Available|N\/A|Unknown|INVALID|Type1ProductConfigId|Base Board Product Name|System board|All Series|FFFFFFFF|[0-9]{1,3}\.[0-9]{1,3}|[[:space:]]*)$"
+
+    [[ "$vendor"  =~ $junk_regex ]] && vendor=""
+    [[ "$name"    =~ $junk_regex ]] && name=""
+    [[ "$version" =~ $junk_regex ]] && version=""
+
+    local ver_junk_regex="^([Rr]ev )?[Xx]\.[0-9][0-9A-Za-z]*$|^[0-9](\.[0-9])?$|^[Rr]ev [0-9]+\.[0-9]+$"
+    [[ "$version" =~ $ver_junk_regex ]] && version=""
+
+    if [[ -n "$version" && -n "$name" && "$name" != *"$version"* ]]; then
+        name="$name $version"
+    fi
+    
     if [[ -n "$vendor" && -n "$name" ]]; then
-        # Prevent outputting "Lenovo Lenovo" or "Asus ASUS"
-        # We uppercase both strings just for the comparison check
         if [[ "${name^^}" == *"${vendor^^}"* ]]; then
             echo "$name"
         else
@@ -1301,11 +1303,11 @@ get_ram_info() {
 
     used_kb=$((total_kb - avail_kb))
 
-    local total_gib used_gib
-    total_gib=$(awk "BEGIN {printf \"%.1f\", $total_kb / 1048576}" 2>/dev/null || echo "0.0")
-    used_gib=$(awk "BEGIN {printf \"%.1f\", $used_kb / 1048576}" 2>/dev/null || echo "0.0")
-
-    echo "${used_gib} GiB / ${total_gib} GiB"
+    local u_int=$(( used_kb  / 1048576 ))
+    local t_int=$(( total_kb / 1048576 ))
+    local u_dec=$(( (used_kb  * 10 / 1048576) % 10 ))
+    local t_dec=$(( (total_kb * 10 / 1048576) % 10 ))
+    echo "${u_int}.${u_dec} GiB / ${t_int}.${t_dec} GiB"
 }
 
 # Initialize Usage Values
@@ -1397,46 +1399,48 @@ else
 fi
 
 # DE/WM Detector 
-de_wm="Unknown"
+get_de_wm() {
+    local de_wm="Unknown"
 
-if [ -n "${XDG_CURRENT_DESKTOP:-}" ]; then
-    de_wm="${XDG_CURRENT_DESKTOP}"
-elif [ -n "${DESKTOP_SESSION:-}" ]; then
-    de_wm="${DESKTOP_SESSION}"
-fi
-
-case "${de_wm,,}" in
-    *x-cinnamon*) de_wm="Cinnamon" ;;
-    *ubuntu:gnome* | zorin:gnome | *gnome*) de_wm="GNOME" ;;
-    *kde* | *plasma*) de_wm="KDE Plasma" ;;
-    *xfce*) de_wm="XFCE" ;;
-    *mate*) de_wm="MATE" ;;
-    *budgie*) de_wm="Budgie" ;;
-    *pantheon* | *elementary*) de_wm="Pantheon" ;;
-    *deepin* | *dde*) de_wm="Deepin DDE" ;;
-    *cosmic*) de_wm="COSMIC" ;;
-    *ukui*) de_wm="UKUI" ;;
-    *lumina*) de_wm="Lumina" ;;
-    *ede*) de_wm="EDE" ;;
-    *cde* | *dtwm*) de_wm="CDE" ;;
-    *sugar*) de_wm="Sugar" ;;
-    *rox*) de_wm="ROX Desktop" ;;
-    *razor*) de_wm="Razor-qt" ;;
-    *trinity* | *tde*) de_wm="Trinity (TDE)" ;;
-esac
-
-if [[ "$de_wm" == "Unknown" || -z "$de_wm" ]]; then
-    de_wm="tty"
-
-    if [[ -n "${DISPLAY:-}" ]] || [[ -n "${WAYLAND_DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" =~ ^(x11|wayland)$ ]]; then
-        progs_regex="gnome-shell|gnome-session|mutter|plasmashell|kwin_wayland|kwin_x11|kded5|kded6|cinnamon|cinnamon-session|muffin|xfwm4|xfce4-session|mate-session|marco|budgie-wm|budgie-session|pantheon-session|gala|deepin-session|dde-desktop|ukui-session|lxsession|lxqt-session|openbox|enlightenment|moksha|unity|cosmic-comp|hyprland|sway|i3|river|wayfire|labwc|niri|dwl|awesome|bspwm|dwm|qtile|xmonad|herbstluftwm|spectrwm|stumpwm|fluxbox|icewm|wmaker|fvwm|pekwm|twm|metacity|compiz|cage|exwm|blackbox|jwm|afterstep|berry|hikari|waybox|sxwm|oxwm|leftwm|newm|vxwm|exwm|dtwm|2bwm|9wm|aewm|aewm\+\+|amiwm|echinus|evilwm|goomwwm|lwm|matchbox|ratpoison|sapphire|sawfish|wmii|zwm|cagebreak"
-        detected_wm=$(ps -eo comm= 2>/dev/null | grep -Eiw "^(${progs_regex})$" | head -n 1)
-        if [[ -z "$detected_wm" ]]; then
-            detected_wm=$(ps -eo comm= 2>/dev/null | grep -Eiw "^\.(${progs_regex})-wrapped$" | sed 's/^\.//; s/-wrapped$//' | head -n 1)
-        fi
-        [[ -n "$detected_wm" ]] && de_wm="$detected_wm"
+    if [ -n "${XDG_CURRENT_DESKTOP:-}" ]; then
+        de_wm="${XDG_CURRENT_DESKTOP}"
+    elif [ -n "${DESKTOP_SESSION:-}" ]; then
+        de_wm="${DESKTOP_SESSION}"
     fi
-fi
+
+    case "${de_wm,,}" in
+        *x-cinnamon*) de_wm="Cinnamon" ;;
+        *ubuntu:gnome* | zorin:gnome | *gnome*) de_wm="GNOME" ;;
+        *kde* | *plasma*) de_wm="KDE Plasma" ;;
+        *xfce*) de_wm="XFCE" ;;
+        *mate*) de_wm="MATE" ;;
+        *budgie*) de_wm="Budgie" ;;
+        *pantheon* | *elementary*) de_wm="Pantheon" ;;
+        *deepin* | *dde*) de_wm="Deepin DDE" ;;
+        *cosmic*) de_wm="COSMIC" ;;
+        *ukui*) de_wm="UKUI" ;;
+        *lumina*) de_wm="Lumina" ;;
+        *ede*) de_wm="EDE" ;;
+        *cde* | *dtwm*) de_wm="CDE" ;;
+        *sugar*) de_wm="Sugar" ;;
+        *rox*) de_wm="ROX Desktop" ;;
+        *razor*) de_wm="Razor-qt" ;;
+        *trinity* | *tde*) de_wm="Trinity (TDE)" ;;
+    esac
+
+    if [[ "$de_wm" == "Unknown" || -z "$de_wm" ]]; then
+        de_wm="tty"
+
+        if [[ -n "${DISPLAY:-}" ]] || [[ -n "${WAYLAND_DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" =~ ^(x11|wayland)$ ]]; then
+            local progs_regex="gnome-shell|gnome-session|mutter|plasmashell|kwin_wayland|kwin_x11|kded5|kded6|cinnamon|cinnamon-session|muffin|xfwm4|xfce4-session|mate-session|marco|budgie-wm|budgie-session|pantheon-session|gala|deepin-session|dde-desktop|ukui-session|lxsession|lxqt-session|openbox|enlightenment|moksha|unity|cosmic-comp|hyprland|sway|i3|river|wayfire|labwc|niri|dwl|awesome|bspwm|dwm|qtile|xmonad|herbstluftwm|spectrwm|stumpwm|fluxbox|icewm|wmaker|fvwm|pekwm|twm|metacity|compiz|cage|exwm|blackbox|jwm|afterstep|berry|hikari|waybox|sxwm|oxwm|leftwm|newm|vxwm|exwm|dtwm|2bwm|9wm|aewm|aewm\+\+|amiwm|echinus|evilwm|goomwwm|lwm|matchbox|ratpoison|sapphire|sawfish|wmii|zwm|cagebreak"
+            local detected_wm
+            detected_wm=$(ps -eo comm= 2>/dev/null | grep -Eiw "^(${progs_regex})$" | head -n 1)
+            if [[ -z "$detected_wm" ]]; then
+                detected_wm=$(ps -eo comm= 2>/dev/null | grep -Eiw "^\.(${progs_regex})-wrapped$" | sed 's/^\.//; s/-wrapped$//' | head -n 1)
+            fi
+            [[ -n "$detected_wm" ]] && de_wm="$detected_wm"
+        fi
+    fi
 
 case "${de_wm,,}" in
     gnome* | mutter) de_wm="GNOME" ;;
@@ -1510,19 +1514,25 @@ case "${de_wm,,}" in
     *newm*) de_wm="newm" ;;
 esac
 
-if [[ -n "${WAYLAND_DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]]; then
-    de_wm="${de_wm} (Wayland)"
-elif [[ -n "${DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "x11" ]]; then
-    if { command -v xdpyinfo >/dev/null 2>&1 && xdpyinfo 2>/dev/null | grep -qi "xlibre"; } || \
-       { command -v Xorg >/dev/null 2>&1 && Xorg -version 2>&1 | grep -qi "xlibre"; } || \
-       { command -v pacman >/dev/null 2>&1 && pacman -Qq xlibre-xserver >/dev/null 2>&1; } || \
-       { [ -f /var/log/Xorg.0.log ] && grep -qi "xlibre" /var/log/Xorg.0.log; } || \
-       { [ -f "$HOME/.local/share/xorg/Xorg.0.log" ] && grep -qi "xlibre" "$HOME/.local/share/xorg/Xorg.0.log"; }; then
-        de_wm="${de_wm} (XLibre)"
-    else
-        de_wm="${de_wm} (X11)"
+    if [[ -n "${WAYLAND_DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]]; then
+        de_wm="${de_wm} (Wayland)"
+    elif [[ -n "${DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "x11" ]]; then
+        local _xlibre=false
+        for _xlog in "$HOME/.local/share/xorg/Xorg.0.log" "/var/log/Xorg.0.log"; do
+            if [[ -f "$_xlog" ]] && grep -qim1 "xlibre" "$_xlog" 2>/dev/null; then
+                _xlibre=true; break
+            fi
+        done
+        if ! $_xlibre && command -v pacman >/dev/null 2>&1; then
+            pacman -Qq xlibre-xserver >/dev/null 2>&1 && _xlibre=true
+        fi
+        $_xlibre && de_wm="${de_wm} (XLibre)" || de_wm="${de_wm} (X11)"
     fi
-fi
+
+    echo "$de_wm"
+}
+
+cache "de_wm" 'get_de_wm' 30; de_wm=$_CACHE_RESULT
 
 # Precomputed Variables
 { read -r KERNEL; } < /proc/sys/kernel/osrelease 2>/dev/null || KERNEL=$(uname -r)
