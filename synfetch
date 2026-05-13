@@ -1101,7 +1101,9 @@ pkg_count() {
     if [ ${#pkgs[@]} -eq 0 ]; then
         echo "?"
     else
-        echo "${pkgs[*]}"
+        local out
+        printf -v out '%s, ' "${pkgs[@]}"
+        echo "${out%, }"
     fi
 }
 
