@@ -1080,6 +1080,9 @@ pkg_count() {
     elif command -v pkgutil >/dev/null || command -v pkg >/dev/null; then
         count=$(pkgutil --pkgs 2>/dev/null | wc -l)
         pkgs+=("$count (Fink/pkgutil)")
+    elif command -v Veiler >/dev/null; then
+        count=$(Veiler pkgs 2> /dev/null)
+        pkgs+=("$count (veiler)")
     elif command -v pacman >/dev/null; then
         count=$(pacman -Qq 2>/dev/null | wc -l)
         pkgs+=("$count (pacman)")
