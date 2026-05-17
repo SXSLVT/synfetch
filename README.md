@@ -146,7 +146,18 @@ wget https://raw.githubusercontent.com/SXSLVT/synfetch/main/synfetch && chmod +x
 
   `sudo mv synfetch /usr/bin/` → installs **synfetch** system-wide (so you can run it anywhere)
 
-You can use the [`install.sh`](./install.sh) script to update synfetch.
+You can use the [`install.sh`](./install.sh) script to update synfetch regularly.
+
+If you installed **synfetch** from the AUR, you can update it with:
+- Using paru:
+```bash
+paru -Syu synfetch-git
+```
+or
+- Using yay:
+```bash
+yay -Syu synfetch-git
+```
 
 ### Usage
 
