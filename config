@@ -38,6 +38,9 @@ SHOW_DEWM=true
 SHOW_PKGS=true
 SHOW_USAGE_BARS=true
 
+# Show/Hide all modules except the ASCII text
+HIDE_INFO=false
+
 # Toggle ASCII
 USE_ASCII=true
 
@@ -46,6 +49,10 @@ USE_NERD_FONTS=true
 
 # Use a different distro ASCII art (leave empty for default distro)
 CUSTOM_DISTRO="" 
+
+# Custom ASCII text rendered in small slant font (leave empty to use distro logo)
+# Requires figlet. Example: CUSTOM_TEXT="hello"
+CUSTOM_TEXT=""
 
 # Toggle Live mode on startup
 LIVE_MODE=false
