@@ -109,11 +109,13 @@ They told me **bash** wasn't meant for speed... I took that personally. `synfetc
 
 - Core dependencies **(necessary)**:
 `bash`, `coreutils` and `procps`/`procps-ng`
-- Required dependencies for Live mode (--live):
-`tput` and `stty`
-- Optional dependencies for better GPU/CPU detection:
+- Optional dependencies:
 
-  `pciutils` for most GPUs and CPUs
+  `tput` and `stty` for live mode (--live) feature
+
+  `figlet` for custom ASCII art text (if you enable it)
+
+  `pciutils` for better GPU and CPU detection
 
   `nvidia-utils` for NVIDIA GPU usage
 
@@ -184,10 +186,21 @@ To hide ASCII art:
 synfetch --noascii
 ```
 
+To generate a custom ASCII art text:
+```bash
+synfetch --text <text>
+```
+
+To hide all info and usage bars (ASCII art only):
+```bash
+synfetch --hide-info
+```
+
 To display ASCII art of a different distro:
 ```bash
 synfetch --distro <name>
 ```
+
 To force refresh all cache files (use after installing packages):
 ```bash
 synfetch --refresh
@@ -217,6 +230,8 @@ Options:
   --config          Open or locate the configuration file
   --nonerd          Hide icons
   --noascii         Hide ASCII art
+  --text <text>     Custom ASCII art text (small slant font, requires figlet)
+  --hide-info       Hide all info and usage bars (ASCII art only)
   --distro <name>   Display ASCII art of a different distro
   --live            Animated Uptime, CPU, GPU and RAM usage + app killer
   --refresh         Force refresh all cache files (use after installing packages)
@@ -226,7 +241,7 @@ Options:
   --help | -h       Show this help message
 
 Config:
-  Location: /home/syner/.config/synfetch/config
+  Location: /home/<user>/.config/synfetch/config
 
 Available themes:
   synthwave (default), monochrome, minimal, dracula, nord, catppuccin, tokyonight, gruvbox, custom, automatic
