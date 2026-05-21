@@ -742,6 +742,9 @@ SHOW_DEWM=true
 SHOW_PKGS=true
 SHOW_USAGE_BARS=true
 
+# Show/Hide all modules except the ASCII text
+HIDE_INFO=false
+
 # Toggle ASCII
 USE_ASCII=true
 
@@ -750,6 +753,10 @@ USE_NERD_FONTS=true
 
 # Use a different distro ASCII art (leave empty for default distro)
 CUSTOM_DISTRO="" 
+
+# Custom ASCII text rendered in small slant font (leave empty to use distro logo)
+# Requires figlet. Example: CUSTOM_TEXT="hello"
+CUSTOM_TEXT=""
 
 # Toggle Live mode on startup
 LIVE_MODE=false
@@ -768,6 +775,8 @@ show_help() {
     echo -e "  ${PINK}--config${RESET}          Open or locate the configuration file"
     echo -e "  ${PINK}--nonerd${RESET}          Hide icons"
     echo -e "  ${PINK}--noascii${RESET}         Hide ASCII art"
+    echo -e "  ${PINK}--text${RESET} <text>     Custom ASCII art text (small slant font, requires figlet)"
+    echo -e "  ${PINK}--hide-info${RESET}       Hide all info and usage bars (ASCII art only)"
     echo -e "  ${PINK}--distro${RESET} <name>   Display ASCII art of a different distro"
     echo -e "  ${PINK}--live${RESET}            Animated Uptime, CPU, GPU and RAM usage + app killer"
     echo -e "  ${PINK}--refresh${RESET}         Force refresh all cache files (use after installing packages)"
@@ -824,6 +833,14 @@ parse_args() {
 	--live)
                 LIVE_MODE=true
                 ;;
+             --text)
+                shift
+                CUSTOM_TEXT="$*"
+                break
+                ;;
+            --hide-info)
+                HIDE_INFO=true
+                ;;   
             --theme)
                 shift
                 THEME="${1,,}"
@@ -893,6 +910,23 @@ validate_theme() {
 }
 validate_theme
 set_theme 
+
+# Custom text ASCII renderer
+apply_custom_text() {
+    [[ -z "${CUSTOM_TEXT:-}" ]] && return
+    local rendered=""
+    if command -v figlet >/dev/null 2>&1; then
+        rendered=$(figlet -f smslant " $CUSTOM_TEXT" 2>/dev/null) \
+        || rendered=$(figlet -f slant " $CUSTOM_TEXT" 2>/dev/null) \
+        || rendered=$(figlet " $CUSTOM_TEXT" 2>/dev/null)
+    else
+        echo -e "${YELLOW}  Warning:${RESET} 'figlet' is not installed. CUSTOM_TEXT requires it for ASCII rendering."
+        return
+    fi
+    if [[ -n "$rendered" ]]; then
+        ART="${C1}${rendered}${RESET}"
+    fi
+}
 
 # GPU & GPU Usage Detector
 get_gpu() {
@@ -1534,7 +1568,7 @@ esac
     echo "$de_wm"
 }
 
-cache "de_wm" 'get_de_wm' 30; de_wm=$_CACHE_RESULT
+cache "de_wm" 'get_de_wm' 7; de_wm=$_CACHE_RESULT
 
 # Precomputed Variables
 { read -r KERNEL; } < /proc/sys/kernel/osrelease 2>/dev/null || KERNEL=$(uname -r)
@@ -1922,6 +1956,7 @@ fi
 
 # Main Output
 detect_distro
+apply_custom_text
 
 if [[ "${LIVE_MODE:-false}" == true ]]; then
     synfetch_live
@@ -1931,39 +1966,36 @@ else
         echo
     fi
 
-    [[ "${SHOW_OS:-true}" == true ]]     && prin "$ICON_OS"     "OS"     "$DISTRO"      "$OS_COLOR"
-    [[ "${SHOW_KERNEL:-true}" == true ]] && prin "$ICON_KERNEL" "Kernel" "$KERNEL"      "$KERNEL_COLOR"
-    [[ "${SHOW_USER:-true}" == true ]]   && prin "$ICON_USER"   "User"   "$USER"        "$USER_COLOR"
-    [[ "${SHOW_HOST:-true}" == true ]]   && prin "$ICON_HOST"   "Host"   "$HOSTNAME"    "$HOST_COLOR"
-    mobo_print="${MOBO:-}"
-    [[ -z "$mobo_print" || "$mobo_print" == *"Unknown"* ]] && mobo_print=$(get_mobo_info)
-    [[ "${SHOW_MOBO:-true}" == true ]]   && prin "$ICON_MOBO"   "MoBo"   "$mobo_print"  "$MOBO_COLOR"
-    [[ "${SHOW_CPU:-true}" == true ]]    && prin "$ICON_CPU"    "CPU"    "$CPU_MODEL"   "$CPU_COLOR"
-    if [[ "${SHOW_GPU:-true}" == true ]]; then
-        while IFS= read -r gpu_line || [[ -n "$gpu_line" ]]; do
-            [[ -z "$gpu_line" ]] && continue
-            prin "$ICON_GPU" "GPU" "$gpu_line" "$GPU_COLOR"
-        done <<< "${GPU:-Unknown GPU}"
-    fi
-    [[ "${SHOW_UPTIME:-true}" == true ]] && prin "$ICON_UPTIME" "Uptime" "$(get_uptime)" "$UPTIME_COLOR"
-    [[ "${SHOW_SHELL:-true}" == true ]]  && prin "$ICON_SHELL"  "Shell"  "$SHELL_NAME"  "$SHELL_COLOR"
-    [[ "${SHOW_DEWM:-true}" == true ]]   && prin "$ICON_DEWM"   "DE/WM"  "$de_wm"       "$DEWM_COLOR"
-    [[ "${SHOW_PKGS:-true}" == true ]]   && prin "$ICON_PKGS"   "Pkgs"   "$PKG_COUNT"   "$PKGS_COLOR"
-    
-    if [[ "${SHOW_USAGE_BARS:-true}" == true ]]; then
-        echo -e " ${SEPARATOR_COLOR}──────────────────────────────────────────${RESET}"
-
-        printf " ${BAR_LABEL_COLOR}%b CPU${RESET}   %b\n" "$ICON_CPU" "$(cyber_bar "${CPU}" "percent")"
-
-        if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
-            printf " ${BAR_LABEL_COLOR}%b GPU${RESET}   %b\n" "$ICON_GPU" "$(cyber_bar "${GPU_USAGE}" "percent")"
+    if [[ "${HIDE_INFO:-false}" != true ]]; then
+        [[ "${SHOW_OS:-true}" == true ]]     && prin "$ICON_OS"     "OS"     "$DISTRO"      "$OS_COLOR"
+        [[ "${SHOW_KERNEL:-true}" == true ]] && prin "$ICON_KERNEL" "Kernel" "$KERNEL"      "$KERNEL_COLOR"
+        [[ "${SHOW_USER:-true}" == true ]]   && prin "$ICON_USER"   "User"   "$USER"        "$USER_COLOR"
+        [[ "${SHOW_HOST:-true}" == true ]]   && prin "$ICON_HOST"   "Host"   "$HOSTNAME"    "$HOST_COLOR"
+        mobo_print="${MOBO:-}"
+        [[ -z "$mobo_print" || "$mobo_print" == *"Unknown"* ]] && mobo_print=$(get_mobo_info)
+        [[ "${SHOW_MOBO:-true}" == true ]]   && prin "$ICON_MOBO"   "MoBo"   "$mobo_print"  "$MOBO_COLOR"
+        [[ "${SHOW_CPU:-true}" == true ]]    && prin "$ICON_CPU"    "CPU"    "$CPU_MODEL"   "$CPU_COLOR"
+        if [[ "${SHOW_GPU:-true}" == true ]]; then
+            while IFS= read -r gpu_line || [[ -n "$gpu_line" ]]; do
+                [[ -z "$gpu_line" ]] && continue
+                prin "$ICON_GPU" "GPU" "$gpu_line" "$GPU_COLOR"
+            done <<< "${GPU:-Unknown GPU}"
         fi
+        [[ "${SHOW_UPTIME:-true}" == true ]] && prin "$ICON_UPTIME" "Uptime" "$(get_uptime)" "$UPTIME_COLOR"
+        [[ "${SHOW_SHELL:-true}" == true ]]  && prin "$ICON_SHELL"  "Shell"  "$SHELL_NAME"  "$SHELL_COLOR"
+        [[ "${SHOW_DEWM:-true}" == true ]]   && prin "$ICON_DEWM"   "DE/WM"  "$de_wm"       "$DEWM_COLOR"
+        [[ "${SHOW_PKGS:-true}" == true ]]   && prin "$ICON_PKGS"   "Pkgs"   "$PKG_COUNT"   "$PKGS_COLOR"
 
-        ram_display=$(get_ram_info)
-
-        printf " ${BAR_LABEL_COLOR}%b RAM${RESET}   %b  ${GRAY}%s${RESET}\n" "$ICON_RAM" "$(cyber_bar "${RAM}" "gb")" "$ram_display"
-       
-       	echo -e " ${SEPARATOR_COLOR}──────────────────────────────────────────${RESET}"
+        if [[ "${SHOW_USAGE_BARS:-true}" == true ]]; then
+            echo -e " ${SEPARATOR_COLOR}──────────────────────────────────────────${RESET}"
+            printf " ${BAR_LABEL_COLOR}%b CPU${RESET}   %b\n" "$ICON_CPU" "$(cyber_bar "${CPU}" "percent")"
+            if [[ "$GPU_USAGE" != "N/A" && "$GPU_USAGE" != "0" ]]; then
+                printf " ${BAR_LABEL_COLOR}%b GPU${RESET}   %b\n" "$ICON_GPU" "$(cyber_bar "${GPU_USAGE}" "percent")"
+            fi
+            ram_display=$(get_ram_info)
+            printf " ${BAR_LABEL_COLOR}%b RAM${RESET}   %b  ${GRAY}%s${RESET}\n" "$ICON_RAM" "$(cyber_bar "${RAM}" "gb")" "$ram_display"
+            echo -e " ${SEPARATOR_COLOR}──────────────────────────────────────────${RESET}"
+        fi
     fi
 fi
 
