@@ -924,6 +924,7 @@ apply_custom_text() {
         return
     fi
     if [[ -n "$rendered" ]]; then
+        rendered="${rendered//\\/\\\\}"
         ART="${C1}${rendered}${RESET}"
     fi
 }
