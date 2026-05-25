@@ -49,6 +49,8 @@ FILLED2_COLOR=""
 EMPTY_COLOR=""
 SEPARATOR_COLOR=""
 
+VERSION="1.12.2"
+
 # ASCII Detector
 detect_distro() {
     local target_distro="${CUSTOM_DISTRO}"
@@ -783,6 +785,7 @@ show_help() {
     echo -e "  ${PINK}--theme${RESET} <name>    Color theme"
     echo -e "  ${PINK}--cycle-theme${RESET}     Pick a random built-in theme"
     echo -e "  ${PINK}--random${RESET}          Randomize colors and distro"
+    echo -e "  ${PINK}--version${RESET}         Print the version and exit"
     echo -e "  ${PINK}--help | -h${RESET}       Show this help message"
     echo ""
     echo -e "${BLUE}Config:${RESET}"
@@ -801,7 +804,7 @@ show_help() {
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
-           --config)
+            --config)
                 echo -e "${BLUE}Config Location:${RESET} ${CONFIG_FILE}"
                 if [ -n "$EDITOR" ]; then
                     $EDITOR "$CONFIG_FILE"
@@ -827,13 +830,13 @@ parse_args() {
                     kate "$CONFIG_FILE" >/dev/null 2>&1 &
                 elif command -v xed >/dev/null 2>&1; then
                     xed "$CONFIG_FILE" >/dev/null 2>&1 &
-		fi                
-		exit 0
-		;;
-	--live)
+        		fi                
+		            exit 0
+        		;;
+        	--live)
                 LIVE_MODE=true
                 ;;
-             --text)
+            --text)
                 shift
                 CUSTOM_TEXT="$*"
                 break
@@ -850,8 +853,8 @@ parse_args() {
                 CUSTOM_DISTRO=${distros[$RANDOM % ${#distros[@]}]}
 
                 rand_hex() { 
-			printf "#%06x" "$(( ((RANDOM << 15) | RANDOM) % 0x1000000 ))"
-		}
+	        		printf "#%06x" "$(( ((RANDOM << 15) | RANDOM) % 0x1000000 ))"
+        		}
 
                 C1_HEX=$(rand_hex); OS_HEX=$(rand_hex); KERNEL_HEX=$(rand_hex)
                 USER_HEX=$(rand_hex); HOST_HEX=$(rand_hex); MOBO_HEX=$(rand_hex)
@@ -863,12 +866,12 @@ parse_args() {
 	
                 THEME="custom" 
                 shift 
-	;;
+        	;;
             --cycle-theme)
                 themes=("synthwave" "monochrome" "minimal" "dracula" "nord" "catppuccin" "tokyonight" "gruvbox" "custom" "automatic")
                 THEME=${themes[$RANDOM % ${#themes[@]}]}
                 shift 
-		;;
+	    	;;
             --nonerd)
                 USE_NERD_FONTS=false
                 ;;
@@ -884,6 +887,10 @@ parse_args() {
                 ;;
             --refresh)
                 REFRESH=true
+                ;;
+            --version)
+                echo -e "Synfetch version${PINK} $VERSION ${RESET}"
+                exit
                 ;;
             *)
                 echo -e "${PINK}Error:${RESET} Unknown option '$1'"
