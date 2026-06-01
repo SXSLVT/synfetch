@@ -955,10 +955,11 @@ get_gpu() {
     fi
 
     if command -v nvidia-smi >/dev/null 2>&1; then
-        local nvidia_name
+       local nvidia_name _nv_rc
         nvidia_name=$(nvidia-smi --query-gpu=name --format=csv,noheader,nounits 2>/dev/null | head -n1)
-        if [[ -n "$nvidia_name" ]]; then
-            local found_nv=false
+        _nv_rc=${PIPESTATUS[0]}
+        if [[ "$_nv_rc" -eq 0 && -n "$nvidia_name" ]]; then
+	    local found_nv=false
             for i in "${!gpu_list[@]}"; do
                 if [[ "${gpu_list[$i]}" == *NVIDIA* || "${gpu_list[$i]}" == *GeForce* || "${gpu_list[$i]}" == *RTX* || "${gpu_list[$i]}" == *Quadro* ]]; then
                     gpu_list[$i]="NVIDIA ${nvidia_name#NVIDIA }"
@@ -1088,8 +1089,8 @@ pkg_count() {
         count=$(qlist -I 2>/dev/null | wc -l)
         pkgs+=("$count (emerge)")
     elif command -v guix >/dev/null; then
-        local user_count=$(guix package --list-installed 2>/dev/null | wc -l)
-        local system_count=0
+        local user_count=$(guix package --profile="${HOME}/.guix-profile" --list-installed 2>/dev/null | wc -l)
+	local system_count=0
         if [ -f /run/current-system/profile/manifest ]; then
             system_count=$(guix package --list-installed --profile=/run/current-system/profile 2>/dev/null | wc -l)
         fi
@@ -1261,7 +1262,7 @@ get_mobo_info() {
     fi
 
     vendor=$(echo "$vendor" | xargs 2>/dev/null)
-    name=$(echo "$name" | xargs 2>/dev/null)
+    name=$(echo "$name" | xargs 2>/dev/null | sed -E 's/[[:space:]]+[Rr]ev ?[0-9]+(\.[0-9A-Za-z.]*)*$//')
     version=$(echo "$version" | xargs 2>/dev/null)
 
     vendor=${vendor//QEMU Standard PC/QEMU}
@@ -1273,7 +1274,7 @@ get_mobo_info() {
     [[ "$name"    =~ $junk_regex ]] && name=""
     [[ "$version" =~ $junk_regex ]] && version=""
 
-    local ver_junk_regex="^([Rr]ev )?[Xx]\.[0-9][0-9A-Za-z]*$|^[0-9](\.[0-9])?$|^[Rr]ev [0-9]+\.[0-9]+$"
+    local ver_junk_regex="^([Rr]ev )?[Xx]\.[0-9][0-9A-Za-z]*$|^[0-9]+(\.[0-9A-Za-z]+)*$|^[Rr]ev [0-9A-Za-z.]+$"
     [[ "$version" =~ $ver_junk_regex ]] && version=""
 
     if [[ -n "$version" && -n "$name" && "$name" != *"$version"* ]]; then
@@ -1403,7 +1404,7 @@ get_uptime() {
     fi
 
     if [[ -z "$result" ]]; then
-        result="just started"
+        result="Just started"
     fi
 
     echo "$result"
