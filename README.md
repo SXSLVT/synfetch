@@ -3,7 +3,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 <div align="center">
-<img width="916" height="406" alt="image" src="https://github.com/user-attachments/assets/5708e723-161f-42d5-9528-9f7f0de5823f" />
+<img width="915" height="372" alt="image" src="https://github.com/user-attachments/assets/16973f23-3a1f-47c7-94fe-390f2adb8bb4" />
 <img width="506" height="510" alt="image" src="https://github.com/user-attachments/assets/d900f2ad-4132-4333-acf3-30ced586983c" />
 </div>
 
