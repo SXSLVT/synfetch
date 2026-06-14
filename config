@@ -5,22 +5,24 @@
 # Set theme to "custom" to use the hex colors below
 THEME="synthwave"
 
-# Custom hex colors 
-C1_HEX="#ff5555"            # ASCII Art
-OS_HEX="#ffb86c"            # OS
-KERNEL_HEX="#f1fa8c"        # Kernel
-USER_HEX="#50fa7b"          # User
-HOST_HEX="#8be9fd"          # Hostname
-MOBO_HEX="#bd93f9"          # Motherboard
-CPU_HEX="#ff79c6"           # CPU
-GPU_HEX="#ff5555"           # GPU
-UPTIME_HEX="#ffb86c"        # Uptime
-SHELL_HEX="#f1fa8c"         # Shell
-DEWM_HEX="#50fa7b"          # DE/WM
-PKGS_HEX="#8be9fd"          # Packages
-BAR_LABEL_HEX="#bd93f9"     # Bar label
-BAR_FILLED1_HEX="#ff79c6"   # Filled bar 1
-BAR_FILLED2_HEX="#ff5555"   # Filled bar 2
+# Custom hex colors (rainbow gradient by default, edit any line to taste)
+C1_HEX="#e25a5a"            # ASCII Art
+OS_HEX="#e28a5a"            # OS
+KERNEL_HEX="#e2ba5a"        # Kernel
+USER_HEX="#dae25a"          # User
+HOST_HEX="#aae25a"          # Hostname
+MOBO_HEX="#7ae25a"          # Motherboard
+CPU_HEX="#5ae26a"           # CPU
+GPU_HEX="#5ae29a"           # GPU
+RAM_HEX="#5ae2ca"           # RAM
+UPTIME_HEX="#5acae2"        # Uptime
+SHELL_HEX="#5a9ae2"         # Shell
+DEWM_HEX="#5a6ae2"          # DE/WM
+PKGS_HEX="#7a5ae2"          # Packages
+COLORS_HEX="#aa5ae2"        # Color palette
+BAR_LABEL_HEX="#da5ae2"     # Bar label
+BAR_FILLED1_HEX="#e25aba"   # Filled bar 1
+BAR_FILLED2_HEX="#e25a8a"   # Filled bar 2
 BAR_EMPTY_HEX="#282a36"     # Empty bar
 SEPARATOR_HEX="#444b6a"     # Separator
 
@@ -32,10 +34,12 @@ SHOW_HOST=true
 SHOW_MOBO=true
 SHOW_CPU=true
 SHOW_GPU=true
+SHOW_RAM=true
 SHOW_UPTIME=true
 SHOW_SHELL=true
 SHOW_DEWM=true
 SHOW_PKGS=true
+SHOW_COLOR_PALETTE=true
 SHOW_USAGE_BARS=true
 
 # Show/Hide all modules except the ASCII text
@@ -47,11 +51,14 @@ USE_ASCII=true
 # Toggle icons
 USE_NERD_FONTS=true
 
+# Toggle between Fastfetch side-by-side (false) or classic Nitch top-banner (true)
+NITCH_LIKE=false
+
 # Use a different distro ASCII art (leave empty for default distro)
 CUSTOM_DISTRO="" 
 
 # Custom ASCII text rendered in small slant font (leave empty to use distro logo)
-# Requires figlet. Example: CUSTOM_TEXT="hello"
+# Requires figlet.
 CUSTOM_TEXT=""
 
 # Toggle Live mode on startup
