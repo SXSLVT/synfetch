@@ -3,9 +3,8 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 <div align="center">
-<img width="765" height="625" alt="image" src="https://github.com/user-attachments/assets/5a5ec9b3-8546-4d97-988c-1466618af5ea" />
-<img width="805" height="686" alt="image" src="https://github.com/user-attachments/assets/d3da4aac-4ede-4e4a-979b-4be06550366b" />
-
+<img width="916" height="406" alt="image" src="https://github.com/user-attachments/assets/5708e723-161f-42d5-9528-9f7f0de5823f" />
+<img width="506" height="510" alt="image" src="https://github.com/user-attachments/assets/d900f2ad-4132-4333-acf3-30ced586983c" />
 </div>
 
 <div align="center">
@@ -206,6 +205,11 @@ To force refresh all cache files (use after installing packages):
 synfetch --refresh
 ```
 
+To use the classic top ASCII banner layout:
+```bash
+synfetch --nitch-like
+```
+
 To pick a random built-in theme:
 ```bash
 synfetch --cycle-theme
@@ -223,6 +227,7 @@ synfetch --random
 
 Output of `synfetch --help`
 ```bash
+
 Usage: 
   synfetch [OPTIONS]
 
@@ -230,11 +235,12 @@ Options:
   --config          Open or locate the configuration file
   --nonerd          Hide icons
   --noascii         Hide ASCII art
-  --text <text>     Custom ASCII art text (small slant font, requires figlet)
+  --text <text>     Custom ASCII art text (requires --nitch-like, requires figlet)
   --hide-info       Hide all info and usage bars (ASCII art only)
   --distro <name>   Display ASCII art of a different distro
   --live            Animated Uptime, CPU, GPU and RAM usage + app killer
   --refresh         Force refresh all cache files (use after installing packages)
+  --nitch-like      Use the classic top ASCII banner layout
   --theme <name>    Color theme
   --cycle-theme     Pick a random built-in theme
   --random          Randomize colors and distro
